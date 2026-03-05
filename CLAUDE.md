@@ -9,7 +9,6 @@ This is a new, empty repository owned by **nicogaray7**. No application code has
 ## Repository Status
 
 - **State**: Initial (no application code committed yet)
-- **Branch model**: Feature branches prefixed with `claude/` for AI-assisted work
 - **Remote**: `origin` at `nicogaray7/nicogaray`
 
 ## Development Workflows
@@ -17,8 +16,7 @@ This is a new, empty repository owned by **nicogaray7**. No application code has
 ### Branch Strategy
 
 - `main` (or `master`): Stable, production-ready code
-- `claude/<feature-name>-<session-id>`: AI-assisted feature branches
-- `feature/<name>`: Human-authored feature branches
+- `feature/<name>`: Feature branches
 - `fix/<name>`: Bug fix branches
 
 ### Commit Conventions
