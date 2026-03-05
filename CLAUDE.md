@@ -19,6 +19,8 @@ This is a new, empty repository owned by **nicogaray7**. No application code has
 - `feature/<name>`: Feature branches
 - `fix/<name>`: Bug fix branches
 
+> **AI assistants**: Do not use any special prefix (e.g. `claude/`) for branches. Follow the same `feature/` and `fix/` conventions as everyone else.
+
 ### Commit Conventions
 
 Use clear, imperative commit messages:
