@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "shop": "Boutique",
+    "about": "À propos",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Photographe & Voyageur",
+      "cta": "Voir la boutique"
+    },
+    "map": {
+      "title": "Voyages en images",
+      "subtitle": "Cliquez sur un pays pour explorer les photos"
+    },
+    "about": {
+      "title": "À propos",
+      "text": "Je suis Nico Garay, photographe voyageur passionné. J'arpente le monde en quête de lumières uniques, de paysages oubliés et de visages authentiques.",
+      "countries": "pays visités",
+      "photos": "photos disponibles"
+    },
+    "featured": {
+      "title": "Dernières photos",
+      "cta": "Voir toute la boutique"
+    }
+  },
+  "shop": {
+    "title": "Boutique",
+    "filters": {
+      "country": "Pays",
+      "orientation": "Orientation",
+      "sort": "Trier",
+      "all": "Tous",
+      "landscape": "Paysage",
+      "portrait": "Portrait",
+      "square": "Carré",
+      "recent": "Récent",
+      "priceAsc": "Prix croissant",
+      "priceDesc": "Prix décroissant"
+    },
+    "results": "{count} photo(s)",
+    "hd": "HD disponible",
+    "buy": "Acheter en HD",
+    "price": "{price} €",
+    "fees": "Frais de transaction à la charge du client",
+    "size": "Fichier original — {mp} MP, {size} Mo",
+    "metadata": {
+      "country": "Pays",
+      "city": "Ville",
+      "date": "Date",
+      "camera": "Appareil"
+    }
+  },
+  "checkout": {
+    "title": "Paiement",
+    "stripe": "Payer par carte",
+    "wise": "Virement IBAN",
+    "wise_instructions": "Effectuez un virement avec la référence indiquée. Votre lien de téléchargement sera envoyé après confirmation.",
+    "success": {
+      "title": "Merci pour votre achat !",
+      "message": "Votre fichier HD est prêt au téléchargement.",
+      "download": "Télécharger la photo HD",
+      "expiry": "Lien valable 48h · {max} téléchargements maximum",
+      "email": "Un email de confirmation vous a été envoyé."
+    }
+  },
+  "about": {
+    "title": "À propos de Nico Garay",
+    "text1": "Depuis plus de dix ans, j'explore le monde avec mon appareil photo.",
+    "text2": "Mes photos sont disponibles en haute résolution, prêtes à être imprimées et accrochées chez vous."
+  },
+  "footer": {
+    "cgv": "CGV",
+    "license": "Licence",
+    "legal": "Mentions légales",
+    "rights": "© {year} Nico Garay — Tous droits réservés"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "about": "About",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Photographer & Traveler",
+      "cta": "Browse the shop"
+    },
+    "map": {
+      "title": "Travels in pictures",
+      "subtitle": "Click a country to explore photos"
+    },
+    "about": {
+      "title": "About",
+      "text": "I'm Nico Garay, a travel photographer. I roam the world in search of unique lights, forgotten landscapes and authentic faces.",
+      "countries": "countries visited",
+      "photos": "photos available"
+    },
+    "featured": {
+      "title": "Latest photos",
+      "cta": "View the full shop"
+    }
+  },
+  "shop": {
+    "title": "Shop",
+    "filters": {
+      "country": "Country",
+      "orientation": "Orientation",
+      "sort": "Sort",
+      "all": "All",
+      "landscape": "Landscape",
+      "portrait": "Portrait",
+      "square": "Square",
+      "recent": "Recent",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low"
+    },
+    "results": "{count} photo(s)",
+    "hd": "HD available",
+    "buy": "Buy HD",
+    "price": "€{price}",
+    "fees": "Transaction fees charged to the buyer",
+    "size": "Original file — {mp} MP, {size} MB",
+    "metadata": {
+      "country": "Country",
+      "city": "City",
+      "date": "Date",
+      "camera": "Camera"
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "stripe": "Pay by card",
+    "wise": "IBAN transfer",
+    "wise_instructions": "Transfer with the reference shown. Your download link will be sent once payment is confirmed.",
+    "success": {
+      "title": "Thank you for your purchase!",
+      "message": "Your HD file is ready to download.",
+      "download": "Download HD photo",
+      "expiry": "Link valid 48h · max {max} downloads",
+      "email": "A confirmation email has been sent."
+    }
+  },
+  "about": {
+    "title": "About Nico Garay",
+    "text1": "For over ten years, I have been exploring the world with my camera.",
+    "text2": "My photos are available in high resolution, ready to be printed and hung in your home."
+  },
+  "footer": {
+    "cgv": "Terms",
+    "license": "License",
+    "legal": "Legal notice",
+    "rights": "© {year} Nico Garay — All rights reserved"
+  }
+}

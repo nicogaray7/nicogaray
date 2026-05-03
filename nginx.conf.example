@@ -1,0 +1,52 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name photos-garaynico.com www.photos-garaynico.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name photos-garaynico.com www.photos-garaynico.com;
+
+    ssl_certificate     /etc/letsencrypt/live/photos-garaynico.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/photos-garaynico.com/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+
+    # Bloquer les user-agents de scrapers/bots connus
+    if ($http_user_agent ~* (wget|curl|python-requests|scrapy|HTTrack|MJ12bot|AhrefsBot|SemrushBot)) {
+        return 403;
+    }
+
+    client_max_body_size 100M;
+
+    location / {
+        proxy_pass         http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection 'upgrade';
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # Timeout long pour les téléchargements HD avec watermark
+        proxy_read_timeout 120s;
+        proxy_send_timeout 120s;
+    }
+
+    location /_next/static/ {
+        proxy_pass http://127.0.0.1:3000;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    location /api/stripe/webhook {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

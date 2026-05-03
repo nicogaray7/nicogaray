@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Photo {
+  id            String   @id @default(cuid())
+  title         String
+  titleEn       String
+  description   String?
+  descriptionEn String?
+
+  // R2 keys
+  fileKeyR2    String
+  thumbKeyR2   String
+  previewKeyR2 String
+  fileSize     Int
+  width        Int
+  height       Int
+
+  // EXIF
+  country   String?
+  city      String?
+  latitude  Float?
+  longitude Float?
+  takenAt   DateTime?
+  camera    String?
+  lens      String?
+
+  // Tags
+  orientation String   // "landscape" | "portrait" | "square"
+  tags        String[]
+
+  // Shop
+  price     Float   @default(5.00)
+  currency  String  @default("EUR")
+  published Boolean @default(false)
+  featured  Boolean @default(false)
+
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id      String @id @default(cuid())
+  photoId String
+  photo   Photo  @relation(fields: [photoId], references: [id])
+
+  buyerEmail String
+  buyerName  String?
+
+  paymentMethod   String  @default("stripe") // "stripe" | "wise"
+  paymentStatus   String  @default("pending") // "pending" | "paid" | "failed"
+  stripeSessionId String?
+  wiseReference   String? @unique
+
+  amount Float
+  fees   Float  @default(0)
+  total  Float
+
+  downloadToken  String   @unique @default(cuid())
+  downloadCount  Int      @default(0)
+  downloadMax    Int      @default(3)
+  downloadExpiry DateTime?
+  downloadedAt   DateTime?
+
+  createdAt DateTime  @default(now())
+  paidAt    DateTime?
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+}
