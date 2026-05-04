@@ -19,9 +19,9 @@ export async function generateMetadata({
 }
 
 interface SearchParams {
-  country?: string
+  country?:     string
   orientation?: string
-  sort?: string
+  sort?:        string
 }
 
 export default async function ShopPage({
@@ -37,24 +37,23 @@ export default async function ShopPage({
 
   const where = {
     published: true,
-    ...(country ? { country } : {}),
+    ...(country     ? { country }     : {}),
     ...(orientation ? { orientation } : {}),
   }
 
   type SortOrder = { createdAt?: 'asc' | 'desc'; price?: 'asc' | 'desc' }
   const orderBy: SortOrder =
-    sort === 'priceAsc' ? { price: 'asc' }
+    sort === 'priceAsc'  ? { price: 'asc' }
     : sort === 'priceDesc' ? { price: 'desc' }
     : { createdAt: 'desc' }
 
   const [photos, countries] = await Promise.all([
     prisma.photo.findMany({
-      where,
-      orderBy,
+      where, orderBy,
       select: {
-        id: true, title: true, titleEn: true,
+        id: true,
         thumbKeyR2: true, previewKeyR2: true,
-        country: true, orientation: true, price: true,
+        country: true, city: true, orientation: true, price: true,
       },
     }),
     prisma.photo.findMany({
@@ -64,29 +63,57 @@ export default async function ShopPage({
     }),
   ])
 
-  const countryList = countries.map((p) => p.country!).filter(Boolean).sort()
+  const countryList = countries.map(p => p.country!).filter(Boolean).sort()
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-      <h1 className="font-serif text-4xl text-stone-800 mb-10">{t('title')}</h1>
-
-      <Suspense>
-        <FilterBar countries={countryList} />
-      </Suspense>
-
-      <p className="text-sm text-stone-400 mb-6">{t('results', { count: photos.length })}</p>
-
-      {photos.length === 0 ? (
-        <div className="text-center py-24 text-stone-400">
-          <p className="text-lg">—</p>
+    <>
+      {/* En-tête éditorial */}
+      <section className="border-b border-ink-100 pt-28 sm:pt-36 pb-12 sm:pb-16">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <p className="text-[11px] tracking-[0.3em] uppercase text-ink-400 mb-3">
+            {locale === 'fr' ? 'Galerie' : 'Gallery'}
+          </p>
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-ink-900 leading-[0.95] text-balance max-w-3xl">
+            {t('title')}
+          </h1>
+          <p className="mt-6 text-ink-500 text-base sm:text-lg max-w-xl text-pretty">
+            {locale === 'fr'
+              ? 'Photographies originales en haute résolution. Téléchargement immédiat sous licence personnelle.'
+              : 'Original high-resolution photographs. Instant download under personal license.'}
+          </p>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {photos.map((photo) => (
-            <PhotoCard key={photo.id} photo={photo} locale={locale} />
-          ))}
+      </section>
+
+      {/* Filtres + grille */}
+      <section className="py-10 sm:py-12">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+
+          <Suspense>
+            <FilterBar countries={countryList} />
+          </Suspense>
+
+          <div className="flex items-center justify-between mb-6 sm:mb-8">
+            <p className="text-sm text-ink-500">
+              {t('results', { count: photos.length })}
+            </p>
+          </div>
+
+          {photos.length === 0 ? (
+            <div className="text-center py-24 text-ink-400">
+              <p className="font-display text-2xl mb-2">—</p>
+              <p className="text-sm">
+                {locale === 'fr' ? 'Aucune photo ne correspond à ces filtres.' : 'No photo matches these filters.'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+              {photos.map(photo => (
+                <PhotoCard key={photo.id} photo={photo} locale={locale} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </section>
+    </>
   )
 }

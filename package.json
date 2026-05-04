@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public",
     "start": "next start",
     "lint": "eslint"
   },
@@ -30,6 +30,7 @@
     "stripe": "^22.1.0",
     "tailwind-merge": "^3.5.0",
     "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2",
     "yet-another-react-lightbox": "^3.32.0",
     "zod": "^4.4.2"
   },

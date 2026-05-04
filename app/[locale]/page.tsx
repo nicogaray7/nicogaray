@@ -36,15 +36,15 @@ export default async function HomePage({
       orderBy: { createdAt: 'desc' },
       take: 6,
       select: {
-        id: true, title: true, titleEn: true,
+        id: true,
         thumbKeyR2: true, previewKeyR2: true,
-        country: true, orientation: true, price: true,
+        country: true, city: true, orientation: true, price: true,
       },
     }),
     prisma.photo.findFirst({
       where: { published: true, featured: true },
       orderBy: { createdAt: 'desc' },
-      select: { id: true, thumbKeyR2: true, previewKeyR2: true, title: true, titleEn: true },
+      select: { id: true, thumbKeyR2: true, previewKeyR2: true, country: true, city: true },
     }),
     prisma.photo.findMany({
       where: { published: true, country: { not: null } },

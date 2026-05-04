@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/db'
 import { sendDownloadEmail } from '@/lib/email'
+import { photoPublicLabel } from '@/lib/photoLabel'
 
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -25,16 +26,17 @@ export async function POST(req: NextRequest) {
 
     const paidAt = new Date()
 
+    const totalCents = session.amount_total ?? 0
+
     await prisma.order.update({
       where: { id: orderId },
       data: {
-        buyerEmail: session.customer_email ?? '',
-        buyerName: session.customer_details?.name ?? undefined,
+        buyerEmail:      session.customer_email ?? '',
+        buyerName:       session.customer_details?.name ?? undefined,
         stripeSessionId: session.id,
-        paymentStatus: 'paid',
+        paymentStatus:   'paid',
         paidAt,
-        fees: (session.amount_total ?? 0) - (session.amount_subtotal ?? 0),
-        total: (session.amount_total ?? 0) / 100,
+        total:           totalCents / 100,
       },
     })
 
@@ -46,12 +48,12 @@ export async function POST(req: NextRequest) {
     if (order && session.customer_email) {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos-garaynico.com'
       const downloadUrl = `${siteUrl}/api/download/${order.downloadToken}`
-      const title = (locale ?? 'fr') === 'en' ? order.photo.titleEn : order.photo.title
+      const label = photoPublicLabel(order.photo, locale ?? 'fr')
 
       await sendDownloadEmail({
         to: session.customer_email,
         name: session.customer_details?.name ?? undefined,
-        photoTitle: title,
+        photoTitle: label,
         downloadUrl,
         expiry: order.downloadExpiry!,
         locale: locale ?? 'fr',

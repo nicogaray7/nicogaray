@@ -4,15 +4,25 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { photoId, published } = await req.json()
+    const { photoId, published } = await req.json()
 
-  const photo = await prisma.photo.update({
-    where: { id: photoId },
-    data: { published: published ?? true },
-  })
+    if (!photoId) {
+      return NextResponse.json({ error: 'photoId manquant' }, { status: 400 })
+    }
 
-  return NextResponse.json({ photo })
+    const photo = await prisma.photo.update({
+      where: { id: photoId },
+      data: { published: published ?? true },
+    })
+
+    return NextResponse.json({ photo })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('[PUBLISH ERROR]', message)
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }

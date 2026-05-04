@@ -12,9 +12,10 @@ interface Props {
   priority?: boolean
   width?: number
   height?: number
+  sizes?: string
 }
 
-export function ProtectedImage({ src, alt, fill, className, priority, width, height }: Props) {
+export function ProtectedImage({ src, alt, fill, className, priority, width, height, sizes }: Props) {
   return (
     <div
       className={cn('relative select-none', fill ? 'absolute inset-0' : '')}
@@ -29,6 +30,7 @@ export function ProtectedImage({ src, alt, fill, className, priority, width, hei
         height={fill ? undefined : height}
         priority={priority}
         draggable={false}
+        sizes={sizes}
         className={cn(className)}
         style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
       />

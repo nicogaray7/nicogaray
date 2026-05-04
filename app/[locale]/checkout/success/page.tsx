@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { getTranslations } from 'next-intl/server'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/db'
+import { photoPublicLabel } from '@/lib/photoLabel'
 import Link from 'next/link'
 
 export default async function CheckoutSuccessPage({
@@ -38,7 +39,7 @@ export default async function CheckoutSuccessPage({
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos-garaynico.com'
   const downloadUrl = order ? `${siteUrl}/api/download/${order.downloadToken}` : null
-  const title = photo ? (locale === 'en' ? photo.titleEn : photo.title) : ''
+  const label = photo ? photoPublicLabel(photo, locale) : ''
 
   return (
     <div className="max-w-xl mx-auto px-4 py-24 text-center">
@@ -49,7 +50,7 @@ export default async function CheckoutSuccessPage({
       </div>
 
       <h1 className="font-serif text-4xl text-stone-800 mb-4">{t('title')}</h1>
-      {title && <p className="text-stone-500 mb-8 text-lg">{title}</p>}
+      {label && <p className="text-stone-500 mb-8 text-lg">{label}</p>}
       <p className="text-stone-500 mb-8">{t('message')}</p>
 
       {downloadUrl && (

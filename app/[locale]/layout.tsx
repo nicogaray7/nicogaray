@@ -45,10 +45,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className="bg-white text-stone-900 font-sans antialiased">
+      <body className="bg-ink-50 text-ink-900 font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
           <Header />
-          <main className="pt-16 min-h-screen">{children}</main>
+          <main className="min-h-screen">{children}</main>
           <Footer />
         </NextIntlClientProvider>
       </body>

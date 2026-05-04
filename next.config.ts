@@ -12,9 +12,10 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "img-src 'self' data: blob:",
+      "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' js.stripe.com",
       "frame-src js.stripe.com",
-      "connect-src 'self' api.stripe.com",
+      "connect-src 'self' api.stripe.com https://cdn.jsdelivr.net https://api.bigdatacloud.net",
     ].join('; '),
   },
 ]

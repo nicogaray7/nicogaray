@@ -1,11 +1,17 @@
 export const dynamic = 'force-dynamic'
 
+import type { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
+import { ArrowLeft, MapPin, Calendar, Maximize2 } from 'lucide-react'
 import { prisma } from '@/lib/db'
 import { ProtectedImage } from '@/components/shop/ProtectedImage'
 import { BuyButton } from '@/components/shop/BuyButton'
+import { PhotoLocationMap } from '@/components/shop/PhotoLocationMap'
 import { formatFileSize, formatMegapixels } from '@/lib/utils'
+import { calculateStripeTotal } from '@/lib/fees'
+import { photoPublicLabel } from '@/lib/photoLabel'
 import type { Metadata } from 'next'
 
 export async function generateMetadata({
@@ -16,11 +22,12 @@ export async function generateMetadata({
   const { locale, id } = await params
   const photo = await prisma.photo.findUnique({
     where: { id },
-    select: { title: true, titleEn: true, country: true },
+    select: { country: true, city: true },
   })
   if (!photo) return {}
+  const label = photoPublicLabel(photo, locale)
   return {
-    title: `${locale === 'en' ? photo.titleEn : photo.title} — Nico Garay`,
+    title: `${label} — Nico Garay`,
   }
 }
 
@@ -32,88 +39,167 @@ export default async function PhotoDetailPage({
   const { locale, id } = await params
   const t = await getTranslations('shop')
 
-  const photo = await prisma.photo.findUnique({
-    where: { id, published: true },
-  })
-
+  const photo = await prisma.photo.findUnique({ where: { id, published: true } })
   if (!photo) notFound()
 
-  const title = locale === 'en' ? photo.titleEn : photo.title
   const description = locale === 'en' ? photo.descriptionEn : photo.description
+  const stripeBreakdown = calculateStripeTotal(photo.price)
+  const label = photoPublicLabel(photo, locale)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        {/* Image protégée */}
-        <div className="relative aspect-[3/2] bg-stone-100 overflow-hidden rounded">
-          <ProtectedImage
-            src={`/api/image/${photo.previewKeyR2}`}
-            alt={title}
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
+    <div className="bg-ink-50 min-h-screen">
 
-        {/* Infos + achat */}
-        <div className="space-y-6">
-          <div>
-            <h1 className="font-serif text-3xl text-stone-800 mb-2">{title}</h1>
-            {description && (
-              <p className="text-stone-500 leading-relaxed">{description}</p>
-            )}
-          </div>
-
-          {/* Métadonnées */}
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
-            {photo.country && (
-              <>
-                <dt className="text-stone-400 tracking-wide">{t('metadata.country')}</dt>
-                <dd className="text-stone-700">{photo.country}</dd>
-              </>
-            )}
-            {photo.city && (
-              <>
-                <dt className="text-stone-400 tracking-wide">{t('metadata.city')}</dt>
-                <dd className="text-stone-700">{photo.city}</dd>
-              </>
-            )}
-            {photo.takenAt && (
-              <>
-                <dt className="text-stone-400 tracking-wide">{t('metadata.date')}</dt>
-                <dd className="text-stone-700">
-                  {new Date(photo.takenAt).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
-                </dd>
-              </>
-            )}
-            {photo.camera && (
-              <>
-                <dt className="text-stone-400 tracking-wide">{t('metadata.camera')}</dt>
-                <dd className="text-stone-700">{photo.camera}</dd>
-              </>
-            )}
-          </dl>
-
-          {/* Taille fichier */}
-          <p className="text-xs text-stone-400">
-            {t('size', {
-              mp: formatMegapixels(photo.width, photo.height),
-              size: formatFileSize(photo.fileSize),
-            })}
-          </p>
-
-          {/* Prix + achat */}
-          <div className="border-t border-stone-100 pt-6">
-            <div className="flex items-baseline gap-3 mb-1">
-              <span className="font-serif text-3xl text-stone-800">
-                {t('price', { price: photo.price.toFixed(2) })}
-              </span>
-            </div>
-            <p className="text-xs text-stone-400 mb-6">{t('fees')}</p>
-            <BuyButton photoId={photo.id} locale={locale} />
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28">
+        <Link
+          href={`/${locale}/shop`}
+          className="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-900 transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          {locale === 'fr' ? 'Retour à la boutique' : 'Back to shop'}
+        </Link>
       </div>
+
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 sm:pt-10 pb-12 sm:pb-16">
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+
+          <div className="lg:col-span-8 lg:sticky lg:top-28">
+            <div className={
+              photo.orientation === 'portrait'
+                ? 'relative aspect-[2/3] max-h-[80vh] mx-auto bg-ink-100 rounded-xl overflow-hidden'
+                : 'relative aspect-[3/2] bg-ink-100 rounded-xl overflow-hidden'
+            }>
+              <ProtectedImage
+                src={`/api/image/${photo.previewKeyR2}`}
+                alt={label}
+                fill
+                className="object-contain"
+                priority
+                sizes="(max-width: 1024px) 100vw, 65vw"
+              />
+            </div>
+
+            <div className="mt-4 flex items-center justify-between text-xs text-ink-400">
+              <span>© Nico Garay</span>
+              <span>{formatMegapixels(photo.width, photo.height)} · {formatFileSize(photo.fileSize)}</span>
+            </div>
+          </div>
+
+          <div className="lg:col-span-4 space-y-8 sm:space-y-10">
+
+            <div>
+              <p className="font-display text-3xl sm:text-4xl text-ink-900 leading-tight text-balance">
+                {label}
+              </p>
+              {description && (
+                <p className="text-ink-600 leading-relaxed text-pretty mt-4">{description}</p>
+              )}
+            </div>
+
+            <PhotoLocationMap
+              latitude={photo.latitude}
+              longitude={photo.longitude}
+              country={photo.country}
+              locale={locale}
+            />
+
+            <div className="grid grid-cols-2 gap-3">
+              {photo.city && (
+                <Meta icon={<MapPin className="w-3.5 h-3.5" />} label={t('metadata.city')} value={photo.city} />
+              )}
+              {photo.takenAt && (
+                <Meta
+                  icon={<Calendar className="w-3.5 h-3.5" />}
+                  label={t('metadata.date')}
+                  value={new Date(photo.takenAt).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', { year: 'numeric', month: 'long' })}
+                />
+              )}
+              <Meta
+                icon={<Maximize2 className="w-3.5 h-3.5" />}
+                label={locale === 'fr' ? 'Format' : 'Format'}
+                value={photo.orientation === 'portrait' ? (locale === 'fr' ? 'Portrait' : 'Portrait') : (locale === 'fr' ? 'Paysage' : 'Landscape')}
+              />
+            </div>
+
+            <div className="bg-white border border-ink-100 rounded-2xl p-6 sm:p-7 space-y-5">
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <p className="text-[10px] tracking-[0.25em] uppercase text-ink-400 mb-1">
+                    {locale === 'fr' ? 'Téléchargement HD' : 'HD Download'}
+                  </p>
+                  <p className="font-display text-4xl text-ink-900 tabular-nums">
+                    {photo.price.toFixed(2)}<span className="text-2xl text-ink-500 ml-1">€</span>
+                  </p>
+                </div>
+                <span className="text-[10px] tracking-[0.2em] uppercase text-ink-400 border border-ink-200 px-2.5 py-1 rounded-full">
+                  {t('hd')}
+                </span>
+              </div>
+
+              <details className="text-xs">
+                <summary className="text-ink-500 cursor-pointer hover:text-ink-900 transition-colors select-none list-none flex items-center justify-between">
+                  <span>
+                    {locale === 'fr' ? 'Total carte' : 'Card total'} :{' '}
+                    <span className="font-medium text-ink-900 tabular-nums">
+                      {stripeBreakdown.total.toFixed(2)} €
+                    </span>
+                  </span>
+                  <span className="text-ink-300 text-[10px] uppercase tracking-wider">
+                    {locale === 'fr' ? 'détails' : 'details'}
+                  </span>
+                </summary>
+                <div className="mt-3 pt-3 border-t border-ink-100 space-y-1.5 text-ink-500">
+                  <div className="flex justify-between">
+                    <span>{locale === 'fr' ? 'Photo HD' : 'HD photo'}</span>
+                    <span className="tabular-nums">{stripeBreakdown.amount.toFixed(2)} €</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>{locale === 'fr' ? 'Frais de transaction' : 'Transaction fees'}</span>
+                    <span className="tabular-nums">+ {stripeBreakdown.fees.toFixed(2)} €</span>
+                  </div>
+                  <div className="flex justify-between pt-1.5 border-t border-ink-100 font-medium text-ink-900">
+                    <span>{locale === 'fr' ? 'Total' : 'Total'}</span>
+                    <span className="tabular-nums">{stripeBreakdown.total.toFixed(2)} €</span>
+                  </div>
+                  <p className="text-[10px] text-ink-400 pt-1">
+                    {locale === 'fr'
+                      ? `Virement IBAN : sans frais — montant exact ${photo.price.toFixed(2)} €`
+                      : `IBAN transfer: no fees — exact €${photo.price.toFixed(2)}`}
+                  </p>
+                </div>
+              </details>
+
+              <BuyButton photoId={photo.id} locale={locale} />
+            </div>
+
+            <div className="text-xs text-ink-400 leading-relaxed">
+              <p>
+                {locale === 'fr'
+                  ? 'Licence personnelle. Le fichier livré contient un filigrane invisible identifiant l\'acheteur.'
+                  : 'Personal license. The delivered file contains an invisible watermark identifying the buyer.'}
+              </p>
+              <Link
+                href={`/${locale}/legal/license`}
+                className="inline-block mt-2 underline hover:text-ink-700 transition-colors"
+              >
+                {locale === 'fr' ? 'Détails de la licence' : 'License details'}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function Meta({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
+  return (
+    <div className="bg-white border border-ink-100 rounded-xl px-4 py-3">
+      <div className="flex items-center gap-1.5 text-ink-400 mb-1">
+        {icon}
+        <span className="text-[10px] tracking-[0.2em] uppercase">{label}</span>
+      </div>
+      <p className="text-sm text-ink-800 truncate">{value}</p>
     </div>
   )
 }
