@@ -1,10 +1,9 @@
 export const dynamic = 'force-dynamic'
 
-import type { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Calendar, Maximize2 } from 'lucide-react'
+import { ArrowLeft, Calendar, Maximize2 } from 'lucide-react'
 import { prisma } from '@/lib/db'
 import { ProtectedImage } from '@/components/shop/ProtectedImage'
 import { BuyButton } from '@/components/shop/BuyButton'
@@ -49,7 +48,7 @@ export default async function PhotoDetailPage({
   return (
     <div className="bg-ink-50 min-h-screen">
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-28 sm:pt-32">
         <Link
           href={`/${locale}/shop`}
           className="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-900 transition-colors group"
@@ -59,7 +58,7 @@ export default async function PhotoDetailPage({
         </Link>
       </div>
 
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-6 sm:pt-10 pb-12 sm:pb-16">
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 sm:pt-12 pb-16 sm:pb-24">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
@@ -85,14 +84,14 @@ export default async function PhotoDetailPage({
             </div>
           </div>
 
-          <div className="lg:col-span-4 space-y-8 sm:space-y-10">
+          <div className="lg:col-span-4 space-y-10 sm:space-y-12">
 
             <div>
-              <p className="font-display text-3xl sm:text-4xl text-ink-900 leading-tight text-balance">
+              <p className="font-display text-3xl sm:text-5xl text-ink-900 leading-[1.1] text-balance">
                 {label}
               </p>
               {description && (
-                <p className="text-ink-600 leading-relaxed text-pretty mt-4">{description}</p>
+                <p className="text-base text-ink-500 leading-relaxed text-pretty mt-6">{description}</p>
               )}
             </div>
 
@@ -103,67 +102,62 @@ export default async function PhotoDetailPage({
               locale={locale}
             />
 
-            <div className="grid grid-cols-2 gap-3">
-              {photo.city && (
-                <Meta icon={<MapPin className="w-3.5 h-3.5" />} label={t('metadata.city')} value={photo.city} />
-              )}
+            <div className="flex flex-col gap-4">
               {photo.takenAt && (
-                <Meta
-                  icon={<Calendar className="w-3.5 h-3.5" />}
-                  label={t('metadata.date')}
-                  value={new Date(photo.takenAt).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', { year: 'numeric', month: 'long' })}
-                />
+                <div className="flex items-center gap-3 text-sm">
+                  <Calendar className="w-4 h-4 text-ink-400 flex-shrink-0" />
+                  <span className="text-ink-500">{new Date(photo.takenAt).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', { year: 'numeric', month: 'long' })}</span>
+                </div>
               )}
-              <Meta
-                icon={<Maximize2 className="w-3.5 h-3.5" />}
-                label={locale === 'fr' ? 'Format' : 'Format'}
-                value={photo.orientation === 'portrait' ? (locale === 'fr' ? 'Portrait' : 'Portrait') : (locale === 'fr' ? 'Paysage' : 'Landscape')}
-              />
+              <div className="flex items-center gap-3 text-sm">
+                <Maximize2 className="w-4 h-4 text-ink-400 flex-shrink-0" />
+                <span className="text-ink-500">{photo.orientation === 'portrait' ? (locale === 'fr' ? 'Portrait' : 'Portrait') : (locale === 'fr' ? 'Paysage' : 'Landscape')}</span>
+              </div>
             </div>
 
-            <div className="bg-white border border-ink-100 rounded-2xl p-6 sm:p-7 space-y-5">
+            <div className="bg-white border border-ink-100 rounded-xl p-8 space-y-6">
               <div className="flex items-baseline justify-between">
                 <div>
-                  <p className="text-[10px] tracking-[0.25em] uppercase text-ink-400 mb-1">
+                  <p className="text-[11px] tracking-[0.2em] uppercase text-ink-400 mb-2">
                     {locale === 'fr' ? 'Téléchargement HD' : 'HD Download'}
                   </p>
-                  <p className="font-display text-4xl text-ink-900 tabular-nums">
-                    {photo.price.toFixed(2)}<span className="text-2xl text-ink-500 ml-1">€</span>
+                  <p className="font-display text-5xl text-ink-900 tabular-nums leading-none">
+                    {photo.price.toFixed(2)}<span className="text-2xl text-ink-500 ml-2">€</span>
                   </p>
                 </div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-ink-400 border border-ink-200 px-2.5 py-1 rounded-full">
+                <span className="text-[10px] tracking-[0.15em] uppercase text-ink-500 border border-ink-200 px-3 py-1.5 rounded-full bg-ink-50">
                   {t('hd')}
                 </span>
               </div>
 
               <details className="text-xs">
-                <summary className="text-ink-500 cursor-pointer hover:text-ink-900 transition-colors select-none list-none flex items-center justify-between">
-                  <span>
-                    {locale === 'fr' ? 'Total carte' : 'Card total'} :{' '}
-                    <span className="font-medium text-ink-900 tabular-nums">
+                <summary className="text-ink-600 cursor-pointer hover:text-ink-900 transition-colors select-none list-none flex items-center justify-between py-2">
+                  <span className="flex items-baseline gap-2">
+                    <span className="font-medium">{locale === 'fr' ? 'Total carte' : 'Card total'}</span>
+                    <span className="font-display text-lg text-ink-900 tabular-nums">
                       {stripeBreakdown.total.toFixed(2)} €
                     </span>
                   </span>
-                  <span className="text-ink-300 text-[10px] uppercase tracking-wider">
-                    {locale === 'fr' ? 'détails' : 'details'}
+                  <span className="text-ink-400 text-[9px] uppercase tracking-wider">
+                    {locale === 'fr' ? 'Détails' : 'Details'}
                   </span>
                 </summary>
-                <div className="mt-3 pt-3 border-t border-ink-100 space-y-1.5 text-ink-500">
+                <div className="mt-4 pt-4 border-t border-ink-100 space-y-2.5 text-ink-600">
                   <div className="flex justify-between">
                     <span>{locale === 'fr' ? 'Photo HD' : 'HD photo'}</span>
-                    <span className="tabular-nums">{stripeBreakdown.amount.toFixed(2)} €</span>
+                    <span className="tabular-nums text-ink-900">{stripeBreakdown.amount.toFixed(2)} €</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{locale === 'fr' ? 'Frais de transaction' : 'Transaction fees'}</span>
-                    <span className="tabular-nums">+ {stripeBreakdown.fees.toFixed(2)} €</span>
+                    <span className="tabular-nums text-ink-900">+ {stripeBreakdown.fees.toFixed(2)} €</span>
                   </div>
-                  <div className="flex justify-between pt-1.5 border-t border-ink-100 font-medium text-ink-900">
+                  <div className="flex justify-between pt-2.5 border-t border-ink-100 font-medium text-ink-900 text-sm">
                     <span>{locale === 'fr' ? 'Total' : 'Total'}</span>
                     <span className="tabular-nums">{stripeBreakdown.total.toFixed(2)} €</span>
                   </div>
-                  <p className="text-[10px] text-ink-400 pt-1">
+                  <p className="text-[9px] text-ink-500 pt-2">
                     {locale === 'fr'
-                      ? `Virement IBAN : sans frais — montant exact ${photo.price.toFixed(2)} €`
+                      ? `Virement IBAN: sans frais — montant exact ${photo.price.toFixed(2)} €`
                       : `IBAN transfer: no fees — exact €${photo.price.toFixed(2)}`}
                   </p>
                 </div>
@@ -172,7 +166,7 @@ export default async function PhotoDetailPage({
               <BuyButton photoId={photo.id} locale={locale} />
             </div>
 
-            <div className="text-xs text-ink-400 leading-relaxed">
+            <div className="text-xs text-ink-500 leading-relaxed space-y-2">
               <p>
                 {locale === 'fr'
                   ? 'Licence personnelle. Le fichier livré contient un filigrane invisible identifiant l\'acheteur.'
@@ -180,9 +174,9 @@ export default async function PhotoDetailPage({
               </p>
               <Link
                 href={`/${locale}/legal/license`}
-                className="inline-block mt-2 underline hover:text-ink-700 transition-colors"
+                className="inline-block text-ink-600 hover:text-ink-900 transition-colors font-medium"
               >
-                {locale === 'fr' ? 'Détails de la licence' : 'License details'}
+                {locale === 'fr' ? 'Détails de la licence →' : 'License details →'}
               </Link>
             </div>
           </div>
@@ -192,14 +186,3 @@ export default async function PhotoDetailPage({
   )
 }
 
-function Meta({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
-  return (
-    <div className="bg-white border border-ink-100 rounded-xl px-4 py-3">
-      <div className="flex items-center gap-1.5 text-ink-400 mb-1">
-        {icon}
-        <span className="text-[10px] tracking-[0.2em] uppercase">{label}</span>
-      </div>
-      <p className="text-sm text-ink-800 truncate">{value}</p>
-    </div>
-  )
-}

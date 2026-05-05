@@ -99,14 +99,14 @@ export default async function ShopPage({
           </div>
 
           {photos.length === 0 ? (
-            <div className="text-center py-24 text-ink-400">
-              <p className="font-display text-2xl mb-2">—</p>
+            <div className="text-center py-32 text-ink-400">
+              <p className="font-display text-2xl mb-3">—</p>
               <p className="text-sm">
                 {locale === 'fr' ? 'Aucune photo ne correspond à ces filtres.' : 'No photo matches these filters.'}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {photos.map(photo => (
                 <PhotoCard key={photo.id} photo={photo} locale={locale} />
               ))}

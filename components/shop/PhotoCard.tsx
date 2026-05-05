@@ -28,7 +28,7 @@ export function PhotoCard({
   return (
     <Link
       href={`/${locale}/shop/${photo.id}`}
-      className="group block relative overflow-hidden bg-ink-100 rounded-lg sm:rounded-xl"
+      className="group block relative overflow-hidden bg-ink-100 rounded-lg"
     >
       <div
         className={cn(
@@ -68,8 +68,9 @@ export function PhotoCard({
           </div>
         </div>
 
-        <div className="sm:hidden absolute inset-x-0 bottom-0 p-3 z-20 bg-gradient-to-t from-black/70 to-transparent">
-          <p className="text-white text-xs font-medium truncate">{label}</p>
+        <div className="sm:hidden absolute inset-x-0 bottom-0 p-4 z-20 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+          <p className="text-white text-xs font-medium line-clamp-2">{label}</p>
+          <p className="text-white/80 text-[11px] mt-1">{t('price', { price: photo.price.toFixed(2) })}</p>
         </div>
       </div>
     </Link>
