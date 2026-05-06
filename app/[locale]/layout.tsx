@@ -45,7 +45,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className="bg-ink-50 text-ink-900 font-sans antialiased">
+      <body className="bg-ink-50 text-ink-900 font-sans">
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main className="min-h-screen">{children}</main>

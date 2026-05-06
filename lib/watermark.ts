@@ -40,7 +40,7 @@ function buildWatermarkSVG(width: number, height: number): Buffer {
       font-family="Georgia, serif"
       font-size="${unit * 0.028}px"
       fill="white" fill-opacity="0.9"
-    >© Nico Garay — photos.nicogaray.com — Tous droits réservés</text>`
+    >© Nico Garay - photos.nicogaray.com - Tous droits réservés</text>`
 
   return Buffer.from(`
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">

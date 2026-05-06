@@ -1,5 +1,5 @@
 /**
- * Wise (TransferWise) — virements IBAN.
+ * Wise (TransferWise) - virements IBAN.
  * Token requis : READ (profil, balances). READ_STATEMENTS pour la vérification auto.
  */
 

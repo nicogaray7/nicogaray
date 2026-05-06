@@ -5,6 +5,7 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/db'
 import { photoPublicLabel } from '@/lib/photoLabel'
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 export default async function CheckoutSuccessPage({
   params,
@@ -42,39 +43,56 @@ export default async function CheckoutSuccessPage({
   const label = photo ? photoPublicLabel(photo, locale) : ''
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-24 text-center">
-      <div className="mb-8">
-        <svg className="w-16 h-16 mx-auto text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
+    <section className="py-32 sm:py-40">
+      <div className="max-w-2xl mx-auto px-5 sm:px-8">
+        <div className="text-center">
+          <div className="mb-8 flex justify-center">
+            <svg className="w-16 h-16 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
 
-      <h1 className="font-serif text-4xl text-stone-800 mb-4">{t('title')}</h1>
-      {label && <p className="text-stone-500 mb-8 text-lg">{label}</p>}
-      <p className="text-stone-500 mb-8">{t('message')}</p>
+          <h1 className="font-display text-5xl sm:text-6xl text-ink-900 mb-6">
+            {t('title')}
+          </h1>
 
-      {downloadUrl && (
-        <div className="space-y-4">
-          <a
-            href={downloadUrl}
-            className="inline-block bg-stone-900 text-white text-sm tracking-wide px-8 py-3 rounded hover:bg-stone-700 transition-colors"
-          >
-            {t('download')}
-          </a>
-          <p className="text-xs text-stone-400">
-            {t('expiry', { max: order?.downloadMax ?? 3 })}
+          {label && (
+            <p className="text-ink-700 mb-8 text-lg sm:text-xl">
+              {label}
+            </p>
+          )}
+
+          <p className="text-ink-600 mb-10 text-base sm:text-lg">
+            {t('message')}
           </p>
+
+          {downloadUrl && (
+            <div className="space-y-6 mb-12">
+              <a
+                href={downloadUrl}
+                className="inline-block bg-accent-500 text-white text-sm tracking-widest uppercase px-10 py-3 hover:bg-accent-600 transition-colors font-medium"
+              >
+                {t('download')}
+              </a>
+              <p className="text-xs text-ink-600">
+                {t('expiry', { max: order?.downloadMax ?? 3 })}
+              </p>
+            </div>
+          )}
+
+          <p className="text-xs text-ink-600 mb-10">
+            {t('email')}
+          </p>
+
+          <Link
+            href={`/${locale}/shop`}
+            className="inline-flex items-center gap-2 text-accent-500 text-sm tracking-wider uppercase hover:text-accent-600 transition-colors"
+          >
+            {locale === 'fr' ? 'Retour à la boutique' : 'Back to shop'}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-      )}
-
-      <p className="text-xs text-stone-400 mt-6">{t('email')}</p>
-
-      <Link
-        href={`/${locale}/shop`}
-        className="inline-block mt-8 text-sm text-stone-400 hover:text-stone-700 underline"
-      >
-        ← Retour à la boutique
-      </Link>
-    </div>
+      </div>
+    </section>
   )
 }

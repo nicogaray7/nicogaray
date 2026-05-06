@@ -78,77 +78,82 @@ export function BuyButton({ photoId, locale }: { photoId: string; locale: string
     })
   }
 
-  /* ── Paiement Wise confirmé ─────────────────────────────────────────── */
+  /* ── Transfer confirmed ─────────────────────────────────────────── */
   if (mode === 'wise_paid') {
     return (
-      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center space-y-3 animate-fade-up">
-        <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" strokeWidth={1.5} />
-        <p className="text-emerald-800 font-medium text-sm">
-          {locale === 'fr' ? 'Paiement confirmé' : 'Payment confirmed'}
-        </p>
+      <div className="bg-accent-500/10 border border-accent-500/30 rounded-lg p-6 text-center space-y-4 animate-fade-up">
+        <CheckCircle2 className="w-8 h-8 text-accent-500 mx-auto" strokeWidth={1.5} />
+        <div className="space-y-2">
+          <p className="text-ink-900 font-medium text-sm">
+            {locale === 'fr' ? 'Paiement confirme' : 'Payment confirmed'}
+          </p>
+          <p className="text-ink-700 text-xs">
+            {locale === 'fr' ? 'Acces a votre fichier' : 'Access to your file'}
+          </p>
+        </div>
         <a
           href={downloadUrl}
-          className="block bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium px-5 py-3 rounded-full transition-colors"
+          className="block bg-accent-500 hover:bg-accent-600 text-white text-sm font-medium px-5 py-3 rounded-full transition-colors"
         >
-          {locale === 'fr' ? 'Télécharger la photo HD' : 'Download HD photo'}
+          {locale === 'fr' ? 'Telecharger la photo HD' : 'Download HD photo'}
         </a>
       </div>
     )
   }
 
-  /* ── Wise en attente de validation ──────────────────────────────────── */
+  /* ── Transfer pending validation ──────────────────────────────────── */
   if (mode === 'wise_pending') {
     return (
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 space-y-2 animate-fade-up">
-        <p className="text-amber-800 font-medium text-sm">
-          {locale === 'fr' ? 'Virement enregistré' : 'Transfer registered'}
+      <div className="bg-accent-400/10 border border-accent-400/30 rounded-lg p-6 space-y-3 animate-fade-up">
+        <p className="text-ink-900 font-medium text-sm">
+          {locale === 'fr' ? 'Virement enregistre' : 'Transfer registered'}
         </p>
-        <p className="text-amber-700 text-xs leading-relaxed">
+        <p className="text-ink-700 text-xs leading-relaxed">
           {locale === 'fr'
-            ? "Vous recevrez votre lien de téléchargement par email dès confirmation du virement (généralement sous 24h)."
-            : "You will receive your download link by email once the transfer is confirmed (usually within 24h)."}
+            ? 'Vous recevrez votre lien de telechargement par email des confirmation du virement, generalement sous 24 heures.'
+            : 'You will receive your download link by email once the transfer is confirmed, usually within 24 hours.'}
         </p>
         {wiseOrder && (
-          <p className="text-amber-600 text-xs pt-2 border-t border-amber-100">
-            {locale === 'fr' ? 'Référence' : 'Reference'} : <span className="font-mono font-medium">{wiseOrder.reference}</span>
+          <p className="text-ink-700 text-xs pt-2 border-t border-accent-400/20">
+            <span className="text-accent-400">{locale === 'fr' ? 'Ref' : 'Ref'}:</span> <span className="font-mono">{wiseOrder.reference}</span>
           </p>
         )}
       </div>
     )
   }
 
-  /* ── Vue détails du virement Wise ──────────────────────────────────── */
+  /* ── Transfer details view ──────────────────────────────────────── */
   if (mode === 'wise' && wiseOrder) {
     return (
-      <div className="space-y-4 animate-fade-up">
+      <div className="space-y-5 animate-fade-up">
         <button
           onClick={() => setMode('choice')}
-          className="flex items-center gap-1 text-xs text-ink-500 hover:text-ink-900 transition-colors"
+          className="flex items-center gap-1 text-xs text-accent-400 hover:text-accent-500 transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
           {locale === 'fr' ? 'Retour' : 'Back'}
         </button>
 
-        <div className="bg-ink-50 rounded-xl p-4 space-y-2.5">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-ink-400 mb-3">
-            {locale === 'fr' ? 'Coordonnées du virement' : 'Transfer details'}
+        <div className="bg-ink-150 rounded-lg border border-accent-500/30 p-6 space-y-3">
+          <p className="text-[9px] tracking-[0.2em] uppercase text-accent-400 mb-4">
+            {locale === 'fr' ? 'Coordonnees du virement' : 'Transfer details'}
           </p>
           {[
-            { label: locale === 'fr' ? 'Bénéficiaire' : 'Recipient', value: 'Nico Garay', key: 'name' },
+            { label: locale === 'fr' ? 'Beneficiaire' : 'Recipient', value: 'Nico Garay', key: 'name' },
             { label: 'IBAN',        value: wiseOrder.iban,           key: 'iban'   },
             { label: 'BIC',         value: 'TRWIBEB1XXX',            key: 'bic'    },
             { label: locale === 'fr' ? 'Montant' : 'Amount', value: `${wiseOrder.total} EUR`, key: 'amount' },
-            { label: locale === 'fr' ? 'Référence' : 'Reference', value: wiseOrder.reference, key: 'ref' },
+            { label: locale === 'fr' ? 'Reference' : 'Reference', value: wiseOrder.reference, key: 'ref' },
           ].map(({ label, value, key }) => (
-            <div key={key} className="flex items-center gap-2 text-xs">
-              <span className="text-ink-400 w-24 flex-shrink-0">{label}</span>
-              <span className="text-ink-800 font-mono flex-1 truncate">{value}</span>
+            <div key={key} className="flex items-center gap-3 text-xs">
+              <span className="text-ink-700 w-20 flex-shrink-0">{label}</span>
+              <span className="text-ink-900 font-mono text-xs flex-1 break-all">{value}</span>
               <button
                 onClick={() => copyText(value, key)}
-                className="text-ink-400 hover:text-ink-900 flex-shrink-0 p-1"
-                title="Copier"
+                className="text-ink-600 hover:text-accent-500 flex-shrink-0 p-1 transition-colors"
+                title={locale === 'fr' ? 'Copier' : 'Copy'}
               >
-                {copied === key ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied === key ? <CheckCircle2 className="w-3.5 h-3.5 text-accent-500" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
             </div>
           ))}
@@ -160,54 +165,54 @@ export function BuyButton({ photoId, locale }: { photoId: string; locale: string
           placeholder={locale === 'fr' ? 'Votre email' : 'Your email'}
           value={buyerEmail}
           onChange={e => setBuyerEmail(e.target.value)}
-          className="w-full border border-ink-200 rounded-full px-5 py-3 text-sm text-ink-900 placeholder-ink-300 focus:outline-none focus:border-ink-900 transition-colors"
+          className="w-full border border-accent-500/40 rounded-full px-5 py-3 text-sm text-ink-900 placeholder-ink-600 bg-ink-50 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/30 transition-colors"
         />
 
         <button
           onClick={handleVerify}
           disabled={verifyLoading || !buyerEmail}
-          className="w-full flex items-center justify-center gap-2 bg-ink-900 hover:bg-ink-800 text-white text-sm font-medium px-5 py-3.5 rounded-full transition-colors disabled:opacity-40"
+          className="w-full flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white text-sm font-medium px-5 py-3.5 rounded-full transition-colors disabled:opacity-40"
         >
           {verifyLoading
-            ? <><Loader2 className="w-4 h-4 animate-spin" /> {locale === 'fr' ? 'Vérification…' : 'Verifying…'}</>
-            : <>{locale === 'fr' ? "J'ai effectué le virement" : "I made the transfer"} <ArrowRight className="w-4 h-4" /></>
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> {locale === 'fr' ? 'Verification' : 'Verifying'}</>
+            : <>{locale === 'fr' ? 'Confirmer le virement' : 'Confirm transfer'} <ArrowRight className="w-4 h-4" /></>
           }
         </button>
 
-        <p className="text-ink-400 text-xs text-center">
-          {locale === 'fr' ? 'Délai SEPA : 1–2 jours ouvrés' : 'SEPA: 1–2 business days'}
+        <p className="text-ink-700 text-xs text-center">
+          {locale === 'fr' ? 'SEPA: 1 a 2 jours ouvres' : 'SEPA: 1-2 business days'}
         </p>
       </div>
     )
   }
 
-  /* ── Choix du mode de paiement ─────────────────────────────────────── */
+  /* ── Payment method choice ─────────────────────────────────────── */
   return (
     <div className="flex flex-col gap-3">
       <button
         onClick={handleStripe}
         disabled={loading}
-        className="group flex items-center justify-between gap-2.5 bg-ink-900 hover:bg-ink-800 text-white text-sm font-medium px-6 py-3.5 rounded-full transition-colors disabled:opacity-50"
+        className="group flex items-center justify-between gap-3 bg-accent-500 hover:bg-accent-600 text-white text-sm font-medium px-6 py-3 rounded-full transition-colors disabled:opacity-50"
       >
         <span className="flex items-center gap-2.5">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
           {t('stripe')}
         </span>
         <span className="text-xs text-white/70 font-normal">
-          {locale === 'fr' ? '+ frais 1.5%' : '+ 1.5% fees'}
+          {locale === 'fr' ? '+1.5%' : '+1.5%'}
         </span>
       </button>
       <button
         onClick={handleWise}
         disabled={loading}
-        className="flex items-center justify-between gap-2.5 bg-white border border-ink-200 hover:border-ink-900 text-ink-900 text-sm font-medium px-6 py-3.5 rounded-full transition-colors disabled:opacity-50"
+        className="flex items-center justify-between gap-3 bg-ink-50 border border-accent-500/40 hover:border-accent-500 text-ink-900 text-sm font-medium px-6 py-3 rounded-full transition-colors disabled:opacity-50"
       >
         <span className="flex items-center gap-2.5">
           <Building2 className="w-4 h-4" />
           {t('wise')}
         </span>
-        <span className="text-xs text-ink-400 font-normal">
-          {locale === 'fr' ? 'sans frais' : 'no fees'}
+        <span className="text-xs text-accent-400 font-normal">
+          {locale === 'fr' ? 'Sans frais' : 'No fees'}
         </span>
       </button>
     </div>

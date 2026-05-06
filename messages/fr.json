@@ -7,22 +7,23 @@
   },
   "home": {
     "hero": {
-      "tagline": "Photographe & Voyageur",
-      "cta": "Voir la boutique"
+      "tagline": "Photographie",
+      "cta": "Explorer",
+      "description": "Photographies de mes voyages."
     },
     "map": {
-      "title": "Voyages en images",
-      "subtitle": "Cliquez sur un pays pour explorer les photos"
+      "title": "Explorations",
+      "subtitle": "Cliquez pour explorer par région"
     },
     "about": {
       "title": "À propos",
-      "text": "Je suis Nico Garay, photographe voyageur passionné. J'arpente le monde en quête de lumières uniques, de paysages oubliés et de visages authentiques.",
+      "text": "Je voyage lentement, attentif à la lumière. Chaque photographie est une observation de mon parcours. Disponible en haute résolution pour tirage.",
       "countries": "pays visités",
       "photos": "photos disponibles"
     },
     "featured": {
-      "title": "Dernières photos",
-      "cta": "Voir toute la boutique"
+      "title": "Travaux récents",
+      "cta": "Voir tout"
     }
   },
   "shop": {
@@ -46,7 +47,7 @@
     "buy": "Acheter en HD",
     "price": "{price} €",
     "fees": "Frais de transaction à la charge du client",
-    "size": "Fichier original — {mp} MP, {size} Mo",
+    "size": "Fichier original - {mp} MP, {size} Mo",
     "metadata": {
       "country": "Pays",
       "city": "Ville",
@@ -69,13 +70,13 @@
   },
   "about": {
     "title": "À propos de Nico Garay",
-    "text1": "Depuis plus de dix ans, j'explore le monde avec mon appareil photo.",
-    "text2": "Mes photos sont disponibles en haute résolution, prêtes à être imprimées et accrochées chez vous."
+    "text1": "Je voyage pour observer la lumière et les lieux. Mon appareil m'apprend à regarder.",
+    "text2": "Chaque photographie est une observation. Disponible en haute résolution pour tirage."
   },
   "footer": {
     "cgv": "CGV",
     "license": "Licence",
     "legal": "Mentions légales",
-    "rights": "© {year} Nico Garay — Tous droits réservés"
+    "rights": "© {year} Nico Garay - Tous droits réservés"
   }
 }

@@ -39,7 +39,7 @@ export function calculateStripeTotal(amount: number): PriceBreakdown {
 }
 
 /**
- * Calcule le total pour Wise (virement SEPA EUR — pas de frais côté receveur).
+ * Calcule le total pour Wise (virement SEPA EUR - pas de frais côté receveur).
  */
 export function calculateWiseTotal(amount: number): PriceBreakdown {
   return {

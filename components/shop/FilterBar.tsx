@@ -47,12 +47,12 @@ export function FilterBar({ countries }: { countries: string[] }) {
       <div className="sm:hidden flex items-center justify-between gap-3 mb-6">
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 text-sm bg-white border border-ink-200 px-4 py-2.5 rounded-full text-ink-700 hover:border-ink-400 transition-colors"
+          className="flex items-center gap-2 text-sm bg-ink-50 border border-accent-500/40 px-4 py-2.5 rounded-full text-ink-900 hover:border-accent-500 transition-colors"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           {locale_label(t, 'filter')}
           {activeCount > 0 && (
-            <span className="bg-ink-900 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+            <span className="bg-accent-500 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
               {activeCount}
             </span>
           )}
@@ -60,7 +60,7 @@ export function FilterBar({ countries }: { countries: string[] }) {
         {activeCount > 0 && (
           <button
             onClick={() => router.push(pathname)}
-            className="text-xs text-ink-400 hover:text-ink-700 underline"
+            className="text-xs text-accent-400 hover:text-accent-500 underline"
           >
             {t('all')}
           </button>
@@ -99,7 +99,7 @@ export function FilterBar({ countries }: { countries: string[] }) {
         {activeCount > 0 && (
           <button
             onClick={() => router.push(pathname)}
-            className="ml-2 text-xs tracking-wide uppercase text-ink-400 hover:text-ink-900 transition-colors"
+            className="ml-2 text-xs tracking-wide uppercase text-accent-400 hover:text-accent-500 transition-colors"
           >
             {t('all')}
           </button>
@@ -116,11 +116,11 @@ export function FilterBar({ countries }: { countries: string[] }) {
         <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
         <div
           className={cn(
-            'absolute bottom-0 inset-x-0 bg-white rounded-t-3xl max-h-[85vh] overflow-y-auto transition-transform duration-300',
+            'absolute bottom-0 inset-x-0 bg-ink-50 rounded-t-3xl max-h-[85vh] overflow-y-auto transition-transform duration-300',
             open ? 'translate-y-0' : 'translate-y-full'
           )}
         >
-          <div className="sticky top-0 bg-white px-5 pt-4 pb-3 border-b border-ink-100 flex items-center justify-between">
+          <div className="sticky top-0 bg-ink-50 px-5 pt-4 pb-3 border-b border-accent-500/20 flex items-center justify-between">
             <p className="font-display text-xl text-ink-900">{locale_label(t, 'filter')}</p>
             <button
               onClick={() => setOpen(false)}
@@ -159,18 +159,18 @@ export function FilterBar({ countries }: { countries: string[] }) {
             />
           </div>
 
-          <div className="sticky bottom-0 bg-white border-t border-ink-100 px-5 py-4 flex gap-3">
+          <div className="sticky bottom-0 bg-ink-50 border-t border-accent-500/20 px-5 py-4 flex gap-3">
             {activeCount > 0 && (
               <button
                 onClick={() => { router.push(pathname); setOpen(false) }}
-                className="flex-1 border border-ink-200 text-ink-700 text-sm py-3 rounded-full"
+                className="flex-1 border border-accent-500/40 text-ink-900 text-sm py-3 rounded-full hover:bg-accent-500/10"
               >
                 {t('all')}
               </button>
             )}
             <button
               onClick={() => setOpen(false)}
-              className="flex-1 bg-ink-900 text-white text-sm py-3 rounded-full"
+              className="flex-1 bg-accent-500 text-white text-sm py-3 rounded-full font-medium"
             >
               {locale_label(t, 'apply')}
             </button>
@@ -209,8 +209,8 @@ function DropdownFilter({
         className={cn(
           'flex items-center gap-2 text-sm border px-4 py-2 rounded-full transition-colors',
           selected
-            ? 'bg-ink-900 text-white border-ink-900'
-            : 'bg-white text-ink-700 border-ink-200 hover:border-ink-400'
+            ? 'bg-accent-500 text-white border-accent-500 font-medium'
+            : 'bg-ink-50 text-ink-700 border-accent-500/40 hover:border-accent-500'
         )}
       >
         {selected ? selected.label : label}
@@ -220,12 +220,12 @@ function DropdownFilter({
       {open && (
         <div
           onClick={e => e.stopPropagation()}
-          className="absolute top-full left-0 mt-2 bg-white border border-ink-100 rounded-2xl shadow-xl py-2 z-30 min-w-[200px] max-h-72 overflow-y-auto"
+          className="absolute top-full left-0 mt-2 bg-ink-50 border border-accent-500/30 rounded-2xl shadow-xl py-2 z-40 min-w-[200px] max-h-72 overflow-y-auto"
         >
           {selected && (
             <button
               onClick={() => { onChange(''); setOpen(false) }}
-              className="w-full text-left px-4 py-2 text-xs text-ink-400 hover:bg-ink-50 italic"
+              className="w-full text-left px-4 py-2 text-xs text-accent-400 hover:bg-accent-500/10 italic"
             >
               {locale_label_t('clear')}
             </button>
@@ -236,7 +236,7 @@ function DropdownFilter({
               onClick={() => { onChange(o.value); setOpen(false) }}
               className={cn(
                 'w-full flex items-center justify-between text-left px-4 py-2 text-sm transition-colors',
-                o.value === value ? 'text-ink-900 font-medium bg-ink-50' : 'text-ink-700 hover:bg-ink-50'
+                o.value === value ? 'text-accent-500 font-medium bg-accent-500/10' : 'text-ink-700 hover:bg-ink-150'
               )}
             >
               {o.label}
@@ -261,7 +261,7 @@ function FilterGroup({
 }) {
   return (
     <div>
-      <p className="text-[11px] tracking-[0.25em] uppercase text-ink-400 mb-3">{label}</p>
+      <p className="text-[11px] tracking-[0.25em] uppercase text-accent-400 mb-3">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map(o => (
           <button
@@ -270,8 +270,8 @@ function FilterGroup({
             className={cn(
               'text-sm px-4 py-2 rounded-full border transition-colors',
               o.value === value
-                ? 'bg-ink-900 text-white border-ink-900'
-                : 'bg-white text-ink-700 border-ink-200'
+                ? 'bg-accent-500 text-white border-accent-500 font-medium'
+                : 'bg-ink-50 text-ink-700 border-accent-500/40 hover:bg-accent-500/10'
             )}
           >
             {o.label}

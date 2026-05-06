@@ -1,4 +1,4 @@
-# Déploiement VPS — Nico Garay
+# Déploiement VPS - Nico Garay
 
 ## Prérequis sur le VPS Ubuntu 24
 

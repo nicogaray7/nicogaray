@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       const geo = await reverseGeocode(exif.latitude, exif.longitude)
       country = geo?.country || undefined
       city    = geo?.city    || undefined
-      console.log(`[UPLOAD] Géolocalisation: ${city ?? '—'}, ${country ?? '—'}`)
+      console.log(`[UPLOAD] Géolocalisation: ${city ?? '-'}, ${country ?? '-'}`)
     } else {
       console.log('[UPLOAD] Pas de données GPS dans cette photo')
     }
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    console.log(`[UPLOAD] Photo sauvegardée en DB: ${photo.id} — ${country ?? 'sans pays'}`)
+    console.log(`[UPLOAD] Photo sauvegardée en DB: ${photo.id} - ${country ?? 'sans pays'}`)
     return NextResponse.json({ photo })
 
   } catch (err: unknown) {

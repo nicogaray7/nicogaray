@@ -75,25 +75,25 @@ export function MapSection({
   )
 
   return (
-    <section className="py-20 sm:py-32 bg-ink-50 overflow-hidden">
+    <section className="py-20 sm:py-32 bg-ink-150 overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
 
-        {/* En-tête */}
+        {/* Header */}
         <div className="max-w-2xl mb-12 sm:mb-16">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-ink-400 mb-4">
+          <p className="text-[11px] tracking-[0.3em] uppercase text-accent-400 mb-4">
             {locale === 'fr' ? 'Carnets de voyage' : 'Travel notebook'}
           </p>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink-900 leading-[1] text-balance mb-4">
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink-900 leading-[1] text-balance mb-6">
             {t('title')}
           </h2>
-          <p className="text-ink-500 text-base sm:text-lg text-pretty">
+          <p className="text-ink-700 text-base sm:text-lg leading-relaxed">
             {t('subtitle')}
           </p>
         </div>
 
-        {/* Carte */}
+        {/* Map */}
         <div className="relative">
-          <div className="relative aspect-[2/1] sm:aspect-[16/9] bg-white rounded-2xl overflow-hidden border border-ink-100">
+          <div className="relative aspect-[2/1] sm:aspect-[16/9] bg-ink-50 rounded-lg overflow-hidden border border-accent-500/30">
             <ComposableMap
               width={800}
               height={420}
@@ -118,7 +118,7 @@ export function MapSection({
                         onMouseLeave={() => setHovered(null)}
                         style={{
                           default: {
-                            fill:        isVisited ? '#1a1917' : '#e8e6e0',
+                            fill:        isVisited ? '#ff6b35' : '#e5e3df',
                             stroke:      '#fafaf9',
                             strokeWidth: 0.5,
                             outline:     'none',
@@ -126,7 +126,7 @@ export function MapSection({
                             transition:  'fill 0.3s',
                           },
                           hover: {
-                            fill:    isVisited ? '#9a7b3e' : '#e8e6e0',
+                            fill:    isVisited ? '#ff5522' : '#e5e3df',
                             outline: 'none',
                           },
                           pressed: { outline: 'none' },
@@ -139,25 +139,25 @@ export function MapSection({
             </ComposableMap>
           </div>
 
-          {/* Pays survolé */}
+          {/* Hovered country label */}
           {hovered && (
-            <div className="hidden sm:block absolute top-6 right-6 bg-ink-900 text-white text-sm tracking-wide px-4 py-2 rounded animate-fade-in">
+            <div className="hidden sm:block absolute top-6 right-6 bg-accent-500 text-white text-sm tracking-wide px-4 py-2 rounded-full animate-fade-in font-medium">
               {hovered}
             </div>
           )}
         </div>
 
-        {/* Pays en chips */}
+        {/* Countries chips */}
         <div className="mt-8 sm:mt-12">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-ink-400 mb-4 sm:mb-6">
-            {locale === 'fr' ? 'Pays visités' : 'Countries visited'}
+          <p className="text-[11px] tracking-[0.3em] uppercase text-accent-400 mb-4 sm:mb-6">
+            {locale === 'fr' ? 'Pays visites' : 'Countries visited'}
           </p>
           <div className="flex flex-wrap gap-2">
             {countries.map(c => (
               <button
                 key={c}
                 onClick={() => router.push(`/${locale}/shop?country=${encodeURIComponent(c)}`)}
-                className="text-xs sm:text-sm bg-white text-ink-700 border border-ink-200 px-3.5 py-2 rounded-full hover:bg-ink-900 hover:text-white hover:border-ink-900 transition-all"
+                className="text-xs sm:text-sm bg-ink-50 text-ink-900 border border-accent-500/40 px-3.5 py-2 rounded-full hover:bg-accent-500 hover:text-white hover:border-accent-500 transition-all"
               >
                 {c}
               </button>

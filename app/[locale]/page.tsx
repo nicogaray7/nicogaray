@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic'
 
-import { getTranslations } from 'next-intl/server'
 import { prisma } from '@/lib/db'
 import { HeroSection } from '@/components/home/Hero'
 import { MapSection } from '@/components/home/MapSection'
@@ -15,11 +14,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   return {
-    title: locale === 'fr' ? 'Nico Garay — Photographe Voyageur' : 'Nico Garay — Travel Photographer',
+    title: locale === 'fr' ? 'Nico Garay - Photographie' : 'Nico Garay - Photography',
     description:
       locale === 'fr'
-        ? 'Photos de voyage en haute résolution. Achetez et téléchargez les fichiers HD.'
-        : 'High-resolution travel photography. Buy and download HD files.',
+        ? 'Photographies contemplatives de voyage. Editions numeriques en haute resolution.'
+        : 'Contemplative travel photography. Digital editions in high resolution.',
   }
 }
 

@@ -19,14 +19,15 @@ export function PhotoLocationMap({ latitude, longitude, country, locale }: Props
   const lon = hasGps ? longitude! : fallback![0]
   const lat = hasGps ? latitude!  : fallback![1]
 
-  const scale = hasGps ? 120000 : 900
+  // Keep zoom moderate to avoid rendering a "broken" over-zoomed map.
+  const scale = hasGps ? 2600 : 900
 
   return (
-    <div className="rounded-xl overflow-hidden border border-ink-100 bg-ink-100">
-      <p className="text-[10px] tracking-[0.25em] uppercase text-ink-400 px-4 pt-3 pb-1">
+    <div className="rounded-lg overflow-hidden border border-ink-150 bg-white">
+      <p className="text-[9px] tracking-[0.2em] uppercase text-ink-500 px-4 pt-3 pb-1">
         {locale === 'fr' ? 'Localisation' : 'Location'}
       </p>
-      <div className="relative w-full aspect-[2/1] max-h-[220px]">
+      <div className="relative w-full aspect-[2/1] max-h-[240px]">
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{ center: [lon, lat], scale }}
@@ -41,8 +42,8 @@ export function PhotoLocationMap({ latitude, longitude, country, locale }: Props
                   key={geo.rsmKey}
                   geography={geo}
                   style={{
-                    default: { fill: '#e8e6e0', stroke: '#fafaf9', strokeWidth: 0.4, outline: 'none' },
-                    hover:   { fill: '#e8e6e0', outline: 'none' },
+                    default: { fill: '#EDE8DC', stroke: '#DDD9CF', strokeWidth: 0.4, outline: 'none' },
+                    hover:   { fill: '#EDE8DC', outline: 'none' },
                     pressed: { outline: 'none' },
                   }}
                 />
@@ -50,12 +51,12 @@ export function PhotoLocationMap({ latitude, longitude, country, locale }: Props
             }
           </Geographies>
           <Marker coordinates={[lon, lat]}>
-            <circle r={10} fill="#b8985c" stroke="#fff" strokeWidth={3} />
+            <circle r={8} fill="#2C2416" stroke="#fff" strokeWidth={2.5} />
           </Marker>
         </ComposableMap>
       </div>
       {country && (
-        <p className="text-xs text-ink-600 px-4 pb-3 pt-1">{country}</p>
+        <p className="text-xs text-ink-700 px-4 pb-3 pt-1">{country}</p>
       )}
     </div>
   )

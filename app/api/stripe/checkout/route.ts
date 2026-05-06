@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
             product_data: {
               name:        label,
               description: photo.country
-                ? `Photo HD — ${photo.country}`
+                ? `Photo HD - ${photo.country}`
                 : 'Photo HD',
             },
           },

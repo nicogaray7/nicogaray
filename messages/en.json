@@ -7,22 +7,23 @@
   },
   "home": {
     "hero": {
-      "tagline": "Photographer & Traveler",
-      "cta": "Browse the shop"
+      "tagline": "Photography",
+      "cta": "Explore",
+      "description": "Photographs from my travels."
     },
     "map": {
-      "title": "Travels in pictures",
-      "subtitle": "Click a country to explore photos"
+      "title": "Explorations",
+      "subtitle": "Click to explore by location"
     },
     "about": {
       "title": "About",
-      "text": "I'm Nico Garay, a travel photographer. I roam the world in search of unique lights, forgotten landscapes and authentic faces.",
+      "text": "I travel slowly, paying attention to light. Each photograph is an observation from my journey. Available in high resolution for print.",
       "countries": "countries visited",
       "photos": "photos available"
     },
     "featured": {
-      "title": "Latest photos",
-      "cta": "View the full shop"
+      "title": "Recent work",
+      "cta": "View all"
     }
   },
   "shop": {
@@ -46,7 +47,7 @@
     "buy": "Buy HD",
     "price": "€{price}",
     "fees": "Transaction fees charged to the buyer",
-    "size": "Original file — {mp} MP, {size} MB",
+    "size": "Original file - {mp} MP, {size} MB",
     "metadata": {
       "country": "Country",
       "city": "City",
@@ -69,13 +70,13 @@
   },
   "about": {
     "title": "About Nico Garay",
-    "text1": "For over ten years, I have been exploring the world with my camera.",
-    "text2": "My photos are available in high resolution, ready to be printed and hung in your home."
+    "text1": "I travel to observe light and place. My camera teaches me how to see.",
+    "text2": "Each photograph is what I've observed. Available in high resolution for print."
   },
   "footer": {
     "cgv": "Terms",
     "license": "License",
     "legal": "Legal notice",
-    "rights": "© {year} Nico Garay — All rights reserved"
+    "rights": "© {year} Nico Garay - All rights reserved"
   }
 }

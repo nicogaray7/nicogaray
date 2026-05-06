@@ -30,7 +30,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files — ne jamais committer les secrets
+# env files - ne jamais committer les secrets
 .env
 .env.local
 .env.development.local
@@ -49,3 +49,4 @@ photos-source/
 next-env.d.ts
 
 /app/generated/prisma
+awesome-claude-design/

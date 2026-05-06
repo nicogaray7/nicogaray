@@ -27,9 +27,6 @@ export function Header() {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  // Fermer le menu au changement de route
-  useEffect(() => { setOpen(false) }, [pathname])
-
   const navLinks = [
     { href: `/${locale}`,        label: t('home') },
     { href: `/${locale}/shop`,   label: t('shop') },
@@ -40,35 +37,32 @@ export function Header() {
     <>
       <header
         className={cn(
-          'fixed top-0 inset-x-0 z-40 transition-all duration-500',
+          'fixed top-0 inset-x-0 z-40 transition-all duration-300',
           scrolled || open
-            ? 'bg-white/95 backdrop-blur-lg border-b border-ink-100'
+            ? 'bg-ink-50/95 backdrop-blur-sm border-b border-accent-500/30'
             : 'bg-transparent border-b border-transparent'
         )}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
           <Link
             href={`/${locale}`}
-            className={cn(
-              'font-display text-lg sm:text-xl tracking-tight transition-colors',
-              scrolled || open ? 'text-ink-900' : 'text-ink-900'
-            )}
+            className="font-display text-xl sm:text-2xl text-accent-500"
           >
-            <span className="font-medium">Nico</span>
-            <span className="font-light italic ml-1.5">Garay</span>
+            <span className="font-light">Nico</span>
+            <span className="italic ml-1">Garay</span>
           </Link>
 
           {/* Nav desktop */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-12">
             {navLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'text-[13px] tracking-wider uppercase transition-colors link-underline',
+                  'text-xs tracking-[0.15em] uppercase transition-colors',
                   pathname === link.href
-                    ? 'text-ink-900'
-                    : 'text-ink-500 hover:text-ink-900'
+                    ? 'text-accent-500 font-medium'
+                    : 'text-ink-600 hover:text-ink-900'
                 )}
               >
                 {link.label}
@@ -79,7 +73,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
 
-            {/* Bouton menu mobile */}
+            {/* Menu toggle mobile */}
             <button
               onClick={() => setOpen(!open)}
               aria-label="Menu"
@@ -91,23 +85,21 @@ export function Header() {
         </div>
       </header>
 
-      {/* Menu mobile fullscreen */}
+      {/* Mobile menu */}
       <div
         className={cn(
-          'md:hidden fixed inset-0 z-30 bg-white transition-opacity duration-300',
+          'md:hidden fixed inset-0 z-50 bg-ink-50 transition-opacity duration-300',
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
       >
-        <nav className="flex flex-col items-center justify-center min-h-screen gap-2 px-8">
+        <nav className="flex flex-col items-center justify-center min-h-screen gap-3 px-8">
           {navLinks.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                'font-display text-4xl py-3 transition-colors',
-                pathname === link.href
-                  ? 'text-ink-900 italic'
-                  : 'text-ink-400 hover:text-ink-900',
+                'font-display text-3xl sm:text-4xl transition-colors',
+                pathname === link.href ? 'text-accent-500 italic' : 'text-ink-600 hover:text-ink-900',
                 open && 'animate-fade-up'
               )}
               style={{ animationDelay: `${100 + i * 80}ms` }}
@@ -130,9 +122,9 @@ function LanguageSwitcher() {
   return (
     <Link
       href={newPath}
-      className="text-[10px] tracking-[0.2em] text-ink-400 hover:text-ink-900 transition-colors uppercase"
+      className="text-[10px] tracking-[0.2em] text-ink-600 hover:text-accent-500 transition-colors uppercase"
     >
-      {locale.toUpperCase()} <span className="text-ink-200 mx-0.5">/</span> <span>{otherLocale.toUpperCase()}</span>
+      {locale.toUpperCase()} <span className="text-ink-400 mx-0.5">/</span> <span>{otherLocale.toUpperCase()}</span>
     </Link>
   )
 }
