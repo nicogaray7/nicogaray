@@ -26,6 +26,10 @@ Add the following secrets:
    - Value: `https://photos.nicogaray.com`
    - Public site URL for Next.js build
 
+## Dependency install (CI and Docker)
+
+The repo includes a root `.npmrc` with `legacy-peer-deps=true` so `npm ci` matches the Docker build (React 19 and `react-simple-maps` peer range). **Do not remove** without resolving that peer conflict upstream.
+
 ## SSH Keys Generated
 
 **Fingerprint:** `SHA256:2Ylx02hsd9UTmNh4PK6PHyKTHgPRnUTNT4F8wDKTOEI`
@@ -47,7 +51,17 @@ When you push to `main` branch:
 9. ✅ Restarts containers
 10. ✅ App is live!
 
-## Monitoring Deployments
+You can also run the workflow manually: GitHub → **Actions** → **Build and Deploy** → **Run workflow** (always builds and deploys `main`).
+
+## Verify production matches GitHub
+
+From your machine (SSH access required):
+
+```bash
+ssh root@<VPS_IP> 'cd /root/nico-garay && git fetch origin main && git rev-parse HEAD && git rev-parse origin/main'
+```
+
+The two commit hashes should match after a successful deploy. To compare with GitHub in the browser, open the latest commit on `main` and check it matches the VPS `HEAD`.
 
 - View deployment logs: GitHub repo → Actions tab
 - See real-time status of builds
@@ -70,6 +84,10 @@ git push origin main
 ```
 
 ## Manual Deployment (if needed)
+
+To manually trigger deployment from GitHub (no local/VPS shell): **Actions** → **Build and Deploy** → **Run workflow**.
+
+To update only from the server:
 
 To manually trigger deployment without code changes:
 
