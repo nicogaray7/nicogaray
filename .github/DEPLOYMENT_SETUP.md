@@ -58,7 +58,8 @@ When you push to `main` branch:
 7. ✅ Pulls latest code from GitHub
 8. ✅ Rebuilds Docker image
 9. ✅ Restarts containers
-10. ✅ App is live!
+10. ✅ Confirms VPS `HEAD` matches the deployed revision
+11. ✅ Smoke-tests `GET /api/health` on the public URL
 
 You can also run the workflow manually: GitHub → **Actions** → **Build and Deploy** → **Run workflow** (always builds and deploys `main`).
 
@@ -68,15 +69,34 @@ You can also run the workflow manually: GitHub → **Actions** → **Build and D
 - See real-time status of builds
 - Click on workflow run to see detailed logs
 
+After each deploy, Actions verifies:
+
+1. **VPS git commit** — SHA under `/root/nico-garay` matches the revision built in the workflow.
+2. **`GET /api/health`** — returns HTTP 200 on `NEXT_PUBLIC_SITE_URL` (fallback `https://photos.nicogaray.com`), with retries while containers start.
+
+If either step fails, the workflow fails so you know production may be out of sync.
+
 ## Verify production matches GitHub
 
-From your machine (SSH access required):
+### Automated (recommended)
+
+See the **Assert VPS revision** and **Smoke test production /api/health** steps in the latest **Build and Deploy** run on `main`.
+
+### Manual (SSH)
 
 ```bash
 ssh root@<VPS_IP> 'cd /root/nico-garay && git fetch origin main && git rev-parse HEAD && git rev-parse origin/main'
 ```
 
-The two commit hashes should match after a successful deploy. To compare with GitHub in the browser, open the latest commit on `main` and check it matches the VPS `HEAD`.
+### Manual (HTTP)
+
+```bash
+curl -sfS https://photos.nicogaray.com/api/health
+```
+
+Expect JSON `{"ok":true}` and HTTP 200 after a successful deploy that includes this endpoint.
+
+The two git hashes from SSH should match each other and match the latest `main` commit on GitHub after deploy.
 
 ## Local Development Workflow
 
@@ -122,6 +142,11 @@ docker compose up -d --build
 - Check GitHub Actions logs for specific error
 - Verify all environment variables are set
 - Ensure npm dependencies are up to date
+
+**Smoke test / health fails:**
+
+- Ensure `NEXT_PUBLIC_SITE_URL` matches the URL nginx proxies to (no trailing slash required). Check container logs: `docker compose logs app`
+- First deploy after adding `/api/health` must complete once before this check passes
 
 **Container won't start:**
 
