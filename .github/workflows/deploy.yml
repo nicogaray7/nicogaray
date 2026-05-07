@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -20,6 +21,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Manual runs always build and deploy `main` to match the SSH script below.
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -41,13 +45,21 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
 
+      - name: Record revision to deploy
+        id: revision
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to VPS
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: appleboy/ssh-action@master
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          github.event_name == 'workflow_dispatch'
+        uses: appleboy/ssh-action@v1.2.4
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
+          # Use VPS_SSH_KEY and/or VPS_ROOT_PASSWORD (Hostinger root password in Actions secrets).
           key: ${{ secrets.VPS_SSH_KEY }}
+          password: ${{ secrets.VPS_ROOT_PASSWORD }}
           script: |
             cd /root/nico-garay
             git fetch origin main
@@ -55,3 +67,53 @@ jobs:
             docker compose down
             docker compose up -d --build
             echo "✅ Deployment completed at $(date)"
+
+      - name: Read VPS git HEAD
+        id: vps_git
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          github.event_name == 'workflow_dispatch'
+        uses: appleboy/ssh-action@v1.2.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          password: ${{ secrets.VPS_ROOT_PASSWORD }}
+          capture_stdout: true
+          script: |
+            cd /root/nico-garay && git fetch origin main >/dev/null 2>&1 && git rev-parse HEAD
+
+      - name: Assert VPS revision matches GitHub revision
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          VPS_SHA=$(printf '%s\n' '${{ steps.vps_git.outputs.stdout }}' | grep -oE '[a-f0-9]{40}' | tail -1)
+          EXPECT_SHA='${{ steps.revision.outputs.sha }}'
+          echo "Expected SHA: $EXPECT_SHA"
+          echo "VPS worktree SHA: $VPS_SHA"
+          test -n "$VPS_SHA"
+          test "$VPS_SHA" = "$EXPECT_SHA"
+
+      - name: Smoke test production /api/health
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          github.event_name == 'workflow_dispatch'
+        env:
+          SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          set -euo pipefail
+          BASE="${SITE_URL:-https://photos.nicogaray.com}"
+          BASE="${BASE%/}"
+          for i in $(seq 1 10); do
+            code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 "$BASE/api/health" || echo "000")
+            if [ "$code" = "200" ]; then
+              echo "Health OK (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $code, retry in 6s..."
+            sleep 6
+          done
+          echo "::error::Production health check failed for $BASE/api/health"
+          exit 1
