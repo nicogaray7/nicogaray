@@ -26,6 +26,13 @@ Add the following secrets:
    - Value: `https://photos.nicogaray.com`
    - Public site URL for Next.js build
 
+### Optional secret (Hostinger API)
+
+5. **HOSTINGER_API_TOKEN**
+   - Value: API token from Hostinger hPanel → search **API** → generate token (see [Hostinger API](https://support.hostinger.com/en/articles/10840865-what-is-hostinger-api))
+   - Used only for **Hostinger REST API / CLI** (VPS management, snapshots, etc.); it does **not** replace SSH login
+   - The deploy workflow does **not** read this secret today—add it if you later run Hostinger API calls from Actions or external tooling that expects `HOSTINGER_API_TOKEN` (or map it to `HAPI_API_TOKEN` for the [Hostinger API CLI](https://support.hostinger.com/en/articles/11679133-how-to-use-hostinger-api-cli))
+
 ## SSH Keys Generated
 
 **Fingerprint:** `SHA256:2Ylx02hsd9UTmNh4PK6PHyKTHgPRnUTNT4F8wDKTOEI`
