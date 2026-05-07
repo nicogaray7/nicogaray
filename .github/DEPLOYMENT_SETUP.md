@@ -8,7 +8,7 @@ Go to your GitHub repository → Settings → Secrets and variables → Actions
 
 Add the following secrets:
 
-### Required Secrets:
+### Required secrets
 
 1. **VPS_HOST**
    - Value: Your VPS IP address or domain (e.g., `your-vps-ip`)
@@ -18,13 +18,22 @@ Add the following secrets:
    - Value: `root` (or your VPS username)
    - SSH user for deployment
 
-3. **VPS_SSH_KEY**
-   - Value: [Copy the PRIVATE KEY from below]
-   - ED25519 private key for SSH authentication
-
-4. **NEXT_PUBLIC_SITE_URL**
+3. **NEXT_PUBLIC_SITE_URL**
    - Value: `https://photos.nicogaray.com`
    - Public site URL for Next.js build
+
+### SSH authentication (at least one)
+
+Provide **either** a private key **or** the root password. If **both** `VPS_SSH_KEY` and `VPS_ROOT_PASSWORD` are set, the SSH client uses **key authentication** first (keep only the secret you need if you want password-only deploys).
+
+4. **VPS_SSH_KEY** (recommended)
+   - ED25519 **private** key (full PEM block including `BEGIN` / `END` lines)
+   - Public key must be in `~/.ssh/authorized_keys` on the VPS
+
+5. **VPS_ROOT_PASSWORD** (alternative, e.g. Hostinger root password)
+   - Root password as shown in hPanel / VPS SSH settings
+   - Stored only as a GitHub Actions secret (masked in logs)
+   - Prefer rotating to **key-based auth** when possible
 
 ## Dependency install (CI and Docker)
 
@@ -53,6 +62,12 @@ When you push to `main` branch:
 
 You can also run the workflow manually: GitHub → **Actions** → **Build and Deploy** → **Run workflow** (always builds and deploys `main`).
 
+## Monitoring Deployments
+
+- View deployment logs: GitHub repo → Actions tab
+- See real-time status of builds
+- Click on workflow run to see detailed logs
+
 ## Verify production matches GitHub
 
 From your machine (SSH access required):
@@ -62,10 +77,6 @@ ssh root@<VPS_IP> 'cd /root/nico-garay && git fetch origin main && git rev-parse
 ```
 
 The two commit hashes should match after a successful deploy. To compare with GitHub in the browser, open the latest commit on `main` and check it matches the VPS `HEAD`.
-
-- View deployment logs: GitHub repo → Actions tab
-- See real-time status of builds
-- Click on workflow run to see detailed logs
 
 ## Local Development Workflow
 
@@ -89,8 +100,6 @@ To manually trigger deployment from GitHub (no local/VPS shell): **Actions** →
 
 To update only from the server:
 
-To manually trigger deployment without code changes:
-
 ```bash
 # On your VPS
 cd /root/nico-garay
@@ -102,16 +111,20 @@ docker compose up -d --build
 ## Troubleshooting
 
 **Deployment fails with SSH error:**
-- Verify VPS_SSH_KEY secret is correctly copied (full key including BEGIN/END lines)
-- Check VPS_HOST and VPS_USER are correct
-- Ensure SSH key is added to VPS authorized_keys
+
+- If using **key**: verify `VPS_SSH_KEY` includes the full private key and the matching public key is on the server
+- If using **password**: verify `VPS_ROOT_PASSWORD` matches the VPS root password and `VPS_USER` is correct (often `root`)
+- Confirm `VPS_HOST` is reachable from the internet (SSH port 22 open)
+- On the VPS, ensure `PasswordAuthentication` is allowed if you rely only on password (Hostinger images usually allow this by default)
 
 **Build fails:**
+
 - Check GitHub Actions logs for specific error
 - Verify all environment variables are set
 - Ensure npm dependencies are up to date
 
 **Container won't start:**
+
 - SSH into VPS: `ssh root@<VPS_IP>`
 - Check logs: `docker compose logs app`
 - Verify .env file has all required variables
