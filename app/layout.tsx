@@ -10,8 +10,8 @@ const sans = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Nico Garay — Photographie',
-    template: '%s — Nico Garay',
+    default: 'Nico Garay · Photographie',
+    template: '%s · Nico Garay',
   },
   description: 'Photographies de voyage. Éditions numériques haute résolution.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com'),

@@ -44,7 +44,7 @@ function watermarkSvg(width: number, height: number, large: boolean): Buffer {
 async function fetchKey(key: string): Promise<Buffer> {
   const resp = await r2.send(new GetObjectCommand({ Bucket: R2_BUCKET, Key: key }));
   const chunks: Buffer[] = [];
-  // @ts-expect-error — stream type from AWS SDK is opaque
+  // @ts-expect-error, stream type from AWS SDK is opaque
   for await (const c of resp.Body) chunks.push(Buffer.from(c));
   return Buffer.concat(chunks);
 }

@@ -44,9 +44,9 @@ export default async function AdminOrders() {
                   <td className="p-3 text-ink-muted text-xs whitespace-nowrap">
                     {new Date(o.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </td>
-                  <td className="p-3 text-ink">{o.photo?.title ?? '—'}</td>
+                  <td className="p-3 text-ink">{o.photo?.title ?? '-'}</td>
                   <td className="p-3">
-                    <p className="text-ink">{o.buyerName ?? '—'}</p>
+                    <p className="text-ink">{o.buyerName ?? '-'}</p>
                     <p className="caption text-xs">{o.buyerEmail}</p>
                   </td>
                   <td className="p-3 tabular-nums">{formatPrice(o.total, o.currency)}</td>

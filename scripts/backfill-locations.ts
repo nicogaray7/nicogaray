@@ -117,7 +117,7 @@ async function main() {
   console.log('');
   console.log(`Geocoded: ${ok}`);
   console.log(`Failed:   ${fail}`);
-  console.log(`Countries: ${seenCountries.size} — ${[...seenCountries].join(', ')}`);
+  console.log(`Countries: ${seenCountries.size}, ${[...seenCountries].join(', ')}`);
 }
 
 main()

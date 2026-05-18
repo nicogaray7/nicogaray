@@ -66,7 +66,7 @@ export default async function AdminPhotos() {
                       </Link>
                       {p.titleEn && <p className="caption text-xs">{p.titleEn}</p>}
                     </td>
-                    <td className="p-3 text-ink-muted">{location || '—'}</td>
+                    <td className="p-3 text-ink-muted">{location || '-'}</td>
                     <td className="p-3 tabular-nums">{formatPrice(p.price, p.currency)}</td>
                     <td className="p-3">
                       <div className="flex items-center gap-2 text-[10px] tracking-widest uppercase">

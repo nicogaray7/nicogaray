@@ -1,7 +1,7 @@
 import { ToastProvider } from '@/components/ui/toast';
 
 export const metadata = {
-  title: 'Admin — Nico Garay',
+  title: 'Admin · Nico Garay',
   robots: { index: false, follow: false },
 };
 

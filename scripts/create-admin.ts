@@ -39,7 +39,7 @@ async function main() {
   if (!passwordArg) {
     console.log('  Password: ', password);
     console.log('');
-    console.log('Store this password securely — it will not be shown again.');
+    console.log('Store this password securely, it will not be shown again.');
   } else {
     console.log('  Password:  (provided)');
   }

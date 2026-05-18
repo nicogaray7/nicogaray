@@ -84,7 +84,7 @@ export async function processImage(buffer: Buffer): Promise<ImageVariants> {
         ? 'landscape'
         : 'portrait';
 
-  // Original: untouched, HD, no watermark — what buyers download
+  // Original: untouched, HD, no watermark, what buyers download
   const original = await sharp(buffer).rotate().jpeg({ quality: 92, mozjpeg: true }).toBuffer();
 
   // Preview + thumb: resized AND watermarked

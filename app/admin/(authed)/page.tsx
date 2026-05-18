@@ -71,7 +71,7 @@ export default async function AdminDashboard() {
               {orders.map((o) => (
                 <li key={o.id} className="py-3 flex items-center justify-between gap-4 text-sm">
                   <div className="min-w-0">
-                    <p className="truncate text-ink">{o.photo?.title ?? '—'}</p>
+                    <p className="truncate text-ink">{o.photo?.title ?? '-'}</p>
                     <p className="caption">{o.buyerEmail}</p>
                   </div>
                   <span

@@ -69,10 +69,10 @@ export default async function EditPhotoPage({ params }: { params: { id: string }
             <Info label="Dimensions" value={`${photo.width} × ${photo.height}`} />
             <Info label="Orientation" value={photo.orientation} />
             <Info label="Size" value={`${(photo.fileSize / 1024 / 1024).toFixed(1)} MB`} />
-            <Info label="Camera" value={photo.camera ?? '—'} />
-            <Info label="Lens" value={photo.lens ?? '—'} />
-            <Info label="Date" value={photo.takenAt?.toISOString().slice(0, 10) ?? '—'} />
-            <Info label="GPS" value={photo.latitude && photo.longitude ? `${photo.latitude.toFixed(3)}, ${photo.longitude.toFixed(3)}` : '—'} />
+            <Info label="Camera" value={photo.camera ?? '-'} />
+            <Info label="Lens" value={photo.lens ?? '-'} />
+            <Info label="Date" value={photo.takenAt?.toISOString().slice(0, 10) ?? '-'} />
+            <Info label="GPS" value={photo.latitude && photo.longitude ? `${photo.latitude.toFixed(3)}, ${photo.longitude.toFixed(3)}` : '-'} />
           </dl>
         </div>
 

@@ -23,15 +23,15 @@ export async function sendPurchaseEmail(params: {
 }) {
   const resend = getResend();
   if (!resend) {
-    console.warn('[email] RESEND_API_KEY not set — skipping email');
+    console.warn('[email] RESEND_API_KEY not set, skipping email');
     return;
   }
   const downloadUrl = `${SITE_URL}/${params.locale ?? 'fr'}/download/${params.downloadToken}`;
   const isFr = (params.locale ?? 'fr') === 'fr';
 
   const subject = isFr
-    ? `Votre achat — ${params.photoTitle}`
-    : `Your purchase — ${params.photoTitle}`;
+    ? `Votre achat, ${params.photoTitle}`
+    : `Your purchase, ${params.photoTitle}`;
 
   const body = isFr
     ? `Bonjour,\n\nMerci pour votre achat de "${params.photoTitle}".\n\nVotre fichier HD est prêt au téléchargement :\n${downloadUrl}\n\nLien valable 48 heures, 3 téléchargements maximum.\n\nÀ très vite,\nNico`

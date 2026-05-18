@@ -63,7 +63,7 @@ export function UploadForm() {
           <div className="flex flex-col items-center gap-3 text-ink-muted">
             <UploadCloud className="w-10 h-10" />
             <p className="text-sm">Drag & drop an image here, or click to browse</p>
-            <p className="caption">JPG, PNG, WebP, TIFF — up to 50 MB</p>
+            <p className="caption">JPG, PNG, WebP, TIFF, up to 50 MB</p>
           </div>
         )}
       </div>
