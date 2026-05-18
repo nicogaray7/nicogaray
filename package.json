@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public",
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev",
+    "build": "rm -rf .next/standalone && next build && mkdir -p .next/standalone/nico-garay/.next && cp -r .next/static .next/standalone/nico-garay/.next/static && cp -r public .next/standalone/nico-garay/public",
     "start": "next start",
     "lint": "eslint"
   },

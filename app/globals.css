@@ -10,27 +10,33 @@
   --font-serif:   "Cormorant Garamond", "Georgia", serif;
   --font-display: "Cormorant Garamond", "Georgia", serif;
 
-  /* Warm earth palette */
-  --color-ink-50:  #faf8f6;
-  --color-ink-100: #f5f1ed;
-  --color-ink-150: #ede7e0;
-  --color-ink-200: #e4dcd3;
-  --color-ink-300: #d4ccc0;
-  --color-ink-400: #bfb4a8;
-  --color-ink-500: #a89a8c;
-  --color-ink-600: #8b7860;
-  --color-ink-700: #6b5d4f;
-  --color-ink-800: #4d433b;
-  --color-ink-900: #2d2622;
+  /* Bold artistic palette */
+  --color-ink-50:  #faf9f6;
+  --color-ink-100: #e8e8e8;
+  --color-ink-150: #dcdcdc;
+  --color-ink-200: #d0d0d0;
+  --color-ink-300: #b8b8b8;
+  --color-ink-400: #a0a0a0;
+  --color-ink-500: #888888;
+  --color-ink-600: #707070;
+  --color-ink-700: #585858;
+  --color-ink-800: #3a3a3a;
+  --color-ink-900: #1a1a2e;
 
-  --color-accent-400: #d99a5c;
-  --color-accent-500: #c17f3f;
-  --color-accent-600: #a86a2f;
+  --color-accent-400: #ff8c42;
+  --color-accent-500: #ff6b35;
+  --color-accent-600: #e55a25;
 
-  --color-dark-bg: #2d2622;
-  --color-dark-surface: #4d433b;
-  --color-dark-text: #faf8f6;
-  --color-dark-muted: #d4ccc0;
+  --color-gold-400: #ffd700;
+  --color-gold-500: #f7b801;
+
+  --color-brown-600: #4a3728;
+  --color-brown-700: #3d2817;
+
+  --color-dark-bg: #1a1a2e;
+  --color-dark-surface: #2d2d44;
+  --color-dark-text: #faf9f6;
+  --color-dark-muted: #e8e8e8;
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────── */
@@ -56,8 +62,9 @@ body {
 
 .font-display {
   font-family: var(--font-display);
-  font-weight: 300;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .font-serif {
@@ -150,3 +157,43 @@ img { user-select: none; -webkit-user-drag: none; }
 /* Texte avec effet ink wash */
 .text-balance { text-wrap: balance; }
 .text-pretty  { text-wrap: pretty; }
+
+/* ─── Editorial/Story styles ────────────────────────────────────── */
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-ink-900);
+}
+
+.headline-large {
+  font-size: 3.5rem;
+}
+
+.headline-small {
+  font-size: 1.875rem;
+}
+
+.story-section {
+  background-color: var(--color-ink-900);
+  color: var(--color-dark-text);
+  padding: 4rem 2rem;
+}
+
+.story-section-alt {
+  background-color: white;
+  color: var(--color-ink-900);
+  padding: 4rem 2rem;
+}
+
+.accent-text {
+  color: var(--color-accent-500);
+}
+
+.gold-text {
+  color: var(--color-gold-500);
+}

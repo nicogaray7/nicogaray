@@ -29,7 +29,7 @@ export function FeaturedPhotos({
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section className="py-20 sm:py-32 bg-ink-50 overflow-hidden" ref={ref}>
+    <section className="py-20 sm:py-32 bg-ink-900 overflow-hidden" ref={ref}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
 
         {/* Header */}
@@ -40,16 +40,16 @@ export function FeaturedPhotos({
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <div className="max-w-xl">
-            <p className="text-[11px] tracking-[0.3em] uppercase text-accent-400 mb-4">
+            <p className="text-[11px] tracking-[0.3em] uppercase text-accent-400 mb-4 font-medium">
               {locale === 'fr' ? 'Selection' : 'Selection'}
             </p>
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-ink-900 leading-[1.05] text-balance">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-[0.95] text-balance">
               {t('title')}
             </h2>
           </div>
           <Link
             href={`/${locale}/shop`}
-            className="group inline-flex items-center gap-3 self-start sm:self-end text-accent-500 border-b border-accent-500/50 hover:border-accent-500 pb-2 text-sm tracking-[0.15em] uppercase transition-colors font-medium"
+            className="group inline-flex items-center gap-3 self-start sm:self-end text-white border-b border-white/40 hover:border-white pb-2 text-sm tracking-[0.15em] uppercase transition-colors font-medium"
           >
             {t('cta')}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

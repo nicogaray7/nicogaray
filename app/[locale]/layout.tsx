@@ -2,8 +2,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
+import { MinimalNav } from '@/components/layout/MinimalNav'
 import type { Metadata } from 'next'
 import '../globals.css'
 
@@ -47,9 +46,8 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className="bg-ink-50 text-ink-900 font-sans">
         <NextIntlClientProvider messages={messages}>
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <MinimalNav />
+          <main className="min-h-screen pt-20">{children}</main>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -13,9 +13,22 @@ interface Props {
   width?: number
   height?: number
   sizes?: string
+  copyrightLabel?: string
+  copyrightClassName?: string
 }
 
-export function ProtectedImage({ src, alt, fill, className, priority, width, height, sizes }: Props) {
+export function ProtectedImage({
+  src,
+  alt,
+  fill,
+  className,
+  priority,
+  width,
+  height,
+  sizes,
+  copyrightLabel,
+  copyrightClassName,
+}: Props) {
   return (
     <div
       className={cn('relative select-none', fill ? 'absolute inset-0' : '')}
@@ -36,6 +49,17 @@ export function ProtectedImage({ src, alt, fill, className, priority, width, hei
       />
       {/* Overlay bloquant l'interaction directe */}
       <div className="absolute inset-0 z-10" aria-hidden="true" />
+      {copyrightLabel && (
+        <span
+          className={cn(
+            'absolute bottom-2 right-2 z-20 rounded-full bg-black/45 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white/90 backdrop-blur-sm transition-opacity duration-300',
+            copyrightClassName,
+          )}
+          aria-hidden="true"
+        >
+          {copyrightLabel}
+        </span>
+      )}
     </div>
   )
 }
