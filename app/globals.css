@@ -14,7 +14,7 @@
   --color-bg-primary:   #ffffff;
   --color-bg-secondary: #fafafa;
   --color-bg-tertiary:  #f5f5f5;
-  
+
   --color-text-primary:    #0a0a0a;
   --color-text-secondary:  #5a5a5a;
   --color-text-muted:      #8a8a8a;
@@ -28,6 +28,16 @@
   --color-accent-light:     #e8f4f8;
 
   --color-overlay-dark: rgba(0, 0, 0, 0.08);
+
+  /* Ink color system (for component compatibility) */
+  --color-ink-50:   #fafafa;
+  --color-ink-200:  #e5e5e5;
+  --color-ink-300:  #f0f0f0;
+  --color-ink-500:  #7a7a7a;
+  --color-ink-600:  #5a5a5a;
+  --color-ink-700:  #3a3a3a;
+  --color-ink-800:  #2a2a2a;
+  --color-ink-900:  #0a0a0a;
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────── */
@@ -232,3 +242,67 @@ a:focus-visible {
   outline: 2px solid var(--color-accent-primary);
   outline-offset: 4px;
 }
+
+/* ─── Tailwind Color Utility Classes ──────────────────────────── */
+
+/* Background colors - Modern luxury system */
+.bg-white { background-color: var(--color-bg-primary); }
+.bg-bg-secondary { background-color: var(--color-bg-secondary); }
+.bg-bg-tertiary { background-color: var(--color-bg-tertiary); }
+.bg-accent-primary { background-color: var(--color-accent-primary); }
+.bg-accent-secondary { background-color: var(--color-accent-secondary); }
+.bg-accent-light { background-color: var(--color-accent-light); }
+
+/* Text colors - Modern luxury system */
+.text-text-primary { color: var(--color-text-primary); }
+.text-text-secondary { color: var(--color-text-secondary); }
+.text-text-muted { color: var(--color-text-muted); }
+.text-text-light { color: var(--color-text-light); }
+.text-accent-primary { color: var(--color-accent-primary); }
+.text-accent-secondary { color: var(--color-accent-secondary); }
+
+/* Border colors - Modern luxury system */
+.border-accent-primary { border-color: var(--color-accent-primary); }
+.border-border { border-color: var(--color-border); }
+.border-border-light { border-color: var(--color-border-light); }
+
+/* Background colors - Ink system */
+.bg-ink-50 { background-color: var(--color-ink-50); }
+.bg-ink-200 { background-color: var(--color-ink-200); }
+.bg-ink-300 { background-color: var(--color-ink-300); }
+.bg-ink-500 { background-color: var(--color-ink-500); }
+.bg-ink-600 { background-color: var(--color-ink-600); }
+.bg-ink-700 { background-color: var(--color-ink-700); }
+.bg-ink-800 { background-color: var(--color-ink-800); }
+.bg-ink-900 { background-color: var(--color-ink-900); }
+
+/* Text colors - Ink system */
+.text-ink-50 { color: var(--color-ink-50); }
+.text-ink-200 { color: var(--color-ink-200); }
+.text-ink-300 { color: var(--color-ink-300); }
+.text-ink-500 { color: var(--color-ink-500); }
+.text-ink-600 { color: var(--color-ink-600); }
+.text-ink-700 { color: var(--color-ink-700); }
+.text-ink-800 { color: var(--color-ink-800); }
+.text-ink-900 { color: var(--color-ink-900); }
+
+/* Border colors - Ink system */
+.border-ink-50 { border-color: var(--color-ink-50); }
+.border-ink-200 { border-color: var(--color-ink-200); }
+.border-ink-300 { border-color: var(--color-ink-300); }
+.border-ink-500 { border-color: var(--color-ink-500); }
+.border-ink-600 { border-color: var(--color-ink-600); }
+.border-ink-700 { border-color: var(--color-ink-700); }
+.border-ink-800 { border-color: var(--color-ink-800); }
+.border-ink-900 { border-color: var(--color-ink-900); }
+
+/* Accent color utilities */
+.text-accent-500 { color: var(--color-accent-primary); }
+.border-accent-500 { border-color: var(--color-accent-primary); }
+
+/* Gradient backgrounds */
+.bg-gradient-subtle { background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%); }
+
+/* Hover states */
+.hover\:bg-accent-secondary:hover { background-color: var(--color-accent-secondary); }
+.hover\:text-accent-500:hover { color: var(--color-accent-primary); }
