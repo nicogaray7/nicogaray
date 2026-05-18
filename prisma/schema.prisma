@@ -37,10 +37,12 @@ model Photo {
   height      Int    @default(0)
 
   // EXIF / metadata
-  country   String?
-  city      String?
-  latitude  Float?
-  longitude Float?
+  country     String?
+  countryCode String? // ISO 3166-1 alpha-2 (eg "FR", "JP") — used by the world map
+  region      String?
+  city        String?
+  latitude    Float?
+  longitude   Float?
   takenAt   DateTime?
   camera    String?
   lens      String?
@@ -66,7 +68,21 @@ model Photo {
 
   @@index([published, featured])
   @@index([country])
+  @@index([countryCode])
   @@index([sortOrder])
+  @@index([takenAt])
+}
+
+model Country {
+  code     String  @id // ISO 3166-1 alpha-2
+  nameFr   String
+  nameEn   String
+  intro    String? // markdown intro shown on /country/[code]
+  introEn  String?
+  cover    String? // optional R2 key of a hero image
+  visitedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Order {
