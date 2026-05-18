@@ -12,7 +12,8 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "img-src 'self' data: blob:",
-      "style-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' js.stripe.com",
       "frame-src js.stripe.com",
       "connect-src 'self' api.stripe.com https://cdn.jsdelivr.net https://api.bigdatacloud.net",
