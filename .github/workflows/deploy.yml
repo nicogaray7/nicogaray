@@ -28,7 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Generate Prisma client so TypeScript types are available for the build
       - name: Generate Prisma client
         run: npx prisma generate
 
@@ -47,51 +46,66 @@ jobs:
         id: revision
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy to VPS
+      - name: Deploy to VPS via SSH
         if: |
           (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
           github.event_name == 'workflow_dispatch'
-        uses: appleboy/ssh-action@v1.2.4
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          password: ${{ secrets.VPS_ROOT_PASSWORD }}
-          script: |
-            set -euo pipefail
-            cd /root/nico-garay
-            git fetch origin main
-            git reset --hard origin/main
-            docker compose up -d --build
-            echo "✅ Deployed $(git rev-parse --short HEAD) at $(date)"
-
-      - name: Read VPS git HEAD
-        id: vps_git
-        if: |
-          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          github.event_name == 'workflow_dispatch'
-        uses: appleboy/ssh-action@v1.2.4
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          password: ${{ secrets.VPS_ROOT_PASSWORD }}
-          capture_stdout: true
-          script: |
-            cd /root/nico-garay && git rev-parse HEAD
-
-      - name: Assert VPS revision matches GitHub revision
-        if: |
-          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          github.event_name == 'workflow_dispatch'
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
         run: |
           set -euo pipefail
-          VPS_SHA=$(printf '%s\n' '${{ steps.vps_git.outputs.stdout }}' | grep -oE '[a-f0-9]{40}' | tail -1)
-          EXPECT_SHA='${{ steps.revision.outputs.sha }}'
+
+          # Write private key
+          echo "$VPS_SSH_KEY" > /tmp/vps_deploy_key
+          chmod 600 /tmp/vps_deploy_key
+
+          SSH_OPTS="-i /tmp/vps_deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            -o ServerAliveInterval=30 \
+            -o BatchMode=yes"
+
+          echo "→ Testing SSH connection..."
+          ssh $SSH_OPTS ${VPS_USER}@${VPS_HOST} "echo '✅ SSH OK — $(hostname)'"
+
+          echo "→ Deploying..."
+          ssh $SSH_OPTS ${VPS_USER}@${VPS_HOST} bash << 'REMOTE'
+            set -euo pipefail
+            cd /root/nico-garay
+            echo "Current SHA before: $(git rev-parse --short HEAD)"
+            git fetch origin main
+            git reset --hard origin/main
+            echo "Current SHA after:  $(git rev-parse --short HEAD)"
+            docker compose up -d --build
+            echo "✅ Deployed at $(date)"
+          REMOTE
+
+          rm -f /tmp/vps_deploy_key
+
+      - name: Verify VPS SHA matches deployed revision
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          github.event_name == 'workflow_dispatch'
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          EXPECT_SHA: ${{ steps.revision.outputs.sha }}
+        run: |
+          set -euo pipefail
+          echo "$VPS_SSH_KEY" > /tmp/vps_deploy_key
+          chmod 600 /tmp/vps_deploy_key
+
+          VPS_SHA=$(ssh -i /tmp/vps_deploy_key \
+            -o StrictHostKeyChecking=no -o ConnectTimeout=20 -o BatchMode=yes \
+            ${VPS_USER}@${VPS_HOST} "cd /root/nico-garay && git rev-parse HEAD")
+          rm -f /tmp/vps_deploy_key
+
           echo "Expected : $EXPECT_SHA"
           echo "VPS HEAD : $VPS_SHA"
-          test -n "$VPS_SHA"
-          test "$VPS_SHA" = "$EXPECT_SHA"
+          test "$VPS_SHA" = "$EXPECT_SHA" && echo "✅ SHA match" || (echo "❌ SHA mismatch" && exit 1)
 
       - name: Smoke test /api/health
         if: |
@@ -112,5 +126,5 @@ jobs:
             echo "Attempt $i: HTTP $code — retry in 10s..."
             sleep 10
           done
-          echo "::error::Health check failed after 2 min for $BASE/api/health"
+          echo "::error::Health check failed after 2 min — $BASE/api/health"
           exit 1
