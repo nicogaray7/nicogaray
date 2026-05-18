@@ -3,49 +3,87 @@ import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { FilterBar } from '@/components/gallery/FilterBar';
+import type { Prisma } from '@prisma/client';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
-async function getPhotos() {
+interface GallerySearchParams {
+  country?: string;
+  orientation?: string;
+  sort?: string;
+}
+
+async function getCountries() {
   try {
-    return await prisma.photo.findMany({
-      where: { published: true },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+    const rows = await prisma.photo.findMany({
+      where: { published: true, country: { not: null } },
+      select: { country: true },
+      distinct: ['country'],
+      orderBy: { country: 'asc' },
     });
+    return rows.map((r) => r.country!).filter(Boolean);
   } catch {
     return [];
   }
 }
 
-export default async function GalleryPage({ params }: { params: { locale: string } }) {
+async function getPhotos(params: GallerySearchParams) {
+  try {
+    const where: Prisma.PhotoWhereInput = { published: true };
+    if (params.country) where.country = params.country;
+    if (params.orientation) where.orientation = params.orientation;
+
+    const orderBy: Prisma.PhotoOrderByWithRelationInput[] =
+      params.sort === 'priceAsc'
+        ? [{ price: 'asc' }, { createdAt: 'desc' }]
+        : params.sort === 'priceDesc'
+          ? [{ price: 'desc' }, { createdAt: 'desc' }]
+          : [{ sortOrder: 'asc' }, { createdAt: 'desc' }];
+
+    return await prisma.photo.findMany({ where, orderBy });
+  } catch {
+    return [];
+  }
+}
+
+export default async function GalleryPage({
+  params,
+  searchParams,
+}: {
+  params: { locale: string };
+  searchParams: GallerySearchParams;
+}) {
   setRequestLocale(params.locale);
-  const photos = await getPhotos();
-  return <GalleryView photos={photos} locale={params.locale} />;
+  const [photos, countries] = await Promise.all([getPhotos(searchParams), getCountries()]);
+  return <GalleryView photos={photos} countries={countries} locale={params.locale} />;
 }
 
 function GalleryView({
   photos,
+  countries,
   locale,
 }: {
   photos: Awaited<ReturnType<typeof getPhotos>>;
+  countries: string[];
   locale: string;
 }) {
   const t = useTranslations('gallery');
   return (
     <>
-      <section className="py-24 sm:py-32 border-b border-line">
+      <section className="py-24 sm:py-32">
         <Container>
           <div className="max-w-2xl space-y-6">
             <p className="eyebrow text-accent">{t('title')}</p>
             <h1 className="text-display-xl font-display text-ink">{t('title')}</h1>
             <p className="prose-editorial">{t('subtitle')}</p>
-            <p className="caption">{t('results', { count: photos.length })}</p>
           </div>
         </Container>
       </section>
 
-      <section className="py-12 sm:py-16">
+      <section className="pb-24">
         <Container>
+          <FilterBar countries={countries} total={photos.length} />
           {photos.length === 0 ? (
             <div className="border border-dashed border-line py-32 text-center">
               <p className="caption">{t('empty')}</p>
