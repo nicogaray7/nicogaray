@@ -1,0 +1,27 @@
+{
+  "common": {
+    "home": "Accueil",
+    "gallery": "Galerie",
+    "about": "À propos",
+    "shop": "Boutique",
+    "back": "Retour",
+    "loading": "Chargement…"
+  },
+  "home": {
+    "tagline": "Photographie de voyage",
+    "title": "Nico Garay",
+    "subtitle": "Capturer la beauté brute du monde, un voyage à la fois.",
+    "cta": "Explorer la galerie",
+    "featured": "Histoires récentes",
+    "seeAll": "Voir tout",
+    "about": {
+      "title": "Voyage et photographie",
+      "text": "Je voyage lentement, attentif à la lumière. Chaque photographie est une observation de mon parcours.",
+      "cta": "En savoir plus"
+    }
+  },
+  "footer": {
+    "rights": "© {year} Nico Garay. Tous droits réservés.",
+    "edition": "Édition numérique"
+  }
+}
