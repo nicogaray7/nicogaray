@@ -47,12 +47,11 @@ export function ProtectedImage({
         className={cn(className)}
         style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
       />
-      {/* Overlay bloquant l'interaction directe */}
       <div className="absolute inset-0 z-10" aria-hidden="true" />
       {copyrightLabel && (
         <span
           className={cn(
-            'absolute bottom-2 right-2 z-20 rounded-full bg-black/45 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white/90 backdrop-blur-sm transition-opacity duration-300',
+            'absolute bottom-2 right-2 z-20 bg-black/50 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white/80 backdrop-blur-sm',
             copyrightClassName,
           )}
           aria-hidden="true"

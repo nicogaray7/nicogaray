@@ -1,8 +1,19 @@
 export const dynamic = 'force-dynamic'
 
-import { getTranslations } from 'next-intl/server'
 import { prisma } from '@/lib/db'
 import { PhotoGrid } from '@/components/PhotoGrid'
+import type { Metadata } from 'next'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: locale === 'fr' ? 'Galerie | Nico Garay' : 'Gallery | Nico Garay',
+  }
+}
 
 export default async function ShopPage({
   params,
@@ -10,7 +21,7 @@ export default async function ShopPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const t = await getTranslations('shop')
+  const en = locale === 'en'
 
   const photos = await prisma.photo.findMany({
     where: { published: true },
@@ -27,27 +38,29 @@ export default async function ShopPage({
   })
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-12 sm:pt-16 pb-20 sm:pb-32">
+    <div className="min-h-screen pt-24 sm:pt-32 pb-20 sm:pb-32">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
         {/* Header */}
         <div className="mb-12 sm:mb-16">
-          <h1 className="font-display text-4xl sm:text-6xl text-ink-900 mb-4 leading-tight">
-            {locale === 'fr' ? 'Galerie' : 'Gallery'}
+          <p className="text-[10px] tracking-[0.25em] uppercase text-accent mb-3">
+            Collection
+          </p>
+          <h1 className="font-display text-4xl sm:text-6xl text-foreground mb-4 leading-tight">
+            {en ? 'Gallery' : 'Galerie'}
           </h1>
-          <p className="text-lg text-ink-700 max-w-2xl">
-            {locale === 'fr'
-              ? 'Éditions numériques haute résolution avec licence personnelle'
-              : 'High-resolution digital editions with personal license'}
+          <p className="text-foreground-dim max-w-xl">
+            {en
+              ? 'High-resolution digital editions with personal-use license. Each file is delivered with invisible watermark traceability.'
+              : 'Editions numeriques haute resolution avec licence personnelle. Chaque fichier est livre avec tracabilite par filigrane invisible.'}
           </p>
         </div>
 
-        {/* Photo Grid */}
         {photos.length > 0 ? (
           <PhotoGrid photos={photos} locale={locale} />
         ) : (
-          <div className="text-center py-20">
-            <p className="text-ink-600">
-              {locale === 'fr' ? 'Aucune photo disponible' : 'No photos available'}
+          <div className="text-center py-24">
+            <p className="text-foreground-muted">
+              {en ? 'No photos available yet' : 'Aucune photo disponible'}
             </p>
           </div>
         )}

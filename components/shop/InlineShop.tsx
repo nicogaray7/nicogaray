@@ -30,35 +30,32 @@ export function InlineShop({
   width,
   height,
   fileSize,
-  orientation,
   locale,
 }: InlineShopProps) {
-  const isEnglish = locale === 'en'
-  const licenseText = isEnglish
-    ? 'Personal license. Delivered file contains an invisible watermark identifying the buyer.'
-    : 'Licence personnelle. Le fichier livre contient un filigrane invisible identifiant l acheteur.'
+  const en = locale === 'en'
 
   return (
-    <section className="py-16 sm:py-24 bg-ink-50 border-t border-ink-200">
+    <section className="py-12 sm:py-20 border-t border-line">
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+          {/* Info */}
           <div className="lg:col-span-2 space-y-8">
             <div>
-              <h2 className="font-display text-3xl sm:text-4xl text-ink-900 mb-4 tracking-tight">
+              <h2 className="font-display text-3xl sm:text-4xl text-foreground mb-4 tracking-tight">
                 {title}
               </h2>
               {description && (
-                <p className="text-lg text-ink-700 leading-relaxed">
+                <p className="text-foreground-dim text-lg leading-relaxed">
                   {description}
                 </p>
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-ink-600">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-foreground-dim">
               {takenAt && (
                 <span className="inline-flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-accent-500" />
-                  {new Date(takenAt).toLocaleDateString(isEnglish ? 'en-GB' : 'fr-FR', {
+                  <Calendar className="w-4 h-4 text-accent" />
+                  {new Date(takenAt).toLocaleDateString(en ? 'en-GB' : 'fr-FR', {
                     year: 'numeric',
                     month: 'long',
                   })}
@@ -66,30 +63,31 @@ export function InlineShop({
               )}
               {(country || city) && (
                 <span className="inline-flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-accent-500" />
+                  <MapPin className="w-4 h-4 text-accent" />
                   {[city, country].filter(Boolean).join(', ')}
                 </span>
               )}
-              <span className="text-ink-600">
-                {formatMegapixels(width, height)} · {formatFileSize(fileSize)}
+              <span className="text-foreground-muted">
+                {formatMegapixels(width, height)} MP / {formatFileSize(fileSize)} MB
               </span>
             </div>
           </div>
 
+          {/* Purchase card */}
           <div className="lg:sticky lg:top-24 lg:h-fit">
-            <div className="bg-white border-2 border-accent-500 rounded-lg p-8 space-y-6">
+            <div className="bg-surface-card border border-line p-8 space-y-6">
               <div>
-                <p className="text-xs font-bold tracking-widest uppercase text-accent-500 mb-2">
-                  {isEnglish ? 'Get This Photo' : 'Achetez cette photo'}
+                <p className="text-[10px] tracking-[0.2em] uppercase text-accent mb-2">
+                  {en ? 'Digital Edition' : 'Edition Numerique'}
                 </p>
-                <p className="font-display text-4xl text-ink-900 tabular-nums">
-                  ${price.toFixed(2)}
+                <p className="font-display text-4xl text-foreground tabular-nums">
+                  {price.toFixed(0)}&euro;
                 </p>
               </div>
 
-              <div className="border-t border-ink-200 pt-4">
-                <p className="text-xs text-ink-600 mb-4">
-                  {isEnglish
+              <div className="border-t border-line pt-4">
+                <p className="text-xs text-foreground-muted mb-4">
+                  {en
                     ? 'High-resolution HD file with personal license'
                     : 'Fichier HD haute resolution avec licence personnelle'}
                 </p>
@@ -97,9 +95,11 @@ export function InlineShop({
 
               <BuyButton photoId={photoId} locale={locale} />
 
-              <div className="text-[10px] text-ink-500 leading-relaxed">
-                <p>{licenseText}</p>
-              </div>
+              <p className="text-[10px] text-foreground-muted leading-relaxed">
+                {en
+                  ? 'Personal license. Delivered file contains an invisible watermark identifying the buyer.'
+                  : 'Licence personnelle. Le fichier livre contient un filigrane invisible identifiant l\'acheteur.'}
+              </p>
             </div>
           </div>
         </div>

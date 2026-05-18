@@ -1,52 +1,48 @@
 {
   "nav": {
     "home": "Accueil",
-    "shop": "Boutique",
-    "about": "À propos",
+    "shop": "Galerie",
+    "about": "A propos",
     "admin": "Admin"
   },
   "home": {
     "hero": {
-      "tagline": "Photographie",
-      "cta": "Explorer",
-      "description": "Photographies de mes voyages."
-    },
-    "map": {
-      "title": "Explorations",
-      "subtitle": "Cliquez pour explorer par région"
+      "tagline": "Photographie de Voyage",
+      "cta": "Explorer la galerie",
+      "description": "Capturer la beaute brute du monde, un voyage a la fois."
     },
     "about": {
-      "title": "À propos",
-      "text": "Je voyage lentement, attentif à la lumière. Chaque photographie est une observation de mon parcours. Disponible en haute résolution pour tirage.",
-      "countries": "pays visités",
-      "photos": "photos disponibles"
+      "title": "Voyage & Photographie",
+      "text": "Je voyage lentement, attentif a la lumiere. Chaque photographie est une observation de mon parcours.",
+      "countries": "pays",
+      "photos": "photos"
     },
     "featured": {
-      "title": "Travaux récents",
+      "title": "Dernieres Histoires",
       "cta": "Voir tout"
     }
   },
   "shop": {
-    "title": "Boutique",
+    "title": "Galerie",
     "filters": {
       "country": "Pays",
       "orientation": "Orientation",
       "sort": "Trier",
       "all": "Tout effacer",
       "filter": "Filtres",
-      "apply": "Voir les résultats",
+      "apply": "Voir les resultats",
       "landscape": "Paysage",
       "portrait": "Portrait",
-      "square": "Carré",
-      "recent": "Plus récentes",
+      "square": "Carre",
+      "recent": "Plus recentes",
       "priceAsc": "Prix croissant",
-      "priceDesc": "Prix décroissant"
+      "priceDesc": "Prix decroissant"
     },
     "results": "{count} photo(s)",
     "hd": "HD disponible",
     "buy": "Acheter en HD",
-    "price": "{price} €",
-    "fees": "Frais de transaction à la charge du client",
+    "price": "{price} EUR",
+    "fees": "Frais de transaction a la charge du client",
     "size": "Fichier original - {mp} MP, {size} Mo",
     "metadata": {
       "country": "Pays",
@@ -59,24 +55,24 @@
     "title": "Paiement",
     "stripe": "Payer par carte",
     "wise": "Virement IBAN",
-    "wise_instructions": "Effectuez un virement avec la référence indiquée. Votre lien de téléchargement sera envoyé après confirmation.",
+    "wise_instructions": "Effectuez un virement avec la reference indiquee. Votre lien de telechargement sera envoye apres confirmation.",
     "success": {
-      "title": "Merci pour votre achat !",
-      "message": "Votre fichier HD est prêt au téléchargement.",
-      "download": "Télécharger la photo HD",
-      "expiry": "Lien valable 48h · {max} téléchargements maximum",
-      "email": "Un email de confirmation vous a été envoyé."
+      "title": "Merci pour votre achat",
+      "message": "Votre fichier HD est pret au telechargement.",
+      "download": "Telecharger la photo HD",
+      "expiry": "Lien valable 48h, {max} telechargements maximum",
+      "email": "Un email de confirmation vous a ete envoye."
     }
   },
   "about": {
-    "title": "À propos de Nico Garay",
-    "text1": "Je voyage pour observer la lumière et les lieux. Mon appareil m'apprend à regarder.",
-    "text2": "Chaque photographie est une observation. Disponible en haute résolution pour tirage."
+    "title": "Nico Garay",
+    "text1": "Je voyage pour observer la lumiere et les lieux. Mon appareil m'apprend a regarder.",
+    "text2": "Chaque photographie est une observation. Disponible en haute resolution pour tirage."
   },
   "footer": {
     "cgv": "CGV",
     "license": "Licence",
-    "legal": "Mentions légales",
-    "rights": "© {year} Nico Garay - Tous droits réservés"
+    "legal": "Mentions legales",
+    "rights": "\u00a9 {year} Nico Garay. Tous droits reserves."
   }
 }

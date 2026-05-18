@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { cn } from '@/lib/utils'
 import { photoPublicLabel } from '@/lib/photoLabel'
 
 interface Photo {
@@ -23,43 +22,38 @@ export function StoryCard({
   locale: string
 }) {
   const label = photoPublicLabel(photo, locale)
-  const cropClass =
-    photo.orientation === 'portrait'
-      ? 'object-[50%_32%]'
-      : photo.orientation === 'landscape'
-        ? 'object-center'
-        : 'object-center'
 
   return (
     <Link
       href={`/${locale}/shop/${photo.id}`}
-      className="group block relative overflow-hidden rounded-lg border border-ink-300 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2"
+      className="group block relative overflow-hidden bg-surface-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
-      <div className="relative w-full overflow-hidden aspect-[4/5] sm:aspect-video">
+      <div className="relative w-full overflow-hidden aspect-[3/4]">
         <Image
           src={`/api/image/${photo.thumbKeyR2}`}
           alt={label}
           fill
-          className={cn('object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]', cropClass)}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="object-cover transition-all duration-700 ease-out group-hover:scale-[1.03] group-hover:brightness-110"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-100 transition-opacity duration-300 group-hover:from-black/90" />
-
-      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-20">
-        <p className="font-display text-white text-lg sm:text-xl leading-tight mb-2 line-clamp-2 tracking-tight">
-          {label}
-        </p>
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-white/90 text-sm font-medium">
-            ${photo.price.toFixed(2)}
+      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 z-10">
+        <div className="flex items-end justify-between gap-3">
+          <div className="space-y-1.5">
+            {photo.country && (
+              <p className="text-[10px] tracking-[0.2em] uppercase text-accent font-medium">
+                {photo.country}
+              </p>
+            )}
+            <p className="font-display text-white text-base sm:text-lg leading-tight">
+              {label}
+            </p>
+          </div>
+          <span className="text-white/80 text-sm tabular-nums shrink-0">
+            {photo.price.toFixed(0)}&euro;
           </span>
-          {photo.country && (
-            <span className="text-[11px] tracking-widest uppercase text-accent-500 font-bold">
-              {photo.country}
-            </span>
-          )}
         </div>
       </div>
     </Link>

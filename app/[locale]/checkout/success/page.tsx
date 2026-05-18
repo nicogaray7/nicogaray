@@ -5,7 +5,7 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/db'
 import { photoPublicLabel } from '@/lib/photoLabel'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, CheckCircle } from 'lucide-react'
 
 export default async function CheckoutSuccessPage({
   params,
@@ -17,6 +17,7 @@ export default async function CheckoutSuccessPage({
   const { locale } = await params
   const { session_id } = await searchParams
   const t = await getTranslations('checkout.success')
+  const en = locale === 'en'
 
   let order = null
   let photo = null
@@ -34,7 +35,7 @@ export default async function CheckoutSuccessPage({
         photo = order?.photo
       }
     } catch {
-      // session invalide
+      // invalid session
     }
   }
 
@@ -43,53 +44,51 @@ export default async function CheckoutSuccessPage({
   const label = photo ? photoPublicLabel(photo, locale) : ''
 
   return (
-    <section className="py-32 sm:py-40">
-      <div className="max-w-2xl mx-auto px-5 sm:px-8">
+    <section className="min-h-screen flex items-center py-32 sm:py-40">
+      <div className="max-w-2xl mx-auto px-5 sm:px-8 w-full">
         <div className="text-center">
-          <div className="mb-8 flex justify-center">
-            <svg className="w-16 h-16 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <div className="mb-8 flex justify-center animate-fade-up">
+            <CheckCircle className="w-14 h-14 text-accent" strokeWidth={1} />
           </div>
 
-          <h1 className="font-display text-5xl sm:text-6xl text-ink-900 mb-6">
+          <h1 className="font-display text-4xl sm:text-5xl text-foreground mb-6 animate-fade-up delay-100">
             {t('title')}
           </h1>
 
           {label && (
-            <p className="text-ink-700 mb-8 text-lg sm:text-xl">
+            <p className="text-foreground-dim mb-8 text-lg animate-fade-up delay-200">
               {label}
             </p>
           )}
 
-          <p className="text-ink-600 mb-10 text-base sm:text-lg">
+          <p className="text-foreground-muted mb-10 text-base animate-fade-up delay-200">
             {t('message')}
           </p>
 
           {downloadUrl && (
-            <div className="space-y-6 mb-12">
+            <div className="space-y-6 mb-12 animate-fade-up delay-300">
               <a
                 href={downloadUrl}
-                className="inline-block bg-accent-500 text-white text-sm tracking-widest uppercase px-10 py-3 hover:bg-accent-600 transition-colors font-medium"
+                className="inline-block bg-accent hover:bg-accent-dim text-surface text-sm tracking-widest uppercase px-10 py-3.5 transition-colors font-medium"
               >
                 {t('download')}
               </a>
-              <p className="text-xs text-ink-600">
+              <p className="text-xs text-foreground-muted">
                 {t('expiry', { max: order?.downloadMax ?? 3 })}
               </p>
             </div>
           )}
 
-          <p className="text-xs text-ink-600 mb-10">
+          <p className="text-xs text-foreground-muted mb-10">
             {t('email')}
           </p>
 
           <Link
             href={`/${locale}/shop`}
-            className="inline-flex items-center gap-2 text-accent-500 text-sm tracking-wider uppercase hover:text-accent-600 transition-colors"
+            className="group inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-accent hover:text-foreground transition-colors duration-300"
           >
-            {locale === 'fr' ? 'Retour à la boutique' : 'Back to shop'}
-            <ArrowRight className="w-4 h-4" />
+            {en ? 'Back to gallery' : 'Retour a la galerie'}
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
       </div>

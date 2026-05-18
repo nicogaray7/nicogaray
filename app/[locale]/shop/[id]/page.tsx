@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { prisma } from '@/lib/db'
@@ -24,7 +23,7 @@ export async function generateMetadata({
   if (!photo) return {}
   const label = photoPublicLabel(photo, locale)
   return {
-    title: `${label} - Nico Garay`,
+    title: `${label} | Nico Garay`,
   }
 }
 
@@ -34,6 +33,7 @@ export default async function PhotoDetailPage({
   params: Promise<{ locale: string; id: string }>
 }) {
   const { locale, id } = await params
+  const en = locale === 'en'
 
   const photo = await prisma.photo.findUnique({ where: { id, published: true } })
   if (!photo) notFound()
@@ -56,22 +56,22 @@ export default async function PhotoDetailPage({
   const label = photoPublicLabel(photo, locale)
 
   return (
-    <div className="bg-white min-h-screen">
-      {/* Back Link */}
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-6">
+    <div className="min-h-screen pt-20 sm:pt-24">
+      {/* Back */}
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6">
         <Link
           href={`/${locale}/shop`}
-          className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-accent-500 hover:text-accent-600 transition-colors group"
+          className="group inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-foreground-dim hover:text-accent transition-colors duration-300"
         >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          {locale === 'fr' ? 'Retour' : 'Back'}
+          <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
+          {en ? 'Gallery' : 'Galerie'}
         </Link>
       </div>
 
-      {/* Featured Image */}
-      <section className="py-8 sm:py-12">
+      {/* Image */}
+      <section className="pb-8 sm:pb-12">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
-          <div className="relative h-[60vh] sm:h-[70vh] max-h-[800px] bg-ink-100 overflow-hidden rounded-lg border border-ink-200">
+          <div className="relative h-[55vh] sm:h-[70vh] max-h-[800px] bg-surface-card overflow-hidden">
             <ProtectedImage
               src={`/api/image/${photo.previewKeyR2}`}
               alt={label}
@@ -84,14 +84,14 @@ export default async function PhotoDetailPage({
         </div>
       </section>
 
-      {/* Story + Shop */}
+      {/* Info + Purchase */}
       <InlineShop
         photoId={photo.id}
         title={label}
         country={photo.country}
         city={photo.city}
         price={photo.price}
-        description={locale === 'en' ? photo.descriptionEn : photo.description}
+        description={en ? photo.descriptionEn : photo.description}
         takenAt={photo.takenAt}
         width={photo.width}
         height={photo.height}
@@ -100,14 +100,14 @@ export default async function PhotoDetailPage({
         locale={locale}
       />
 
-      {/* Related Photos */}
+      {/* Related */}
       {relatedPhotos.length > 0 && (
-        <section className="py-16 sm:py-24 bg-ink-50 border-t border-ink-200">
+        <section className="py-16 sm:py-24 border-t border-line">
           <div className="max-w-7xl mx-auto px-5 sm:px-8">
-            <h2 className="font-display text-3xl sm:text-4xl text-ink-900 mb-8 sm:mb-12">
-              {locale === 'fr' ? 'Autres Histoires' : 'More Stories'}
+            <h2 className="font-display text-2xl sm:text-3xl text-foreground mb-8 sm:mb-12">
+              {en ? 'More Stories' : 'Autres Histoires'}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               {relatedPhotos.map((related) => (
                 <StoryCard key={related.id} photo={related} locale={locale} />
               ))}

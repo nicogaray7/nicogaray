@@ -7,41 +7,41 @@ export default async function LicensePage({
   const isEN = locale === 'en'
 
   return (
-    <section className="py-32 sm:py-40">
+    <section className="min-h-screen pt-32 sm:pt-40 pb-20">
       <div className="max-w-3xl mx-auto px-5 sm:px-8">
-        <h1 className="font-display text-5xl sm:text-6xl text-ink-900 mb-16">
+        <h1 className="font-display text-4xl sm:text-5xl text-foreground mb-16">
           {isEN ? 'License' : 'Licence d\'utilisation'}
         </h1>
 
-        <div className="space-y-10 text-ink-700">
+        <div className="space-y-10 text-foreground-dim">
           <div>
-            <h2 className="font-display text-xl sm:text-2xl text-ink-900 mb-4">
-              {isEN ? 'Granted Rights' : 'Droits accordés'}
+            <h2 className="font-display text-xl sm:text-2xl text-foreground mb-4">
+              {isEN ? 'Granted Rights' : 'Droits accordes'}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed mb-4">
               {isEN
-                ? 'Purchasing a photo on photos-garaynico.com grants you a personal, non-exclusive, non-transferable license allowing:'
-                : 'L\'achat d\'une photo sur photos-garaynico.com vous accorde une licence personnelle, non-exclusive et non-transférable permettant :'}
+                ? 'Purchasing a photo on photos.nicogaray.com grants you a personal, non-exclusive, non-transferable license allowing:'
+                : 'L\'achat d\'une photo sur photos.nicogaray.com vous accorde une licence personnelle, non-exclusive et non-transferable permettant :'}
             </p>
             <ul className="list-disc pl-6 space-y-2 text-base sm:text-lg">
               {isEN ? (
                 <>
                   <li>Printing and displaying at home</li>
                   <li>Use on personal digital media (wallpaper, etc.)</li>
-                  <li>Sharing on social networks with © Nico Garay attribution</li>
+                  <li>Sharing on social networks with &copy; Nico Garay attribution</li>
                 </>
               ) : (
                 <>
-                  <li>L&apos;impression et l&apos;affichage à domicile</li>
-                  <li>L&apos;usage sur support numérique personnel (fond d&apos;écran, etc.)</li>
-                  <li>Le partage sur réseaux sociaux avec mention © Nico Garay</li>
+                  <li>L&apos;impression et l&apos;affichage a domicile</li>
+                  <li>L&apos;usage sur support numerique personnel (fond d&apos;ecran, etc.)</li>
+                  <li>Le partage sur reseaux sociaux avec mention &copy; Nico Garay</li>
                 </>
               )}
             </ul>
           </div>
 
           <div>
-            <h2 className="font-display text-xl sm:text-2xl text-ink-900 mb-4">
+            <h2 className="font-display text-xl sm:text-2xl text-foreground mb-4">
               {isEN ? 'Prohibited Uses' : 'Usages interdits'}
             </h2>
             <ul className="list-disc pl-6 space-y-2 text-base sm:text-lg">
@@ -55,8 +55,8 @@ export default async function LicensePage({
               ) : (
                 <>
                   <li>Revente ou redistribution du fichier</li>
-                  <li>Usage commercial sans accord écrit préalable</li>
-                  <li>Suppression du filigrane ou des métadonnées de copyright</li>
+                  <li>Usage commercial sans accord ecrit prealable</li>
+                  <li>Suppression du filigrane ou des metadonnees de copyright</li>
                   <li>Modification substantielle et republication comme oeuvre originale</li>
                 </>
               )}
@@ -64,24 +64,24 @@ export default async function LicensePage({
           </div>
 
           <div>
-            <h2 className="font-display text-xl sm:text-2xl text-ink-900 mb-4">
+            <h2 className="font-display text-xl sm:text-2xl text-foreground mb-4">
               {isEN ? 'Commercial Use' : 'Usage commercial'}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed">
               {isEN
-                ? 'For commercial use (advertising, publishing, etc.), contact contact@photos-garaynico.com for a commercial license quote.'
-                : 'Pour une utilisation commerciale (publicité, édition, etc.), contactez contact@photos-garaynico.com pour un devis de licence commerciale.'}
+                ? 'For commercial use (advertising, publishing, etc.), contact contact@nicogaray.com for a commercial license quote.'
+                : 'Pour une utilisation commerciale (publicite, edition, etc.), contactez contact@nicogaray.com pour un devis de licence commerciale.'}
             </p>
           </div>
 
           <div>
-            <h2 className="font-display text-xl sm:text-2xl text-ink-900 mb-4">
-              {isEN ? 'Traceability' : 'Traçabilité'}
+            <h2 className="font-display text-xl sm:text-2xl text-foreground mb-4">
+              {isEN ? 'Traceability' : 'Tracabilite'}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed">
               {isEN
                 ? 'Each HD file contains invisible watermarking and metadata linked to your purchase. Unauthorized use is traceable and constitutes counterfeiting.'
-                : 'Chaque fichier HD livré contient un filigrane invisible et des métadonnées liés à votre commande. Toute utilisation non autorisée est traçable et constitue une contrefaçon.'}
+                : 'Chaque fichier HD livre contient un filigrane invisible et des metadonnees lies a votre commande. Toute utilisation non autorisee est tracable et constitue une contrefacon.'}
             </p>
           </div>
         </div>

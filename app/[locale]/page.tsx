@@ -1,9 +1,11 @@
 export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { prisma } from '@/lib/db'
 import { StoryCard } from '@/components/StoryCard'
 import { getTranslations } from 'next-intl/server'
+import { ArrowRight } from 'lucide-react'
 
 export default async function HomePage({
   params,
@@ -13,115 +15,188 @@ export default async function HomePage({
   const { locale } = await params
   const t = await getTranslations('home')
 
-  const featuredPhotos = await prisma.photo.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' },
-    take: 9,
-    select: {
-      id: true,
-      thumbKeyR2: true,
-      previewKeyR2: true,
-      country: true,
-      city: true,
-      orientation: true,
-      price: true,
-    },
-  })
+  const [heroPhoto, featuredPhotos, totalPhotos, totalCountries] = await Promise.all([
+    prisma.photo.findFirst({
+      where: { published: true, featured: true },
+      select: { previewKeyR2: true, country: true },
+    }),
+    prisma.photo.findMany({
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: 6,
+      select: {
+        id: true,
+        thumbKeyR2: true,
+        previewKeyR2: true,
+        country: true,
+        city: true,
+        orientation: true,
+        price: true,
+      },
+    }),
+    prisma.photo.count({ where: { published: true } }),
+    prisma.photo.findMany({
+      where: { published: true, country: { not: null } },
+      select: { country: true },
+      distinct: ['country'],
+    }),
+  ])
 
-  const isEnglish = locale === 'en'
+  const en = locale === 'en'
 
   return (
-    <div className="bg-white">
-      {/* Hero Section - Personal Brand */}
-      <section className="min-h-screen flex items-center justify-center py-20 px-5 sm:px-8 bg-gradient-subtle">
-        <div className="max-w-3xl w-full text-center space-y-8">
-          <div className="space-y-4">
-            <p className="text-sm tracking-widest uppercase text-accent-primary font-semibold">
-              {isEnglish ? 'Travel Photographer' : 'Photographe de Voyage'}
+    <>
+      {/* Hero */}
+      <section className="relative min-h-screen flex items-end">
+        {heroPhoto ? (
+          <div className="absolute inset-0">
+            <Image
+              src={`/api/image/${heroPhoto.previewKeyR2}`}
+              alt=""
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-surface-elevated" />
+        )}
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-8 pb-16 sm:pb-24">
+          <div className="max-w-2xl space-y-6">
+            <p className="text-[11px] tracking-[0.25em] uppercase text-accent animate-fade-up">
+              {t('hero.tagline')}
             </p>
-            <h1 className="font-display text-6xl sm:text-8xl leading-tight text-text-primary">
+            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl text-foreground leading-[0.95] animate-fade-up delay-100">
               Nico Garay
             </h1>
+            <p className="text-lg sm:text-xl text-foreground-dim leading-relaxed max-w-lg animate-fade-up delay-200">
+              {t('hero.description')}
+            </p>
+            <div className="pt-4 animate-fade-up delay-300">
+              <Link
+                href={`/${locale}/shop`}
+                className="group inline-flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase text-accent hover:text-foreground transition-colors duration-300"
+              >
+                {t('hero.cta')}
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <p className="text-xl sm:text-2xl text-text-secondary max-w-2xl mx-auto leading-relaxed font-light">
-            {isEnglish
-              ? "I'm Nico Garay, I share my trips until National Geographic sees my content"
-              : "Je suis Nico Garay, je partage mes voyages jusqu'à ce que National Geographic voie mon contenu"}
+      {/* Stats band */}
+      <section className="border-y border-line bg-surface-elevated">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
+          <div className="grid grid-cols-3 gap-8 text-center">
+            <div>
+              <p className="font-display text-3xl sm:text-4xl text-accent tabular-nums">{totalCountries.length}</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-foreground-muted mt-2">
+                {t('about.countries')}
+              </p>
+            </div>
+            <div>
+              <p className="font-display text-3xl sm:text-4xl text-accent tabular-nums">{totalPhotos}</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-foreground-muted mt-2">
+                {t('about.photos')}
+              </p>
+            </div>
+            <div>
+              <p className="font-display text-3xl sm:text-4xl text-accent tabular-nums">HD</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-foreground-muted mt-2">
+                {en ? 'Resolution' : 'Resolution'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About teaser */}
+      <section className="py-24 sm:py-32 px-5 sm:px-8">
+        <div className="max-w-3xl mx-auto text-center space-y-6">
+          <h2 className="font-display text-3xl sm:text-4xl text-foreground">
+            {t('about.title')}
+          </h2>
+          <p className="text-foreground-dim text-lg leading-relaxed">
+            {t('about.text')}
           </p>
+          <Link
+            href={`/${locale}/about`}
+            className="group inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-accent hover:text-foreground transition-colors duration-300 mt-4"
+          >
+            {en ? 'About me' : 'En savoir plus'}
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </div>
+      </section>
 
-          <div className="pt-8">
+      {/* Featured grid */}
+      <section className="py-20 sm:py-28 px-5 sm:px-8 bg-surface-elevated">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between mb-12 sm:mb-16">
+            <div>
+              <p className="text-[10px] tracking-[0.25em] uppercase text-accent mb-3">
+                {en ? 'Recent work' : 'Travaux recents'}
+              </p>
+              <h2 className="font-display text-3xl sm:text-5xl text-foreground">
+                {t('featured.title')}
+              </h2>
+            </div>
             <Link
-              href={isEnglish ? "/en/shop" : "/fr/shop"}
-              className="inline-block px-8 py-4 bg-accent-primary text-white font-semibold text-sm tracking-wide hover:bg-accent-secondary transition-colors duration-300"
+              href={`/${locale}/shop`}
+              className="hidden sm:inline-flex group items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-foreground-dim hover:text-accent transition-colors duration-300"
             >
-              {isEnglish ? 'Explore My Work' : 'Découvrez Mon Travail'}
+              {t('featured.cta')}
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
-        </div>
-      </section>
 
-      {/* About the Journey */}
-      <section className="py-20 sm:py-32 px-5 sm:px-8 bg-white">
-        <div className="max-w-3xl mx-auto text-center space-y-6">
-          <h2 className="font-display text-4xl sm:text-5xl text-text-primary">
-            {isEnglish ? 'Travel & Photography' : 'Voyage & Photographie'}
-          </h2>
-          <p className="text-lg sm:text-xl text-text-secondary leading-relaxed">
-            {isEnglish
-              ? 'Every trip is a story worth sharing. These high-resolution editions capture the light, moment, and feeling of travel across the world.'
-              : 'Chaque voyage est une histoire qui mérite d\'être partagée. Ces éditions haute résolution capturent la lumière, le moment et la sensation du voyage à travers le monde.'}
-          </p>
-        </div>
-      </section>
-
-      {/* Featured Stories Grid */}
-      <section className="py-20 sm:py-32 px-5 sm:px-8 bg-bg-secondary">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-12 sm:mb-16">
-            <h2 className="font-display text-4xl sm:text-5xl text-text-primary">
-              {isEnglish ? 'Recent Stories' : 'Histoires Récentes'}
-            </h2>
-            <p className="text-text-secondary mt-4">
-              {isEnglish
-                ? 'Available as high-resolution digital editions'
-                : 'Disponibles en tant qu\'éditions numériques haute résolution'}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {featuredPhotos.map((photo, i) => (
-              <div 
-                key={photo.id} 
-                className="animate-fade-up"
-                style={{ animationDelay: `${i * 100}ms` }}
+              <div
+                key={photo.id}
+                className="animate-reveal"
+                style={{ animationDelay: `${i * 80}ms` }}
               >
                 <StoryCard photo={photo} locale={locale} />
               </div>
             ))}
           </div>
+
+          <div className="sm:hidden mt-10 text-center">
+            <Link
+              href={`/${locale}/shop`}
+              className="group inline-flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-foreground-dim hover:text-accent transition-colors duration-300"
+            >
+              {t('featured.cta')}
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 sm:py-24 px-5 sm:px-8 bg-white">
-        <div className="max-w-3xl mx-auto text-center space-y-8">
-          <h2 className="font-display text-3xl sm:text-4xl text-text-primary">
-            {isEnglish ? 'Browse the Full Gallery' : 'Parcourez la Galerie Complète'}
+      {/* CTA */}
+      <section className="py-24 sm:py-32 px-5 sm:px-8">
+        <div className="max-w-2xl mx-auto text-center space-y-8">
+          <h2 className="font-display text-3xl sm:text-4xl text-foreground">
+            {en ? 'Own a piece of the journey' : 'Possedez un fragment du voyage'}
           </h2>
-          <p className="text-text-secondary text-lg">
-            {isEnglish
-              ? 'All photos are available as personal-use digital editions'
-              : 'Toutes les photos sont disponibles en tant qu\'éditions numériques à usage personnel'}
+          <p className="text-foreground-dim text-base sm:text-lg">
+            {en
+              ? 'Every photo is available as a high-resolution digital file with a personal-use license.'
+              : 'Chaque photo est disponible en fichier numerique haute resolution avec licence personnelle.'}
           </p>
           <Link
-            href={isEnglish ? "/en/shop" : "/fr/shop"}
-            className="inline-block px-10 py-4 bg-accent-primary text-white font-semibold text-sm tracking-wide hover:bg-accent-secondary transition-colors duration-300"
+            href={`/${locale}/shop`}
+            className="inline-block px-8 py-3.5 bg-accent text-surface text-sm font-medium tracking-wide hover:bg-accent-dim transition-colors duration-300"
           >
-            {isEnglish ? 'View Gallery' : 'Voir la Galerie'}
+            {en ? 'Browse Gallery' : 'Parcourir la Galerie'}
           </Link>
         </div>
       </section>
-    </div>
+    </>
   )
 }
