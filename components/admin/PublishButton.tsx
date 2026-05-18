@@ -23,7 +23,7 @@ export function PublishButton({ photoId }: { photoId: string }) {
         const data = await res.json()
         alert(data.error ?? 'Erreur lors de la publication')
       }
-    } catch (e) {
+    } catch {
       alert('Erreur réseau')
     } finally {
       setLoading(false)

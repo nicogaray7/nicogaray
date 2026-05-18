@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
-    const { orderId, photoId, locale } = session.metadata ?? {}
+    const { orderId, locale } = session.metadata ?? {}
 
     if (!orderId) return NextResponse.json({ ok: true })
 

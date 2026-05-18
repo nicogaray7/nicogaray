@@ -4,7 +4,7 @@ import { generateWiseReference } from '@/lib/wise'
 import { generateDownloadToken, getDownloadExpiry } from '@/lib/tokens'
 
 export async function POST(req: NextRequest) {
-  const { photoId, locale = 'fr' } = await req.json()
+  const { photoId } = await req.json()
 
   const photo = await prisma.photo.findUnique({
     where: { id: photoId, published: true },
