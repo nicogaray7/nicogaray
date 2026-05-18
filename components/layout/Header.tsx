@@ -39,30 +39,29 @@ export function Header() {
         className={cn(
           'fixed top-0 inset-x-0 z-40 transition-all duration-300',
           scrolled || open
-            ? 'bg-ink-50/95 backdrop-blur-sm border-b border-accent-500/30'
+            ? 'bg-ink-50/92 backdrop-blur-xl border-b border-ink-200'
             : 'bg-transparent border-b border-transparent'
         )}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-[66px] sm:h-[78px] flex items-center justify-between">
           <Link
             href={`/${locale}`}
-            className="font-display text-xl sm:text-2xl text-accent-500"
+            className="font-display text-[30px] sm:text-[36px] text-ink-900 tracking-[0.04em] leading-none"
           >
-            <span className="font-light">Nico</span>
-            <span className="italic ml-1">Garay</span>
+            Nico Garay
           </Link>
 
           {/* Nav desktop */}
-          <nav className="hidden md:flex items-center gap-12">
+          <nav className="hidden md:flex items-center gap-7">
             {navLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'text-xs tracking-[0.15em] uppercase transition-colors',
+                  'text-[11px] tracking-[0.2em] uppercase transition-colors border-b pb-1',
                   pathname === link.href
-                    ? 'text-accent-500 font-medium'
-                    : 'text-ink-600 hover:text-ink-900'
+                    ? 'text-accent-500 border-accent-500'
+                    : 'text-ink-600 border-transparent hover:text-accent-500 hover:border-accent-500/40'
                 )}
               >
                 {link.label}
@@ -92,7 +91,7 @@ export function Header() {
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
       >
-        <nav className="flex flex-col items-center justify-center min-h-screen gap-3 px-8">
+        <nav className="flex flex-col items-center justify-center min-h-screen gap-4 px-8">
           {navLinks.map((link, i) => (
             <Link
               key={link.href}
@@ -122,7 +121,7 @@ function LanguageSwitcher() {
   return (
     <Link
       href={newPath}
-      className="text-[10px] tracking-[0.2em] text-ink-600 hover:text-accent-500 transition-colors uppercase"
+      className="text-[10px] tracking-[0.2em] text-ink-700 hover:text-accent-500 transition-colors uppercase border border-accent-500/40 hover:border-accent-500/60 rounded-full px-3 py-1.5 bg-white/75 hover:bg-accent-500/5"
     >
       {locale.toUpperCase()} <span className="text-ink-400 mx-0.5">/</span> <span>{otherLocale.toUpperCase()}</span>
     </Link>
