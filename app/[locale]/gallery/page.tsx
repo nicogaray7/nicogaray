@@ -34,12 +34,15 @@ async function getPhotos(params: GallerySearchParams) {
     if (params.country) where.country = params.country;
     if (params.orientation) where.orientation = params.orientation;
 
+    // Reverse chronological by date taken; fallback to createdAt
     const orderBy: Prisma.PhotoOrderByWithRelationInput[] =
       params.sort === 'priceAsc'
-        ? [{ price: 'asc' }, { createdAt: 'desc' }]
+        ? [{ price: 'asc' }, { takenAt: 'desc' }]
         : params.sort === 'priceDesc'
-          ? [{ price: 'desc' }, { createdAt: 'desc' }]
-          : [{ sortOrder: 'asc' }, { createdAt: 'desc' }];
+          ? [{ price: 'desc' }, { takenAt: 'desc' }]
+          : params.sort === 'oldest'
+            ? [{ takenAt: 'asc' }, { createdAt: 'asc' }]
+            : [{ takenAt: 'desc' }, { createdAt: 'desc' }];
 
     return await prisma.photo.findMany({ where, orderBy });
   } catch {
@@ -71,27 +74,26 @@ function GalleryView({
   const t = useTranslations('gallery');
   return (
     <>
-      <section className="py-24 sm:py-32">
+      <section className="pt-16 pb-10 sm:pt-24 sm:pb-14">
         <Container>
-          <div className="max-w-2xl space-y-6">
-            <p className="eyebrow text-accent">{t('title')}</p>
+          <div className="max-w-2xl">
             <h1 className="text-display-xl font-display text-ink">{t('title')}</h1>
-            <p className="prose-editorial">{t('subtitle')}</p>
+            <p className="prose-feed text-ink-muted mt-4">{t('subtitle')}</p>
           </div>
         </Container>
       </section>
 
       <section className="pb-24">
-        <Container>
+        <Container size="wide">
           <FilterBar countries={countries} total={photos.length} />
           {photos.length === 0 ? (
             <div className="border border-dashed border-line py-32 text-center">
               <p className="caption">{t('empty')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {photos.map((p, i) => (
-                <PhotoCard key={p.id} photo={p} locale={locale} priority={i < 3} />
+                <PhotoCard key={p.id} photo={p} locale={locale} priority={i < 4} />
               ))}
             </div>
           )}

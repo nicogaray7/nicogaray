@@ -7,34 +7,40 @@ export function PhotoCard({
   photo,
   locale,
   priority = false,
+  showMeta = true,
 }: {
   photo: Photo;
   locale: string;
   priority?: boolean;
+  showMeta?: boolean;
 }) {
   const thumbUrl = r2PublicUrl(photo.thumbKey) ?? '';
   const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
   const location = [photo.city, photo.country].filter(Boolean).join(', ');
+  const date = photo.takenAt
+    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
+        month: 'short',
+        year: 'numeric',
+      }).format(photo.takenAt)
+    : null;
+
+  // Use natural aspect ratios — landscape stays wide, portrait stays tall
+  const aspectClass =
+    photo.orientation === 'portrait'
+      ? 'aspect-[2/3]'
+      : photo.orientation === 'square'
+        ? 'aspect-square'
+        : 'aspect-[3/2]';
 
   return (
-    <Link
-      href={`/${locale}/gallery/${photo.slug}`}
-      className="group block bg-paper-warm overflow-hidden"
-    >
-      <div
-        className={cn(
-          'relative w-full overflow-hidden bg-paper-dark',
-          photo.orientation === 'portrait' && 'aspect-[3/4]',
-          photo.orientation === 'square' && 'aspect-square',
-          photo.orientation === 'landscape' && 'aspect-[4/3]',
-        )}
-      >
+    <Link href={`/${locale}/gallery/${photo.slug}`} className="group block">
+      <div className={cn('relative w-full overflow-hidden bg-paper-cool', aspectClass)}>
         {thumbUrl ? (
           <img
             src={thumbUrl}
             alt={title}
             loading={priority ? 'eager' : 'lazy'}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-ink-dim text-xs">
@@ -43,15 +49,19 @@ export function PhotoCard({
         )}
       </div>
 
-      <div className="pt-4 pb-2 flex items-start justify-between gap-4">
-        <div className="space-y-1">
-          <p className="font-display text-base text-ink leading-snug">{title}</p>
-          {location && <p className="caption">{location}</p>}
+      {showMeta && (
+        <div className="pt-3 pb-1 flex items-baseline justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[15px] text-ink truncate group-hover:text-accent transition-colors">
+              {location || title}
+            </p>
+            {date && <p className="text-xs text-ink-dim mt-0.5">{date}</p>}
+          </div>
+          <p className="text-xs text-ink-muted whitespace-nowrap">
+            €{photo.price}
+          </p>
         </div>
-        <p className="text-[10px] tracking-widest uppercase text-ink-muted whitespace-nowrap mt-1">
-          {photo.price === 0 ? 'Free' : `${photo.price} ${photo.currency}`}
-        </p>
-      </div>
+      )}
     </Link>
   );
 }

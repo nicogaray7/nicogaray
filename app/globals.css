@@ -15,7 +15,7 @@
 
   body {
     @apply bg-paper text-ink font-sans;
-    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'ss01' 1;
   }
 
   ::selection {
@@ -27,7 +27,7 @@
   }
 
   a {
-    @apply transition-colors duration-200;
+    @apply transition-all duration-200;
   }
 
   *:focus-visible {
@@ -37,14 +37,14 @@
 
 @layer utilities {
   .eyebrow {
-    @apply text-[10px] font-sans uppercase tracking-widest text-ink-muted;
+    @apply text-[11px] font-medium font-sans uppercase tracking-widest text-ink-muted;
   }
 
   .caption {
-    @apply text-xs text-ink-muted leading-relaxed;
+    @apply text-sm text-ink-muted leading-relaxed;
   }
 
-  .prose-editorial {
-    @apply text-ink-soft leading-relaxed text-lg;
+  .prose-feed {
+    @apply text-ink-soft leading-relaxed text-base;
   }
 }

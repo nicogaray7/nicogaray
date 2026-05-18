@@ -7,7 +7,7 @@ import { Container } from '@/components/layout/Container';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, slugify } from '@/lib/utils';
 
 export const revalidate = 60;
 
@@ -27,8 +27,8 @@ async function getRelated(currentId: string, country: string | null) {
         NOT: { id: currentId },
         ...(country ? { country } : {}),
       },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-      take: 3,
+      orderBy: [{ takenAt: 'desc' }, { createdAt: 'desc' }],
+      take: 4,
     });
   } catch {
     return [];
@@ -69,125 +69,98 @@ function PhotoView({
   const tCommon = useTranslations('common');
 
   const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
-  const description =
-    locale === 'en' && photo.descriptionEn ? photo.descriptionEn : photo.description;
+  const description = locale === 'en' && photo.descriptionEn ? photo.descriptionEn : photo.description;
   const story = locale === 'en' && photo.storyEn ? photo.storyEn : photo.story;
   const location = [photo.city, photo.country].filter(Boolean).join(', ');
   const previewUrl = r2PublicUrl(photo.previewKey) ?? '';
-  const formattedPrice = formatPrice(photo.price, photo.currency, locale === 'en' ? 'en-GB' : 'fr-FR');
-
+  const intl = locale === 'en' ? 'en-GB' : 'fr-FR';
+  const formattedPrice = formatPrice(photo.price, photo.currency, intl);
   const dateFmt = photo.takenAt
-    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
-        year: 'numeric',
-        month: 'long',
-      }).format(photo.takenAt)
+    ? new Intl.DateTimeFormat(intl, { year: 'numeric', month: 'long', day: 'numeric' }).format(photo.takenAt)
     : null;
 
   return (
     <article>
-      {/* Editorial header */}
-      <header className="py-12 sm:py-16 border-b border-line">
-        <Container size="narrow">
-          <Link
-            href={`/${locale}/gallery`}
-            className="inline-flex items-center gap-2 text-[11px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors mb-10"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            {tCommon('back')}
-          </Link>
-          <div className="space-y-6">
-            {location && (
-              <p className="eyebrow text-accent">{location}</p>
-            )}
-            <h1 className="text-display-xl font-display text-ink">{title}</h1>
-            {description && (
-              <p className="text-xl font-display text-ink-soft leading-snug max-w-xl">{description}</p>
-            )}
-          </div>
-        </Container>
-      </header>
-
-      {/* Full-bleed image */}
-      <section className="py-12 sm:py-16 bg-paper-warm">
+      {/* Full-bleed image dominates the page */}
+      <section className="bg-paper-cool">
         <Container size="wide">
-          <div className="relative w-full bg-paper-dark">
+          <div className="pt-6 sm:pt-8 pb-4">
+            <Link
+              href={`/${locale}/gallery`}
+              className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-accent transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {tCommon('back')}
+            </Link>
+          </div>
+          <div className="relative w-full bg-ink">
             {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt={title}
-                className="w-full h-auto block"
-              />
+              <img src={previewUrl} alt={title} className="w-full h-auto block max-h-[88vh] object-contain mx-auto" />
             ) : (
               <div className="aspect-[3/2] flex items-center justify-center text-ink-dim">No preview</div>
             )}
           </div>
-          {description && (
-            <p className="caption mt-4 text-center italic">{description}</p>
-          )}
         </Container>
       </section>
 
-      {/* Story + buy column */}
-      <section className="py-16 sm:py-24">
+      {/* Meta + buy */}
+      <section className="py-12 sm:py-16">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            <div className="lg:col-span-7 space-y-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            <div className="lg:col-span-7 space-y-8">
+              <header className="space-y-3">
+                {photo.country && (
+                  <Link
+                    href={`/${locale}/country/${slugify(photo.country)}`}
+                    className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-ink transition-colors"
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    {location || photo.country}
+                  </Link>
+                )}
+                <h1 className="text-display-lg font-display text-ink">{title}</h1>
+                {dateFmt && <p className="text-sm text-ink-muted">{dateFmt}</p>}
+                {description && <p className="prose-feed text-lg pt-2">{description}</p>}
+              </header>
+
               {story && (
-                <div>
-                  <p className="eyebrow mb-5 text-accent">{t('story')}</p>
-                  <div className="prose-editorial space-y-5 whitespace-pre-line">{story}</div>
+                <div className="border-t border-line pt-8">
+                  <div className="prose-feed whitespace-pre-line">{story}</div>
                 </div>
               )}
 
-              <div className="border-t border-line pt-10 space-y-5">
-                <p className="eyebrow text-accent">{t('details')}</p>
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                  {location && (
-                    <DetailRow icon={<MapPin className="w-3.5 h-3.5" />} label={t('location')} value={location} />
-                  )}
-                  {dateFmt && (
-                    <DetailRow icon={<Calendar className="w-3.5 h-3.5" />} label={t('date')} value={dateFmt} />
-                  )}
-                  {photo.camera && (
-                    <DetailRow icon={<Camera className="w-3.5 h-3.5" />} label={t('camera')} value={photo.camera} />
-                  )}
-                  {photo.lens && (
-                    <DetailRow icon={<Aperture className="w-3.5 h-3.5" />} label={t('lens')} value={photo.lens} />
-                  )}
-                  {(photo.focalLength || photo.aperture || photo.shutterSpeed || photo.iso) && (
-                    <DetailRow
-                      icon={<Aperture className="w-3.5 h-3.5" />}
-                      label={t('settings')}
-                      value={[
-                        photo.focalLength,
-                        photo.aperture,
-                        photo.shutterSpeed,
-                        photo.iso ? `ISO ${photo.iso}` : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                    />
-                  )}
-                </dl>
-              </div>
+              {(photo.camera || photo.lens || photo.focalLength || photo.iso) && (
+                <div className="border-t border-line pt-8">
+                  <p className="text-sm text-ink-muted mb-3">{t('details')}</p>
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-soft">
+                    {photo.camera && <Detail icon={<Camera className="w-3.5 h-3.5" />} value={photo.camera} />}
+                    {photo.lens && <Detail icon={<Aperture className="w-3.5 h-3.5" />} value={photo.lens} />}
+                    {(photo.focalLength || photo.aperture || photo.shutterSpeed || photo.iso) && (
+                      <Detail
+                        icon={<Calendar className="w-3.5 h-3.5" />}
+                        value={[photo.focalLength, photo.aperture, photo.shutterSpeed, photo.iso ? `ISO ${photo.iso}` : null].filter(Boolean).join(' · ')}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <aside className="lg:col-span-5 lg:sticky lg:top-28 self-start">
-              <div className="bg-paper-cool p-8 sm:p-10 border border-line space-y-6">
-                <p className="eyebrow text-accent">{t('buyTitle')}</p>
-                <p className="prose-editorial text-base">{t('buyDescription')}</p>
-                <div className="border-t border-line pt-6 space-y-3">
-                  <p className="text-3xl font-display text-ink">{formattedPrice}</p>
-                  <p className="caption">{t('license')}</p>
-                  <p className="caption">{t('fees')}</p>
-                  <p className="caption">{t('expiry')}</p>
-                </div>
+            <aside className="lg:col-span-5 lg:sticky lg:top-24 self-start">
+              <div className="bg-paper-warm p-6 sm:p-8 space-y-5 border border-line">
+                <p className="text-2xl font-display text-ink">{formattedPrice}</p>
+                <p className="text-sm text-ink-soft">{t('buyDescription')}</p>
+                <ul className="text-xs text-ink-muted space-y-1.5">
+                  <li>· {t('license')}</li>
+                  <li>· {t('fees')}</li>
+                  <li>· {t('expiry')}</li>
+                </ul>
                 <Link
                   href={`/${locale}/checkout/${photo.id}`}
-                  className="inline-flex items-center justify-center w-full px-9 py-4 bg-ink text-paper text-[11px] tracking-widest uppercase hover:bg-accent transition-colors duration-300 gap-3 group"
+                  className="inline-flex items-center justify-center w-full gap-2 px-6 py-3 bg-ink text-paper text-sm font-medium hover:bg-accent transition-colors group"
                 >
                   {t('buyCta', { price: formattedPrice })}
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </aside>
@@ -195,12 +168,13 @@ function PhotoView({
         </Container>
       </section>
 
-      {/* Related */}
       {related.length > 0 && (
-        <section className="py-20 sm:py-24 border-t border-line bg-paper-cool">
-          <Container>
-            <p className="eyebrow text-accent mb-8">More from this journey</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+        <section className="py-16 border-t border-line bg-paper-warm">
+          <Container size="wide">
+            <h2 className="text-display-lg font-display text-ink mb-8">
+              {photo.country ? `${photo.country}` : 'Plus'}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
               {related.map((p) => (
                 <PhotoCard key={p.id} photo={p} locale={locale} />
               ))}
@@ -212,14 +186,11 @@ function PhotoView({
   );
 }
 
-function DetailRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function Detail({ icon, value }: { icon: React.ReactNode; value: string }) {
   return (
-    <div className="flex flex-col gap-1">
-      <dt className="flex items-center gap-1.5 text-[10px] tracking-widest uppercase text-ink-muted">
-        {icon}
-        {label}
-      </dt>
-      <dd className="text-ink-soft text-sm">{value}</dd>
-    </div>
+    <span className="inline-flex items-center gap-1.5">
+      {icon}
+      {value}
+    </span>
   );
 }

@@ -16,7 +16,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
     <Link
       href={target || `/${other}`}
       className={cn(
-        'text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors duration-200 border border-ink/15 hover:border-accent/40 px-3 py-1.5',
+        'text-xs text-ink-muted hover:text-accent transition-colors',
         className,
       )}
       aria-label={`Switch to ${other.toUpperCase()}`}
