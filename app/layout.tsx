@@ -1,36 +1,37 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter, Fraunces } from 'next/font/google';
+import './globals.css';
+
+const sans = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const display = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+  axes: ['opsz', 'SOFT'],
+});
 
 export const metadata: Metadata = {
-  title: "Nico Garay — Consultant Digital & Créateur de Sites et Apps",
-  description:
-    "Senior Digital & IT Consultant avec +5 ans d'expérience. Je crée des sites vitrine, des applications web et vous accompagne dans votre transformation digitale.",
-  keywords: [
-    "consultant digital",
-    "création site internet",
-    "développement application",
-    "project manager",
-    "freelance",
-    "France",
-  ],
-  authors: [{ name: "Nico Garay" }],
+  title: {
+    default: 'Nico Garay — Photographie',
+    template: '%s — Nico Garay',
+  },
+  description: 'Photographies de voyage. Éditions numériques haute résolution.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com'),
   openGraph: {
-    title: "Nico Garay — Consultant Digital & Créateur Web",
-    description:
-      "Du brief au live — je pilote, je build, je délivre.",
-    type: "website",
-    locale: "fr_FR",
+    type: 'website',
+    siteName: 'Nico Garay Photography',
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className="scroll-smooth">
-      <body className="bg-bg text-white antialiased">{children}</body>
+    <html lang="fr" className={`${sans.variable} ${display.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }

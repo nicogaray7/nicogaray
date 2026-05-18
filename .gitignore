@@ -28,3 +28,20 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude / IDE local config
+.claude/
+.vscode/
+.idea/
+
+# OS / temp
+*.tmp
+*.log
+.vercel
+.turbo
+
+# Tests / coverage
+coverage/
+
+# Prisma local
+prisma/dev.db*

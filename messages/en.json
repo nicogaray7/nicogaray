@@ -1,0 +1,27 @@
+{
+  "common": {
+    "home": "Home",
+    "gallery": "Gallery",
+    "about": "About",
+    "shop": "Shop",
+    "back": "Back",
+    "loading": "Loading…"
+  },
+  "home": {
+    "tagline": "Travel photography",
+    "title": "Nico Garay",
+    "subtitle": "Capturing the raw beauty of the world, one journey at a time.",
+    "cta": "Explore the gallery",
+    "featured": "Recent stories",
+    "seeAll": "See all",
+    "about": {
+      "title": "Journey and photography",
+      "text": "I travel slowly, attentive to light. Each photograph is an observation of my path.",
+      "cta": "Read more"
+    }
+  },
+  "footer": {
+    "rights": "© {year} Nico Garay. All rights reserved.",
+    "edition": "Digital edition"
+  }
+}
