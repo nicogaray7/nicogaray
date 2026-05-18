@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     })
 
     if (order && session.customer_email) {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos-garaynico.com'
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com'
       const downloadUrl = `${siteUrl}/api/download/${order.downloadToken}`
       const label = photoPublicLabel(order.photo, locale ?? 'fr')
 

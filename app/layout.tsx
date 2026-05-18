@@ -4,7 +4,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Nico Garay - Photographie',
   description: 'Photographies contemplatives de voyage. Editions numeriques en haute resolution.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos-garaynico.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://photos.nicogaray.com'),
   openGraph: {
     siteName: 'Nico Garay Photography',
     type: 'website',

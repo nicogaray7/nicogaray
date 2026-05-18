@@ -39,7 +39,7 @@ export default async function CheckoutSuccessPage({
     }
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos-garaynico.com'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com'
   const downloadUrl = order ? `${siteUrl}/api/download/${order.downloadToken}` : null
   const label = photo ? photoPublicLabel(photo, locale) : ''
 
