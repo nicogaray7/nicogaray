@@ -16,7 +16,7 @@ export function Nav() {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -25,37 +25,36 @@ export function Nav() {
   React.useEffect(() => setOpen(false), [pathname]);
 
   const links = [
-    { href: `/${locale}`, label: t('home') },
     { href: `/${locale}/gallery`, label: t('gallery') },
+    { href: `/${locale}/map`, label: locale === 'en' ? 'Map' : 'Carte' },
     { href: `/${locale}/about`, label: t('about') },
   ];
 
-  const isActive = (href: string) =>
-    href === `/${locale}` ? pathname === href : pathname.startsWith(href);
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header
       className={cn(
-        'fixed top-0 inset-x-0 z-40 transition-all duration-500',
-        scrolled ? 'bg-paper/95 backdrop-blur border-b border-line' : 'bg-transparent border-b border-transparent',
+        'fixed top-0 inset-x-0 z-40 transition-all duration-300',
+        scrolled ? 'bg-paper/90 backdrop-blur-md border-b border-line' : 'bg-transparent',
       )}
     >
       <Container>
-        <div className="h-16 sm:h-20 flex items-center justify-between">
+        <div className="h-14 sm:h-16 flex items-center justify-between">
           <Link
             href={`/${locale}`}
-            className="font-display text-xl sm:text-2xl text-ink tracking-wide leading-none hover:text-accent transition-colors"
+            className="text-base sm:text-lg font-medium text-ink hover:text-accent transition-colors"
           >
             Nico Garay
           </Link>
 
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-8">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className={cn(
-                  'text-[11px] tracking-widest uppercase transition-colors duration-200',
+                  'text-sm transition-colors',
                   isActive(l.href) ? 'text-accent' : 'text-ink-muted hover:text-ink',
                 )}
               >
@@ -70,7 +69,7 @@ export function Nav() {
               type="button"
               aria-label="Menu"
               onClick={() => setOpen((v) => !v)}
-              className="md:hidden w-10 h-10 -mr-2 flex items-center justify-center text-ink-muted hover:text-ink transition-colors"
+              className="md:hidden w-9 h-9 -mr-2 flex items-center justify-center text-ink-muted hover:text-ink transition-colors"
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -78,30 +77,29 @@ export function Nav() {
         </div>
       </Container>
 
-      {/* Mobile menu */}
       <div
         className={cn(
           'md:hidden fixed inset-0 z-50 bg-paper transition-all duration-300',
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
         )}
       >
-        <div className="absolute top-0 right-0 p-5">
+        <div className="absolute top-0 right-0 p-4">
           <button
             type="button"
             aria-label="Close"
             onClick={() => setOpen(false)}
-            className="w-10 h-10 flex items-center justify-center text-ink-muted"
+            className="w-9 h-9 flex items-center justify-center text-ink-muted"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        <nav className="flex flex-col items-center justify-center min-h-screen gap-8 px-8">
+        <nav className="flex flex-col items-center justify-center min-h-screen gap-6 px-8">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className={cn(
-                'font-display text-3xl transition-colors',
+                'text-2xl font-medium transition-colors',
                 isActive(l.href) ? 'text-accent' : 'text-ink-muted hover:text-ink',
               )}
             >
