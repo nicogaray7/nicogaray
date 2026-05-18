@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Photo {
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  title         String
+  titleEn       String?
+  description   String?
+  descriptionEn String?
+  story         String? // markdown editorial story (FR)
+  storyEn       String?
+
+  // R2 storage
+  originalKey String // full-size HD file
+  previewKey  String // watermarked preview ~1600px
+  thumbKey    String // small thumbnail ~600px
+  fileSize    Int    @default(0)
+  width       Int    @default(0)
+  height      Int    @default(0)
+
+  // EXIF / metadata
+  country   String?
+  city      String?
+  latitude  Float?
+  longitude Float?
+  takenAt   DateTime?
+  camera    String?
+  lens      String?
+  focalLength String?
+  aperture    String?
+  shutterSpeed String?
+  iso         Int?
+
+  // Tags
+  orientation String   @default("landscape") // landscape | portrait | square
+  tags        String[] @default([])
+
+  // Shop
+  price     Float   @default(5.00)
+  currency  String  @default("EUR")
+  published Boolean @default(false)
+  featured  Boolean @default(false)
+  sortOrder Int     @default(0)
+
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, featured])
+  @@index([country])
+  @@index([sortOrder])
+}
+
+model Order {
+  id      String @id @default(cuid())
+  photoId String
+  photo   Photo  @relation(fields: [photoId], references: [id], onDelete: Restrict)
+
+  buyerEmail String
+  buyerName  String?
+  buyerCountry String?
+
+  paymentMethod   String  @default("stripe")
+  paymentStatus   String  @default("pending") // pending | paid | refunded | failed
+  stripeSessionId String? @unique
+  stripePaymentIntentId String?
+
+  amount Float // photo price
+  fees   Float  @default(0) // stripe fees passed to buyer
+  total  Float // amount + fees
+  currency String @default("EUR")
+
+  downloadToken  String   @unique @default(cuid())
+  downloadCount  Int      @default(0)
+  downloadMax    Int      @default(3)
+  downloadExpiry DateTime?
+  downloadedAt   DateTime?
+
+  createdAt DateTime  @default(now())
+  paidAt    DateTime?
+
+  @@index([buyerEmail])
+  @@index([paymentStatus])
+}
