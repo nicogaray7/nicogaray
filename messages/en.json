@@ -5,23 +5,105 @@
     "about": "About",
     "shop": "Shop",
     "back": "Back",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "viewAll": "View all",
+    "buyHD": "Buy HD",
+    "from": "From",
+    "in": "in"
   },
   "home": {
     "tagline": "Travel photography",
     "title": "Nico Garay",
     "subtitle": "Capturing the raw beauty of the world, one journey at a time.",
     "cta": "Explore the gallery",
-    "featured": "Recent stories",
-    "seeAll": "See all",
+    "featured": {
+      "eyebrow": "Recent work",
+      "title": "Latest stories",
+      "cta": "View full gallery"
+    },
     "about": {
+      "eyebrow": "Statement",
       "title": "Journey and photography",
-      "text": "I travel slowly, attentive to light. Each photograph is an observation of my path.",
+      "text1": "I travel slowly, attentive to light. Each photograph is an observation along the way — a moment suspended between encounter and forgetting.",
+      "text2": "My images don't try to tell. They exist to carry a mood, a silence, the rustle of a landscape slipping away.",
       "cta": "Read more"
+    },
+    "shopBlock": {
+      "eyebrow": "Limited editions",
+      "title": "Own a fragment of the journey",
+      "text": "Each photograph is available as a high-resolution digital file with a personal license for print.",
+      "cta": "Browse the gallery"
+    }
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "A growing collection of images captured across continents.",
+    "filters": {
+      "country": "Country",
+      "orientation": "Orientation",
+      "sort": "Sort",
+      "all": "All",
+      "reset": "Reset",
+      "landscape": "Landscape",
+      "portrait": "Portrait",
+      "square": "Square",
+      "recent": "Most recent",
+      "priceAsc": "Price ascending",
+      "priceDesc": "Price descending"
+    },
+    "results": "{count, plural, =0 {No photos} =1 {1 photo} other {# photos}}",
+    "empty": "No photos match these filters."
+  },
+  "photo": {
+    "story": "Story",
+    "details": "Technical details",
+    "location": "Location",
+    "date": "Date",
+    "camera": "Camera",
+    "lens": "Lens",
+    "settings": "Settings",
+    "buyTitle": "High-resolution digital edition",
+    "buyDescription": "Original file, personal and print use. Download available immediately after payment.",
+    "buyCta": "Buy — {price}",
+    "license": "Personal license included",
+    "fees": "Stripe transaction fees paid by the buyer",
+    "expiry": "Download link valid for 48h, 3 downloads maximum"
+  },
+  "about": {
+    "eyebrow": "Statement",
+    "title": "Nico Garay",
+    "lede": "Travel photographer. I move through the world slowly and listen to the light.",
+    "p1": "I was born in a city where the sea touched the sky. I grew up watching the boats leave the port, and I never stopped following them with my eyes.",
+    "p2": "My images are born of long silences. I walk, I sit, I wait. I'm not chasing the spectacular — I'm waiting for the moment a landscape begins to breathe.",
+    "p3": "This gallery gathers part of that work. The photographs are sold as digital editions for personal use — a print, a wallpaper, a fragment of the world on your wall."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "You are about to acquire a digital edition.",
+    "buyer": "Your details",
+    "email": "Email",
+    "name": "Name (optional)",
+    "summary": "Summary",
+    "fees": "Transaction fees",
+    "total": "Total",
+    "feesNote": "Stripe fees paid by the buyer.",
+    "submit": "Pay now",
+    "success": {
+      "title": "Thank you",
+      "subtitle": "Your HD file is ready for download.",
+      "download": "Download original HD",
+      "expiry": "Link valid for 48h, 3 downloads maximum.",
+      "email": "A confirmation email has been sent to you."
     }
   },
   "footer": {
     "rights": "© {year} Nico Garay. All rights reserved.",
     "edition": "Digital edition"
+  },
+  "legal": {
+    "cgv": { "title": "Terms of sale", "body": "Terms of sale — to be completed." },
+    "license": { "title": "License", "body": "License — to be completed." },
+    "mentions": { "title": "Legal notice", "body": "Legal notice — to be completed." }
   }
 }
