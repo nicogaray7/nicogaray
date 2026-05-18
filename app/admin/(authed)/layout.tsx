@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { auth, signOut } from '@/lib/auth';
-import { LayoutDashboard, ImageIcon, ShoppingBag, LogOut } from 'lucide-react';
+import { LayoutDashboard, ImageIcon, ShoppingBag, LogOut, Globe } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 
 export const dynamic = 'force-dynamic';
@@ -22,6 +22,7 @@ export default async function AuthedLayout({ children }: { children: React.React
             <nav className="flex items-center gap-1">
               <AdminLink href="/admin" icon={<LayoutDashboard className="w-3.5 h-3.5" />} label="Dashboard" />
               <AdminLink href="/admin/photos" icon={<ImageIcon className="w-3.5 h-3.5" />} label="Photos" />
+              <AdminLink href="/admin/countries" icon={<Globe className="w-3.5 h-3.5" />} label="Countries" />
               <AdminLink href="/admin/orders" icon={<ShoppingBag className="w-3.5 h-3.5" />} label="Orders" />
               <form
                 action={async () => {
