@@ -24,7 +24,7 @@ export function PhotoCard({
       }).format(photo.takenAt)
     : null;
 
-  // Use natural aspect ratios — landscape stays wide, portrait stays tall
+  // Use natural aspect ratios, landscape stays wide, portrait stays tall
   const aspectClass =
     photo.orientation === 'portrait'
       ? 'aspect-[2/3]'
@@ -50,16 +50,11 @@ export function PhotoCard({
       </div>
 
       {showMeta && (
-        <div className="pt-3 pb-1 flex items-baseline justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[15px] text-ink truncate group-hover:text-accent transition-colors">
-              {location || title}
-            </p>
-            {date && <p className="text-xs text-ink-dim mt-0.5">{date}</p>}
-          </div>
-          <p className="text-xs text-ink-muted whitespace-nowrap">
-            €{photo.price}
+        <div className="pt-3 pb-1 min-w-0">
+          <p className="text-[15px] text-ink truncate group-hover:text-accent transition-colors">
+            {location || title}
           </p>
+          {date && <p className="text-xs text-ink-dim mt-0.5">{date}</p>}
         </div>
       )}
     </Link>

@@ -12,7 +12,7 @@ export function getStripe(): Stripe {
 
 // Stripe fees passed to buyer: 1.5% + 0.25€ (EU cards). Computed so that
 // the seller receives the full `amount`. Note Stripe's actual settlement
-// is amount * 1.5% + 0.25 from the seller — we pre-add it to the total
+// is amount * 1.5% + 0.25 from the seller, we pre-add it to the total
 // the buyer pays, so net to seller ≈ photo price.
 export function buyerFees(amount: number): number {
   const rate = 0.015;

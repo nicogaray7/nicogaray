@@ -78,7 +78,7 @@ export function WorldMap({
           {hovered ? (
             <>
               <span className="text-ink font-medium">{hovered.name}</span>
-              {' — '}
+              {', '}
               {hovered.count} {hovered.count === 1 ? 'photo' : 'photos'}
             </>
           ) : (

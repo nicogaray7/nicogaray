@@ -25,7 +25,7 @@
     "about": {
       "eyebrow": "Manifeste",
       "title": "Voyage et photographie",
-      "text1": "Je voyage lentement, attentif à la lumière. Chaque photographie est une observation de mon parcours — un instant suspendu entre la rencontre et l'oubli.",
+      "text1": "Je voyage lentement, attentif à la lumière. Chaque photographie est une observation de mon parcours, un instant suspendu entre la rencontre et l'oubli.",
       "text2": "Mes images ne cherchent pas à raconter. Elles existent pour transmettre une humeur, un silence, parfois le bruissement d'un paysage qui se dérobe.",
       "cta": "En savoir plus"
     },
@@ -65,7 +65,7 @@
     "settings": "Réglages",
     "buyTitle": "Édition numérique haute résolution",
     "buyDescription": "Fichier original, usage personnel et tirage. Téléchargement disponible immédiatement après paiement.",
-    "buyCta": "Acheter — {price}",
+    "buyCta": "Acheter, {price}",
     "license": "Licence personnelle incluse",
     "fees": "Frais de transaction Stripe à la charge de l'acheteur",
     "expiry": "Lien de téléchargement valable 48h, 3 téléchargements maximum"
@@ -75,8 +75,8 @@
     "title": "Nico Garay",
     "lede": "Photographe de voyage. Je traverse le monde lentement et j'écoute la lumière.",
     "p1": "Je suis né dans une ville où la mer touchait le ciel. J'ai grandi en regardant les bateaux quitter le port et je n'ai jamais cessé de les suivre du regard.",
-    "p2": "Mes images naissent d'un long silence. Je marche, je m'assois, j'attends. Je ne cherche pas le spectaculaire — je cherche le moment où un paysage commence à respirer.",
-    "p3": "Cette galerie rassemble une partie de ce travail. Les photographies y sont vendues en édition numérique pour un usage personnel — un tirage, un fond d'écran, un fragment du monde sur votre mur."
+    "p2": "Mes images naissent d'un long silence. Je marche, je m'assois, j'attends. Je ne cherche pas le spectaculaire, je cherche le moment où un paysage commence à respirer.",
+    "p3": "Cette galerie rassemble une partie de ce travail. Les photographies y sont vendues en édition numérique pour un usage personnel, un tirage, un fond d'écran, un fragment du monde sur votre mur."
   },
   "checkout": {
     "title": "Paiement",
@@ -102,8 +102,8 @@
     "edition": "Édition numérique"
   },
   "legal": {
-    "cgv": { "title": "Conditions générales de vente", "body": "Contenu CGV — à compléter." },
-    "license": { "title": "Licence d'utilisation", "body": "Contenu licence — à compléter." },
-    "mentions": { "title": "Mentions légales", "body": "Mentions légales — à compléter." }
+    "cgv": { "title": "Conditions générales de vente", "body": "Contenu CGV, à compléter." },
+    "license": { "title": "Licence d'utilisation", "body": "Contenu licence, à compléter." },
+    "mentions": { "title": "Mentions légales", "body": "Mentions légales, à compléter." }
   }
 }
