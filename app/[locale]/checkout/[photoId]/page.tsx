@@ -91,6 +91,7 @@ function CheckoutView({
                   emphasis
                 />
               </dl>
+              <p className="caption">{t('feesNote')}</p>
             </div>
           </aside>
         </div>
