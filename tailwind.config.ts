@@ -41,7 +41,7 @@ const config: Config = {
         line: '#E5E5E5',
       },
       fontFamily: {
-        display: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'monospace'],
       },
