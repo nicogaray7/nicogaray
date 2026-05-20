@@ -41,7 +41,11 @@ export function Nav() {
     <header
       className={cn(
         'fixed top-0 inset-x-0 z-40 transition-all duration-300',
-        scrolled ? 'bg-paper/90 backdrop-blur-md border-b border-line' : 'bg-transparent',
+        scrolled
+          ? 'bg-paper/90 backdrop-blur-md border-b border-line'
+          : overDark
+            ? 'bg-gradient-to-b from-ink/55 via-ink/20 to-transparent'
+            : 'bg-paper/80 backdrop-blur-sm',
       )}
     >
       <Container>
