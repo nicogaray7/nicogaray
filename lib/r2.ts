@@ -58,10 +58,6 @@ export async function r2SignedGetUrl(key: string, expiresIn = 60 * 60) {
   );
 }
 
-export function r2PublicUrl(key: string) {
-  // Read both server (R2_PUBLIC_URL) and client-exposed (NEXT_PUBLIC_) names
-  // so the URL is identical between SSR and client hydration.
-  const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || process.env.R2_PUBLIC_URL;
-  if (!base) return null;
-  return `${base.replace(/\/$/, '')}/${key}`;
-}
+// Re-exported from a dependency-free module so client components can import
+// r2PublicUrl without pulling the AWS SDK into the client bundle.
+export { r2PublicUrl } from './r2-url';

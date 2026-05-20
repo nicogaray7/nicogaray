@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import type { Photo } from '@prisma/client';
-import { r2PublicUrl } from '@/lib/r2';
+import { r2PublicUrl } from '@/lib/r2-url';
 import { cn } from '@/lib/utils';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { COUNTRY_NAMES } from '@/lib/country-names';
