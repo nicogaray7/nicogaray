@@ -62,7 +62,7 @@ export function WorldMap({
           <Sphere id="sphere" stroke="transparent" strokeWidth={0} fill="#0F0F0F" />
           <Graticule stroke="#1F1F1F" strokeWidth={0.5} step={[20, 20]} />
 
-          <Geographies geography="/world-110m.json">
+          <Geographies geography="/world-50m.json">
             {({ geographies }) =>
               geographies.map((geo) => {
                 const numId = String(geo.id).padStart(3, '0');
