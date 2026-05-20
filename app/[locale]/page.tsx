@@ -51,7 +51,10 @@ function Hero() {
           className="absolute inset-0 w-full h-full object-cover opacity-90"
         />
       )}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
+      {/* Top scrim guarantees the white nav stays readable over any sky */}
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/60 via-ink/20 to-transparent pointer-events-none" />
+      {/* Bottom scrim for the hero text */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent pointer-events-none" />
 
       <Container className="relative z-10 pb-16 sm:pb-24">
         <div className="max-w-3xl space-y-6 text-paper">
