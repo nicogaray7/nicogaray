@@ -64,7 +64,6 @@
     "buyDescription": "Fichier original, usage personnel et tirage. Téléchargement disponible immédiatement après paiement.",
     "buyCta": "Acheter, {price}",
     "license": "Licence personnelle incluse",
-    "fees": "Frais de transaction Stripe à la charge de l'acheteur",
     "expiry": "Lien de téléchargement valable 48h, 3 téléchargements maximum"
   },
   "about": {
@@ -84,7 +83,6 @@
     "summary": "Récapitulatif",
     "fees": "Frais de transaction",
     "total": "Total",
-    "feesNote": "Frais Stripe à la charge de l'acheteur.",
     "submit": "Payer maintenant",
     "success": {
       "title": "Merci pour votre achat",

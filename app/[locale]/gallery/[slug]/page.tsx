@@ -157,7 +157,6 @@ function PhotoView({
                 <p className="text-sm text-ink-soft">{t('buyDescription')}</p>
                 <ul className="text-xs text-ink-muted space-y-1.5">
                   <li>· {t('license')}</li>
-                  <li>· {t('fees')}</li>
                   <li>· {t('expiry')}</li>
                 </ul>
                 <Link
