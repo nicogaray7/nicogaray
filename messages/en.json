@@ -64,7 +64,6 @@
     "buyDescription": "Original file, personal and print use. Download available immediately after payment.",
     "buyCta": "Buy, {price}",
     "license": "Personal license included",
-    "fees": "Stripe transaction fees paid by the buyer",
     "expiry": "Download link valid for 48h, 3 downloads maximum"
   },
   "about": {
@@ -84,7 +83,6 @@
     "summary": "Summary",
     "fees": "Transaction fees",
     "total": "Total",
-    "feesNote": "Stripe fees paid by the buyer.",
     "submit": "Pay now",
     "success": {
       "title": "Thank you",
