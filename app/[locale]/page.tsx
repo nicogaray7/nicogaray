@@ -22,8 +22,15 @@ async function getFeaturedPhotos() {
   }
 }
 
+const HERO_SLUG = 'photographie-n-182';
+
 async function getHeroPhoto() {
   try {
+    const pinned = await prisma.photo.findUnique({
+      where: { slug: HERO_SLUG },
+    });
+    if (pinned && pinned.published) return pinned;
+    // Fallback to most recent featured landscape
     return await prisma.photo.findFirst({
       where: { published: true, featured: true, orientation: 'landscape' },
       orderBy: [{ takenAt: 'desc' }, { createdAt: 'desc' }],
