@@ -47,10 +47,7 @@
       "reset": "Reset",
       "landscape": "Landscape",
       "portrait": "Portrait",
-      "square": "Square",
-      "recent": "Most recent",
-      "priceAsc": "Price ascending",
-      "priceDesc": "Price descending"
+      "recent": "Most recent"
     },
     "results": "{count, plural, =0 {No photos} =1 {1 photo} other {# photos}}",
     "empty": "No photos match these filters."

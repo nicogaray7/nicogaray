@@ -5,8 +5,13 @@ import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+interface CountryOption {
+  value: string;
+  label: string;
+}
+
 interface FilterBarProps {
-  countries: string[];
+  countries: CountryOption[];
   total: number;
 }
 
@@ -19,7 +24,6 @@ export function FilterBar({ countries, total }: FilterBarProps) {
 
   const country = params.get('country') ?? '';
   const orientation = params.get('orientation') ?? '';
-  const sort = params.get('sort') ?? '';
 
   const update = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString());
@@ -29,7 +33,7 @@ export function FilterBar({ countries, total }: FilterBarProps) {
   };
 
   const reset = () => router.replace(pathname, { scroll: false });
-  const hasFilters = Boolean(country || orientation || sort);
+  const hasFilters = Boolean(country || orientation);
 
   return (
     <div className="border-y border-line py-5 mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -37,8 +41,8 @@ export function FilterBar({ countries, total }: FilterBarProps) {
         <Select value={country} onChange={(v) => update('country', v)} label={t('country')}>
           <option value="">{t('all')}</option>
           {countries.map((c) => (
-            <option key={c} value={c}>
-              {c}
+            <option key={c.value} value={c.value}>
+              {c.label}
             </option>
           ))}
         </Select>
@@ -46,12 +50,6 @@ export function FilterBar({ countries, total }: FilterBarProps) {
           <option value="">{t('all')}</option>
           <option value="landscape">{t('landscape')}</option>
           <option value="portrait">{t('portrait')}</option>
-          <option value="square">{t('square')}</option>
-        </Select>
-        <Select value={sort} onChange={(v) => update('sort', v)} label={t('sort')}>
-          <option value="">{t('recent')}</option>
-          <option value="priceAsc">{t('priceAsc')}</option>
-          <option value="priceDesc">{t('priceDesc')}</option>
         </Select>
         {hasFilters && (
           <button
