@@ -4,6 +4,7 @@ import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { FilterBar } from '@/components/gallery/FilterBar';
+import { GalleryTracker } from '@/components/gallery/GalleryTracker';
 import { COUNTRY_NAMES } from '@/lib/country-names';
 import type { Prisma } from '@prisma/client';
 
@@ -90,13 +91,23 @@ function GalleryView({
               <p className="caption">{t('empty')}</p>
             </div>
           ) : (
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 sm:gap-8 [column-fill:_balance]">
-              {photos.map((p, i) => (
-                <div key={p.id} className="mb-6 sm:mb-8 break-inside-avoid">
-                  <PhotoCard photo={p} locale={locale} priority={i < 4} />
-                </div>
-              ))}
-            </div>
+            <>
+              <GalleryTracker photos={photos} listId="gallery" listName="Gallery" />
+              <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 sm:gap-8 [column-fill:_balance]">
+                {photos.map((p, i) => (
+                  <div key={p.id} className="mb-6 sm:mb-8 break-inside-avoid">
+                    <PhotoCard
+                      photo={p}
+                      locale={locale}
+                      priority={i < 4}
+                      index={i}
+                      listId="gallery"
+                      listName="Gallery"
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </Container>
       </section>

@@ -4,13 +4,18 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
+import { PurchaseTracker } from '@/components/analytics/PurchaseTracker';
 
 export const dynamic = 'force-dynamic';
 
 async function getOrder(sessionId: string) {
   return prisma.order.findFirst({
     where: { stripeSessionId: sessionId },
-    include: { photo: { select: { title: true, slug: true } } },
+    include: {
+      photo: {
+        select: { id: true, slug: true, title: true, country: true, city: true, orientation: true },
+      },
+    },
   });
 }
 
@@ -23,21 +28,58 @@ export default async function CheckoutSuccessPage({
 }) {
   setRequestLocale(params.locale);
   const order = searchParams.session_id ? await getOrder(searchParams.session_id) : null;
-  return <SuccessView locale={params.locale} token={order?.downloadToken} photoTitle={order?.photo.title} />;
+  return (
+    <SuccessView
+      locale={params.locale}
+      token={order?.downloadToken}
+      photoTitle={order?.photo.title}
+      tracking={
+        order
+          ? {
+              transactionId: order.id,
+              total: order.total,
+              photo: {
+                id: order.photo.id,
+                slug: order.photo.slug,
+                title: order.photo.title,
+                price: order.amount,
+                currency: order.currency,
+                country: order.photo.country,
+                city: order.photo.city,
+                orientation: order.photo.orientation,
+              },
+            }
+          : undefined
+      }
+    />
+  );
 }
 
 function SuccessView({
   locale,
   token,
   photoTitle,
+  tracking,
 }: {
   locale: string;
   token?: string;
   photoTitle?: string;
+  tracking?: {
+    transactionId: string;
+    total: number;
+    photo: import('@/lib/analytics').PhotoLike;
+  };
 }) {
   const t = useTranslations('checkout.success');
   return (
     <section className="min-h-[70vh] flex items-center py-24">
+      {tracking && (
+        <PurchaseTracker
+          transactionId={tracking.transactionId}
+          total={tracking.total}
+          photo={tracking.photo}
+        />
+      )}
       <Container size="narrow">
         <div className="text-center space-y-8">
           <CheckCircle2 className="w-16 h-16 text-accent mx-auto" />
