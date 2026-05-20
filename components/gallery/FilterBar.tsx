@@ -4,6 +4,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { track } from '@/lib/analytics';
 
 interface CountryOption {
   value: string;
@@ -29,10 +30,14 @@ export function FilterBar({ countries, total }: FilterBarProps) {
     const next = new URLSearchParams(params.toString());
     if (value) next.set(key, value);
     else next.delete(key);
+    if (value) track.filterApply(key, value);
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
 
-  const reset = () => router.replace(pathname, { scroll: false });
+  const reset = () => {
+    track.event('filter_reset');
+    router.replace(pathname, { scroll: false });
+  };
   const hasFilters = Boolean(country || orientation);
 
   return (

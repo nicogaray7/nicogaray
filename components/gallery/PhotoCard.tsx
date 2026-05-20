@@ -1,20 +1,28 @@
+'use client';
 import Link from 'next/link';
 import type { Photo } from '@prisma/client';
 import { r2PublicUrl } from '@/lib/r2';
 import { cn } from '@/lib/utils';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { COUNTRY_NAMES } from '@/lib/country-names';
+import { track, toItem } from '@/lib/analytics';
 
 export function PhotoCard({
   photo,
   locale,
   priority = false,
   showMeta = true,
+  index,
+  listId = 'gallery',
+  listName = 'Gallery',
 }: {
   photo: Photo;
   locale: string;
   priority?: boolean;
   showMeta?: boolean;
+  index?: number;
+  listId?: string;
+  listName?: string;
 }) {
   const thumbUrl = r2PublicUrl(photo.previewKey) ?? '';
   const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
@@ -33,7 +41,11 @@ export function PhotoCard({
   const aspectRatio = photo.width && photo.height ? `${photo.width} / ${photo.height}` : '3 / 2';
 
   return (
-    <Link href={`/${locale}/gallery/${photo.slug}`} className="group block">
+    <Link
+      href={`/${locale}/gallery/${photo.slug}`}
+      className="group block"
+      onClick={() => track.selectItem(listId, listName, toItem(photo, index))}
+    >
       <div
         className={cn('relative w-full overflow-hidden bg-paper-cool')}
         style={{ aspectRatio }}

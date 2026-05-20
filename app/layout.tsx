@@ -102,8 +102,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            // Consent Mode v2 - defaults (update via banner if/when added)
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'granted',
+              functionality_storage: 'granted',
+              security_storage: 'granted',
+              wait_for_update: 500,
+            });
             gtag('js', new Date());
-            gtag('config', '${GA_ID}');
+            gtag('config', '${GA_ID}', {
+              send_page_view: true,
+              anonymize_ip: true,
+            });
           `}
         </Script>
       </head>

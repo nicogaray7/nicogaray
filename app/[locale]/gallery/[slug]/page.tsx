@@ -2,9 +2,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, ArrowRight, MapPin, Calendar, Camera, Aperture } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Camera, Aperture } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { PhotoPageTracker } from '@/components/gallery/PhotoPageTracker';
+import { BuyButton } from '@/components/gallery/BuyButton';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2';
@@ -86,6 +88,18 @@ function PhotoView({
 
   return (
     <article>
+      <PhotoPageTracker
+        photo={{
+          id: photo.id,
+          slug: photo.slug,
+          title,
+          price: photo.price,
+          currency: photo.currency,
+          country: photo.country,
+          city: photo.city,
+          orientation: photo.orientation,
+        }}
+      />
       {/* Full-bleed image dominates the page */}
       <section className="bg-paper-cool">
         <Container size="wide">
@@ -159,13 +173,20 @@ function PhotoView({
                   <li>· {t('license')}</li>
                   <li>· {t('expiry')}</li>
                 </ul>
-                <Link
+                <BuyButton
                   href={`/${locale}/checkout/${photo.id}`}
-                  className="inline-flex items-center justify-center w-full gap-2 px-6 py-3 bg-ink text-paper text-sm font-medium hover:bg-accent transition-colors group"
-                >
-                  {t('buyCta', { price: formattedPrice })}
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
+                  label={t('buyCta', { price: formattedPrice })}
+                  photo={{
+                    id: photo.id,
+                    slug: photo.slug,
+                    title,
+                    price: photo.price,
+                    currency: photo.currency,
+                    country: photo.country,
+                    city: photo.city,
+                    orientation: photo.orientation,
+                  }}
+                />
               </div>
             </aside>
           </div>
