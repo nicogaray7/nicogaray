@@ -4,6 +4,7 @@ import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { FilterBar } from '@/components/gallery/FilterBar';
+import { COUNTRY_NAMES } from '@/lib/country-names';
 import type { Prisma } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
@@ -11,18 +12,24 @@ export const dynamic = 'force-dynamic';
 interface GallerySearchParams {
   country?: string;
   orientation?: string;
-  sort?: string;
 }
 
-async function getCountries() {
+async function getCountries(locale: string) {
   try {
     const rows = await prisma.photo.findMany({
       where: { published: true, country: { not: null } },
-      select: { country: true },
+      select: { country: true, countryCode: true },
       distinct: ['country'],
       orderBy: { country: 'asc' },
     });
-    return rows.map((r) => r.country!).filter(Boolean);
+    return rows
+      .filter((r) => r.country)
+      .map((r) => {
+        const meta = r.countryCode ? COUNTRY_NAMES[r.countryCode.toUpperCase()] : null;
+        const label = meta ? (locale === 'en' ? meta.en : meta.fr) : r.country!;
+        return { value: r.country!, label };
+      })
+      .sort((a, b) => a.label.localeCompare(b.label));
   } catch {
     return [];
   }
@@ -34,15 +41,7 @@ async function getPhotos(params: GallerySearchParams) {
     if (params.country) where.country = params.country;
     if (params.orientation) where.orientation = params.orientation;
 
-    // Reverse chronological by date taken; fallback to createdAt
-    const orderBy: Prisma.PhotoOrderByWithRelationInput[] =
-      params.sort === 'priceAsc'
-        ? [{ price: 'asc' }, { takenAt: 'desc' }]
-        : params.sort === 'priceDesc'
-          ? [{ price: 'desc' }, { takenAt: 'desc' }]
-          : params.sort === 'oldest'
-            ? [{ takenAt: 'asc' }, { createdAt: 'asc' }]
-            : [{ takenAt: 'desc' }, { createdAt: 'desc' }];
+    const orderBy: Prisma.PhotoOrderByWithRelationInput[] = [{ takenAt: 'desc' }, { createdAt: 'desc' }];
 
     return await prisma.photo.findMany({ where, orderBy });
   } catch {
@@ -58,7 +57,7 @@ export default async function GalleryPage({
   searchParams: GallerySearchParams;
 }) {
   setRequestLocale(params.locale);
-  const [photos, countries] = await Promise.all([getPhotos(searchParams), getCountries()]);
+  const [photos, countries] = await Promise.all([getPhotos(searchParams), getCountries(params.locale)]);
   return <GalleryView photos={photos} countries={countries} locale={params.locale} />;
 }
 

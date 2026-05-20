@@ -47,10 +47,7 @@
       "reset": "Réinitialiser",
       "landscape": "Paysage",
       "portrait": "Portrait",
-      "square": "Carré",
-      "recent": "Plus récentes",
-      "priceAsc": "Prix croissant",
-      "priceDesc": "Prix décroissant"
+      "recent": "Plus récentes"
     },
     "results": "{count, plural, =0 {Aucune photo} =1 {1 photo} other {# photos}}",
     "empty": "Aucune photo ne correspond à vos filtres."
