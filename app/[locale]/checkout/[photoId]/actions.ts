@@ -7,7 +7,8 @@ const schema = z.object({
   photoId: z.string().min(1),
   locale: z.string().min(2),
   email: z.string().email(),
-  name: z.string().optional(),
+  firstName: z.string().trim().min(1, 'First name required'),
+  lastName: z.string().trim().min(1, 'Last name required'),
 });
 
 export async function createCheckoutSession(
@@ -15,7 +16,8 @@ export async function createCheckoutSession(
 ): Promise<{ url?: string; error?: string }> {
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return { error: 'Invalid input' };
-  const { photoId, locale, email, name } = parsed.data;
+  const { photoId, locale, email, firstName, lastName } = parsed.data;
+  const name = `${firstName} ${lastName}`;
 
   const photo = await prisma.photo.findUnique({ where: { id: photoId } });
   if (!photo || !photo.published) return { error: 'Photo not found' };
