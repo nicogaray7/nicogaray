@@ -15,6 +15,14 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# NEXT_PUBLIC_* vars must be present at build time so they get baked into
+# the client JS bundle. Pass them in via docker-compose build args.
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_R2_PUBLIC_URL
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_R2_PUBLIC_URL=$NEXT_PUBLIC_R2_PUBLIC_URL
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 RUN npx prisma generate && npx next build
 
 # Runner: ships full node_modules so one-off scripts (prisma db push,
