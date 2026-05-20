@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { ArrowLeft, ArrowRight, MapPin, Calendar, Camera, Aperture } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { ProtectedImg } from '@/components/ProtectedImg';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2';
 import { formatPrice, slugify } from '@/lib/utils';
@@ -95,7 +96,7 @@ function PhotoView({
           </div>
           <div className="relative w-full bg-ink">
             {previewUrl ? (
-              <img src={previewUrl} alt={title} className="w-full h-auto block max-h-[88vh] object-contain mx-auto" />
+              <ProtectedImg src={previewUrl} alt={title} className="w-full h-auto block max-h-[88vh] object-contain mx-auto" />
             ) : (
               <div className="aspect-[3/2] flex items-center justify-center text-ink-dim">No preview</div>
             )}
