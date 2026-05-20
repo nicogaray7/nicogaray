@@ -110,9 +110,12 @@ export default async function EditPhotoPage({ params }: { params: { id: string }
             </Field>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Field label="Country">
-              <Input name="country" defaultValue={photo.country ?? ''} />
+              <Input name="country" defaultValue={photo.country ?? ''} placeholder="ex: Barbade" />
+            </Field>
+            <Field label="ISO code (2)">
+              <Input name="countryCode" defaultValue={photo.countryCode ?? ''} maxLength={2} placeholder="BB" />
             </Field>
             <Field label="City">
               <Input name="city" defaultValue={photo.city ?? ''} />

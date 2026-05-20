@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { r2Put, r2Delete } from '@/lib/r2';
 import { processImage, extractExif } from '@/lib/images';
+import { COUNTRY_NAMES, nameToCode } from '@/lib/country-names';
 
 async function requireAdmin() {
   const session = await auth();
@@ -23,6 +24,7 @@ const updateSchema = z.object({
   story: z.string().optional(),
   storyEn: z.string().optional(),
   country: z.string().optional(),
+  countryCode: z.string().optional(),
   city: z.string().optional(),
   tags: z.string().optional(),
   price: z.coerce.number().min(0),
@@ -42,6 +44,25 @@ export async function updatePhoto(formData: FormData) {
 
   const tags = data.tags ? data.tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
 
+  // Resolve / normalise country code: prefer explicit code, else derive from name
+  let countryCode = data.countryCode ? data.countryCode.toUpperCase() : null;
+  let countryName = data.country?.trim() || null;
+  if (!countryCode && countryName) countryCode = nameToCode(countryName);
+  if (countryCode) {
+    const meta = COUNTRY_NAMES[countryCode];
+    if (meta && !countryName) countryName = meta.fr;
+    // Make sure a Country row exists for this code so it appears on map + country pages
+    await prisma.country.upsert({
+      where: { code: countryCode },
+      create: {
+        code: countryCode,
+        nameFr: meta?.fr ?? countryName ?? countryCode,
+        nameEn: meta?.en ?? countryName ?? countryCode,
+      },
+      update: {},
+    });
+  }
+
   await prisma.photo.update({
     where: { id: data.id },
     data: {
@@ -51,7 +72,8 @@ export async function updatePhoto(formData: FormData) {
       descriptionEn: data.descriptionEn || null,
       story: data.story || null,
       storyEn: data.storyEn || null,
-      country: data.country || null,
+      country: countryName,
+      countryCode,
       city: data.city || null,
       tags,
       price: data.price,
