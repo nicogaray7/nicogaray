@@ -27,47 +27,41 @@ const THUMB_MAX = 600;
 const PREVIEW_QUALITY = 82;
 const THUMB_QUALITY = 78;
 
-const WATERMARK_TEXT = '© NICO GARAY';
+const WM_TEXT = '© NICO GARAY · photos.nicogaray.com';
 
-function watermarkSvg(width: number, height: number, opts: { large?: boolean } = {}): Buffer {
-  // Two-line watermark in the bottom-right corner: name + URL.
-  // The font size scales with the smaller dimension so it stays readable
-  // across orientations.
-  const dim = Math.min(width, height);
-  const baseSize = opts.large ? Math.max(18, Math.round(dim * 0.022)) : Math.max(12, Math.round(dim * 0.026));
-  const sub = Math.round(baseSize * 0.6);
-  const pad = Math.round(dim * 0.025);
-  const x = width - pad;
-  const y = height - pad - sub - 4;
-  const ySub = height - pad;
-  const opacity = 0.85;
-  const blur = Math.max(2, Math.round(baseSize * 0.15));
+/**
+ * Build a tiled diagonal watermark covering the whole image.
+ * Very low opacity (~7%) so it stays unobtrusive while making cropping
+ * the image to remove the mark essentially impractical (the text
+ * repeats every ~280px in a -30deg pattern, soft mix-blend).
+ */
+export function watermarkSvg(width: number, height: number): Buffer {
+  const dim = Math.max(width, height);
+  const fontSize = Math.max(12, Math.round(dim * 0.012));
+  const stepX = Math.max(220, Math.round(fontSize * 18));
+  const stepY = Math.max(140, Math.round(fontSize * 8));
+  const opacity = 0.07;
 
   return Buffer.from(`
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
   <defs>
-    <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="${blur}"/>
-      <feOffset dx="0" dy="${blur / 3}" result="o"/>
-      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
-      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
+    <pattern id="wm" patternUnits="userSpaceOnUse" width="${stepX}" height="${stepY}" patternTransform="rotate(-30)">
+      <text x="0" y="${stepY / 2}" font-family="-apple-system, system-ui, 'Segoe UI', sans-serif" font-size="${fontSize}" font-weight="500" fill="#FFFFFF" opacity="${opacity}" letter-spacing="${fontSize * 0.15}">${WM_TEXT}</text>
+      <text x="0" y="${stepY / 2}" font-family="-apple-system, system-ui, 'Segoe UI', sans-serif" font-size="${fontSize}" font-weight="500" fill="#000000" opacity="${opacity * 0.6}" letter-spacing="${fontSize * 0.15}" transform="translate(0.5,0.5)">${WM_TEXT}</text>
+    </pattern>
   </defs>
-  <g filter="url(#s)" font-family="-apple-system, system-ui, 'Segoe UI', sans-serif" text-anchor="end">
-    <text x="${x}" y="${y}" font-size="${baseSize}" font-weight="600" fill="#FFFFFF" opacity="${opacity}" letter-spacing="${baseSize * 0.08}">${WATERMARK_TEXT}</text>
-    <text x="${x}" y="${ySub}" font-size="${sub}" fill="#FFFFFF" opacity="${opacity * 0.85}" letter-spacing="${sub * 0.08}">photos.nicogaray.com</text>
-  </g>
+  <rect width="100%" height="100%" fill="url(#wm)"/>
 </svg>`);
 }
 
-async function watermark(buffer: Buffer, opts: { large?: boolean } = {}): Promise<Buffer> {
+async function applyWatermark(buffer: Buffer): Promise<Buffer> {
   const meta = await sharp(buffer).metadata();
   const w = meta.width ?? 0;
   const h = meta.height ?? 0;
   if (!w || !h) return buffer;
   return sharp(buffer)
-    .composite([{ input: watermarkSvg(w, h, opts), top: 0, left: 0 }])
-    .jpeg({ quality: meta.format === 'jpeg' ? 82 : 85, mozjpeg: true })
+    .composite([{ input: watermarkSvg(w, h), top: 0, left: 0 }])
+    .jpeg({ quality: 82, mozjpeg: true })
     .toBuffer();
 }
 
@@ -84,23 +78,21 @@ export async function processImage(buffer: Buffer): Promise<ImageVariants> {
         ? 'landscape'
         : 'portrait';
 
-  // Original: untouched, HD, no watermark, what buyers download
   const original = await sharp(buffer).rotate().jpeg({ quality: 92, mozjpeg: true }).toBuffer();
 
-  // Preview + thumb: resized AND watermarked
   const previewRaw = await sharp(buffer)
     .rotate()
     .resize({ width: PREVIEW_MAX, height: PREVIEW_MAX, fit: 'inside', withoutEnlargement: true })
     .jpeg({ quality: PREVIEW_QUALITY, mozjpeg: true })
     .toBuffer();
-  const preview = await watermark(previewRaw, { large: true });
+  const preview = await applyWatermark(previewRaw);
 
   const thumbRaw = await sharp(buffer)
     .rotate()
     .resize({ width: THUMB_MAX, height: THUMB_MAX, fit: 'inside', withoutEnlargement: true })
     .jpeg({ quality: THUMB_QUALITY, mozjpeg: true })
     .toBuffer();
-  const thumb = await watermark(thumbRaw, { large: false });
+  const thumb = await applyWatermark(thumbRaw);
 
   return { original, preview, thumb, width, height, orientation };
 }
