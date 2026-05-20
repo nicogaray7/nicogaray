@@ -31,6 +31,40 @@ const nextConfig = {
         destination: '/:locale/gallery/photo-n-:n',
         permanent: true,
       },
+      // Branded Instagram links with UTM tags for GA4 attribution.
+      // Bio link → /ig (one link per profile, the main one)
+      {
+        source: '/ig',
+        destination: '/?utm_source=instagram&utm_medium=social&utm_campaign=bio',
+        permanent: false,
+      },
+      // Story link sticker → /ig/story
+      {
+        source: '/ig/story',
+        destination: '/?utm_source=instagram&utm_medium=social&utm_campaign=story',
+        permanent: false,
+      },
+      // Generic post / feed link with optional named campaign suffix
+      {
+        source: '/ig/post/:campaign',
+        destination:
+          '/?utm_source=instagram&utm_medium=social&utm_campaign=:campaign',
+        permanent: false,
+      },
+      // Direct deep-link to a specific photo (use full slug)
+      {
+        source: '/ig/photo/:slug',
+        destination:
+          '/fr/gallery/:slug?utm_source=instagram&utm_medium=social&utm_campaign=photo_link',
+        permanent: false,
+      },
+      // Gallery shortcut
+      {
+        source: '/ig/gallery',
+        destination:
+          '/fr/gallery?utm_source=instagram&utm_medium=social&utm_campaign=gallery_link',
+        permanent: false,
+      },
     ];
   },
   async headers() {
