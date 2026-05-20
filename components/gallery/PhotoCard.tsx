@@ -16,7 +16,7 @@ export function PhotoCard({
   priority?: boolean;
   showMeta?: boolean;
 }) {
-  const thumbUrl = r2PublicUrl(photo.thumbKey) ?? '';
+  const thumbUrl = r2PublicUrl(photo.previewKey) ?? '';
   const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
   const countryName = photo.countryCode && COUNTRY_NAMES[photo.countryCode]
     ? COUNTRY_NAMES[photo.countryCode][locale === 'en' ? 'en' : 'fr']
