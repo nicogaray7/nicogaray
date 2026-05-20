@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -8,6 +9,29 @@ import { ToastProvider } from '@/components/ui/toast';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
+}
+
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  const isEn = params.locale === 'en';
+  const title = isEn ? 'Nico Garay · Travel photography' : 'Nico Garay · Photographie de voyage';
+  const description = isEn
+    ? "Travel photography in high-resolution digital editions. Traveller before photographer, I capture the landscapes and subjects that inspire me."
+    : "Photographies de voyage en édition numérique haute résolution. Voyageur avant photographe, je capture les paysages et les sujets qui m'inspirent.";
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/${params.locale}`,
+      languages: { fr: '/fr', en: '/en', 'x-default': '/fr' },
+    },
+    openGraph: {
+      title,
+      description,
+      locale: isEn ? 'en_GB' : 'fr_FR',
+      alternateLocale: isEn ? ['fr_FR'] : ['en_GB'],
+    },
+    twitter: { title, description },
+  };
 }
 
 export default async function LocaleLayout({
