@@ -59,7 +59,9 @@ export async function r2SignedGetUrl(key: string, expiresIn = 60 * 60) {
 }
 
 export function r2PublicUrl(key: string) {
-  const base = process.env.R2_PUBLIC_URL;
+  // Read both server (R2_PUBLIC_URL) and client-exposed (NEXT_PUBLIC_) names
+  // so the URL is identical between SSR and client hydration.
+  const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || process.env.R2_PUBLIC_URL;
   if (!base) return null;
   return `${base.replace(/\/$/, '')}/${key}`;
 }
