@@ -7,6 +7,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Container } from './Container';
 import { LocaleSwitcher } from './LocaleSwitcher';
+import { Logo } from './Logo';
 
 export function Nav() {
   const locale = useLocale();
@@ -14,6 +15,10 @@ export function Nav() {
   const t = useTranslations('common');
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+
+  // Pages with a dark/photo hero behind the nav at the top of the page.
+  const isHome = pathname === `/${locale}`;
+  const overDark = isHome && !scrolled;
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -40,13 +45,8 @@ export function Nav() {
       )}
     >
       <Container>
-        <div className="h-14 sm:h-16 flex items-center justify-between">
-          <Link
-            href={`/${locale}`}
-            className="text-base sm:text-lg font-medium text-ink hover:text-accent transition-colors"
-          >
-            Nico Garay
-          </Link>
+        <div className="h-16 sm:h-20 flex items-center justify-between">
+          <Logo href={`/${locale}`} size="md" variant={overDark ? 'light' : 'dark'} />
 
           <nav className="hidden md:flex items-center gap-8">
             {links.map((l) => (
@@ -54,8 +54,10 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 className={cn(
-                  'text-sm transition-colors',
-                  isActive(l.href) ? 'text-accent' : 'text-ink-muted hover:text-ink',
+                  'text-xs tracking-[0.18em] uppercase transition-colors',
+                  isActive(l.href)
+                    ? overDark ? 'text-paper' : 'text-accent'
+                    : overDark ? 'text-paper/70 hover:text-paper' : 'text-ink-muted hover:text-ink',
                 )}
               >
                 {l.label}
@@ -64,12 +66,17 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <LocaleSwitcher />
+            <LocaleSwitcher
+              className={overDark ? 'text-paper/70 hover:text-paper' : undefined}
+            />
             <button
               type="button"
               aria-label="Menu"
               onClick={() => setOpen((v) => !v)}
-              className="md:hidden w-9 h-9 -mr-2 flex items-center justify-center text-ink-muted hover:text-ink transition-colors"
+              className={cn(
+                'md:hidden w-9 h-9 -mr-2 flex items-center justify-center transition-colors',
+                overDark ? 'text-paper/80 hover:text-paper' : 'text-ink-muted hover:text-ink',
+              )}
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -99,7 +106,7 @@ export function Nav() {
               key={l.href}
               href={l.href}
               className={cn(
-                'text-2xl font-medium transition-colors',
+                'font-display text-3xl tracking-[0.18em] uppercase transition-colors',
                 isActive(l.href) ? 'text-accent' : 'text-ink-muted hover:text-ink',
               )}
             >

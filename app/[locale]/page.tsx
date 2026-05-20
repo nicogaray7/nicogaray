@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { r2PublicUrl } from '@/lib/r2';
 import { ProtectedImg } from '@/components/ProtectedImg';
+import { Logo } from '@/components/layout/Logo';
 
 export const revalidate = 60;
 
@@ -69,15 +70,17 @@ function Hero({ hero }: { hero: Awaited<ReturnType<typeof getHeroPhoto>> }) {
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
 
       <Container className="relative z-10 pb-16 sm:pb-24">
-        <div className="max-w-3xl space-y-5 text-paper">
-          <h1 className="text-display-2xl font-display animate-fade-up">{t('title')}</h1>
-          <p className="text-lg sm:text-2xl text-paper/90 leading-snug max-w-xl animate-fade-up" style={{ animationDelay: '100ms' }}>
+        <div className="max-w-3xl space-y-6 text-paper">
+          <h1 className="animate-fade-up">
+            <Logo as="span" size="xl" variant="light" />
+          </h1>
+          <p className="font-sans text-lg sm:text-2xl text-paper/90 leading-snug max-w-xl animate-fade-up" style={{ animationDelay: '100ms' }}>
             {t('subtitle')}
           </p>
           <div className="pt-4 animate-fade-up" style={{ animationDelay: '200ms' }}>
             <Link
               href="/gallery"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-paper text-ink text-sm font-medium hover:bg-accent hover:text-paper transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-paper text-ink text-xs tracking-[0.18em] uppercase hover:bg-accent hover:text-paper transition-colors"
             >
               {t('cta')}
               <ArrowRight className="w-4 h-4" />
