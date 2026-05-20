@@ -23,6 +23,16 @@ const nextConfig = {
       bodySizeLimit: '50mb',
     },
   },
+  async redirects() {
+    return [
+      {
+        // Permanent redirect of legacy "photographie-n-X" slugs to "photo-n-X"
+        source: '/:locale/gallery/photographie-n-:n',
+        destination: '/:locale/gallery/photo-n-:n',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
