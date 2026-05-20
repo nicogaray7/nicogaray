@@ -3,6 +3,7 @@ import type { Photo } from '@prisma/client';
 import { r2PublicUrl } from '@/lib/r2';
 import { cn } from '@/lib/utils';
 import { ProtectedImg } from '@/components/ProtectedImg';
+import { COUNTRY_NAMES } from '@/lib/country-names';
 
 export function PhotoCard({
   photo,
@@ -17,7 +18,10 @@ export function PhotoCard({
 }) {
   const thumbUrl = r2PublicUrl(photo.thumbKey) ?? '';
   const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
-  const location = [photo.city, photo.country].filter(Boolean).join(', ');
+  const countryName = photo.countryCode && COUNTRY_NAMES[photo.countryCode]
+    ? COUNTRY_NAMES[photo.countryCode][locale === 'en' ? 'en' : 'fr']
+    : photo.country;
+  const location = [photo.city, countryName].filter(Boolean).join(', ');
   const date = photo.takenAt
     ? new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
         month: 'short',

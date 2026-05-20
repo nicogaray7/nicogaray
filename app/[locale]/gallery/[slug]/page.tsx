@@ -9,6 +9,7 @@ import { ProtectedImg } from '@/components/ProtectedImg';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2';
 import { formatPrice, slugify } from '@/lib/utils';
+import { COUNTRY_NAMES } from '@/lib/country-names';
 
 export const revalidate = 60;
 
@@ -72,7 +73,10 @@ function PhotoView({
   const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
   const description = locale === 'en' && photo.descriptionEn ? photo.descriptionEn : photo.description;
   const story = locale === 'en' && photo.storyEn ? photo.storyEn : photo.story;
-  const location = [photo.city, photo.country].filter(Boolean).join(', ');
+  const countryName = photo.countryCode && COUNTRY_NAMES[photo.countryCode]
+    ? COUNTRY_NAMES[photo.countryCode][locale === 'en' ? 'en' : 'fr']
+    : photo.country;
+  const location = [photo.city, countryName].filter(Boolean).join(', ');
   const previewUrl = r2PublicUrl(photo.previewKey) ?? '';
   const intl = locale === 'en' ? 'en-GB' : 'fr-FR';
   const formattedPrice = formatPrice(photo.price, photo.currency, intl);
@@ -110,13 +114,13 @@ function PhotoView({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
             <div className="lg:col-span-7 space-y-8">
               <header className="space-y-3">
-                {photo.country && (
+                {(photo.countryCode || photo.country) && (
                   <Link
-                    href={`/${locale}/country/${slugify(photo.country)}`}
+                    href={`/${locale}/country/${photo.countryCode ?? slugify(photo.country ?? '')}`}
                     className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-ink transition-colors"
                   >
                     <MapPin className="w-3.5 h-3.5" />
-                    {location || photo.country}
+                    {location || countryName}
                   </Link>
                 )}
                 <h1 className="text-display-lg font-display text-ink">{title}</h1>
