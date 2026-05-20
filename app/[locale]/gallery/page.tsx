@@ -90,9 +90,11 @@ function GalleryView({
               <p className="caption">{t('empty')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 sm:gap-8 [column-fill:_balance]">
               {photos.map((p, i) => (
-                <PhotoCard key={p.id} photo={p} locale={locale} priority={i < 4} />
+                <div key={p.id} className="mb-6 sm:mb-8 break-inside-avoid">
+                  <PhotoCard photo={p} locale={locale} priority={i < 4} />
+                </div>
               ))}
             </div>
           )}
