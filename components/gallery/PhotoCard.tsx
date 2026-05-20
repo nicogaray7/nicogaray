@@ -29,17 +29,15 @@ export function PhotoCard({
       }).format(photo.takenAt)
     : null;
 
-  // Use natural aspect ratios, landscape stays wide, portrait stays tall
-  const aspectClass =
-    photo.orientation === 'portrait'
-      ? 'aspect-[2/3]'
-      : photo.orientation === 'square'
-        ? 'aspect-square'
-        : 'aspect-[3/2]';
+  // Use the photo's true aspect ratio so the masonry grid has no empty gaps
+  const aspectRatio = photo.width && photo.height ? `${photo.width} / ${photo.height}` : '3 / 2';
 
   return (
     <Link href={`/${locale}/gallery/${photo.slug}`} className="group block">
-      <div className={cn('relative w-full overflow-hidden bg-paper-cool', aspectClass)}>
+      <div
+        className={cn('relative w-full overflow-hidden bg-paper-cool')}
+        style={{ aspectRatio }}
+      >
         {thumbUrl ? (
           <ProtectedImg
             src={thumbUrl}
