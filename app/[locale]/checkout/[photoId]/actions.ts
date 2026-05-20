@@ -6,9 +6,6 @@ import { getStripe, buyerFees } from '@/lib/stripe';
 const schema = z.object({
   photoId: z.string().min(1),
   locale: z.string().min(2),
-  email: z.string().email(),
-  firstName: z.string().trim().min(1, 'First name required'),
-  lastName: z.string().trim().min(1, 'Last name required'),
 });
 
 export async function createCheckoutSession(
@@ -16,8 +13,7 @@ export async function createCheckoutSession(
 ): Promise<{ url?: string; error?: string }> {
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return { error: 'Invalid input' };
-  const { photoId, locale, email, firstName, lastName } = parsed.data;
-  const name = `${firstName} ${lastName}`;
+  const { photoId, locale } = parsed.data;
 
   const photo = await prisma.photo.findUnique({ where: { id: photoId } });
   if (!photo || !photo.published) return { error: 'Photo not found' };
@@ -25,11 +21,12 @@ export async function createCheckoutSession(
   const fees = buyerFees(photo.price);
   const total = Math.round((photo.price + fees) * 100) / 100;
 
+  // Create the Order first so we can reference it in Stripe metadata.
+  // Buyer details (email, name, phone) are filled in by the webhook once
+  // Stripe Checkout has collected them natively.
   const order = await prisma.order.create({
     data: {
       photoId: photo.id,
-      buyerEmail: email.toLowerCase(),
-      buyerName: name,
       amount: photo.price,
       fees,
       total,
@@ -42,8 +39,11 @@ export async function createCheckoutSession(
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
-    customer_email: email,
     locale: locale === 'fr' ? 'fr' : 'en',
+    // Stripe-native collection of customer details
+    billing_address_collection: 'required',
+    phone_number_collection: { enabled: true },
+    customer_creation: 'always',
     line_items: [
       {
         quantity: 1,

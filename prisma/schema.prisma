@@ -97,8 +97,9 @@ model Order {
   photoId String
   photo   Photo  @relation(fields: [photoId], references: [id], onDelete: Restrict)
 
-  buyerEmail String
+  buyerEmail String?
   buyerName  String?
+  buyerPhone String?
   buyerCountry String?
 
   paymentMethod   String  @default("stripe")
