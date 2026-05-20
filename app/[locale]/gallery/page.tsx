@@ -67,7 +67,7 @@ function GalleryView({
   locale,
 }: {
   photos: Awaited<ReturnType<typeof getPhotos>>;
-  countries: string[];
+  countries: Awaited<ReturnType<typeof getCountries>>;
   locale: string;
 }) {
   const t = useTranslations('gallery');
