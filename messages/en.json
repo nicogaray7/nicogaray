@@ -83,6 +83,7 @@
     "summary": "Summary",
     "fees": "Transaction fees",
     "total": "Total",
+    "feesNote": "Stripe fees paid by the buyer.",
     "submit": "Pay now",
     "success": {
       "title": "Thank you",

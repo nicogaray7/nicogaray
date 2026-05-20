@@ -53,7 +53,7 @@ async function main() {
       const { original, preview, thumb, width, height, orientation } = await processImage(buffer);
       const exif = await extractExif(buffer);
 
-      const title = name.match(/^\d+$/) ? `Photographie n° ${name}` : name.replace(/[_-]+/g, ' ');
+      const title = name.match(/^\d+$/) ? `Photo n° ${name}` : name.replace(/[_-]+/g, ' ');
       const baseSlug = slugify(title, { lower: true, strict: true }).slice(0, 60) || `photo-${name}`;
       const slug = await uniqueSlug(baseSlug);
 
