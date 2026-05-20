@@ -29,13 +29,24 @@ async function getVisitedCountries(locale: string) {
     .sort((a, b) => b.count - a.count);
 }
 
+async function getPhotoDots() {
+  const rows = await prisma.photo.findMany({
+    where: { published: true, latitude: { not: null }, longitude: { not: null }, countryCode: { not: null } },
+    select: { latitude: true, longitude: true, countryCode: true },
+  });
+  return rows.map((r) => ({ lat: r.latitude!, lng: r.longitude!, countryCode: r.countryCode! }));
+}
+
 export default async function MapPage({ params }: { params: { locale: string } }) {
   setRequestLocale(params.locale);
-  const countries = await getVisitedCountries(params.locale);
+  const [countries, photoDots] = await Promise.all([
+    getVisitedCountries(params.locale),
+    getPhotoDots(),
+  ]);
 
   return (
     <article>
-      <section className="pt-12 pb-8 sm:pt-16 sm:pb-12">
+      <section className="pt-12 pb-6 sm:pt-16 sm:pb-10">
         <Container>
           <div className="max-w-2xl">
             <h1 className="text-display-xl font-display text-ink">
@@ -43,16 +54,16 @@ export default async function MapPage({ params }: { params: { locale: string } }
             </h1>
             <p className="prose-feed text-ink-muted mt-4">
               {params.locale === 'en'
-                ? 'Each highlighted country is one I have photographed. Click to open its gallery.'
-                : 'Chaque pays surligné est un pays que j\'ai photographié. Cliquez pour ouvrir sa galerie.'}
+                ? 'Each red dot is a photo. Click a country to open its gallery.'
+                : 'Chaque point rouge est une photo. Cliquez sur un pays pour ouvrir sa galerie.'}
             </p>
           </div>
         </Container>
       </section>
 
-      <section className="pb-12">
+      <section className="pb-14">
         <Container size="wide">
-          <WorldMap countries={countries} locale={params.locale} />
+          <WorldMap countries={countries} photoDots={photoDots} locale={params.locale} />
         </Container>
       </section>
 
@@ -72,9 +83,7 @@ export default async function MapPage({ params }: { params: { locale: string } }
                   <span className="text-2xl">{flagEmoji(c.code)}</span>
                   <span className="text-sm text-ink group-hover:text-accent transition-colors truncate">{c.name}</span>
                 </div>
-                <span className="text-xs text-ink-muted whitespace-nowrap">
-                  {c.count}
-                </span>
+                <span className="text-xs text-ink-muted whitespace-nowrap">{c.count}</span>
               </Link>
             ))}
           </div>
