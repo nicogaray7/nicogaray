@@ -8,6 +8,7 @@ import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { r2PublicUrl } from '@/lib/r2';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { Logo } from '@/components/layout/Logo';
+import { getSetting, pickText, type HomeSettings } from '@/lib/settings';
 
 export const revalidate = 60;
 
@@ -27,20 +28,25 @@ const HERO_KEY = 'hero/main.jpg';
 
 export default async function HomePage({ params }: { params: { locale: string } }) {
   setRequestLocale(params.locale);
-  const featured = await getFeaturedPhotos();
+  const [featured, homeSettings] = await Promise.all([
+    getFeaturedPhotos(),
+    getSetting<HomeSettings>('home'),
+  ]);
 
   return (
     <>
-      <Hero />
+      <Hero locale={params.locale} settings={homeSettings} />
       <FeaturedSection photos={featured} locale={params.locale} />
       <AboutTeaser locale={params.locale} />
     </>
   );
 }
 
-function Hero() {
+function Hero({ locale, settings }: { locale: string; settings: HomeSettings | null }) {
   const t = useTranslations('home');
   const heroUrl = r2PublicUrl(HERO_KEY);
+  const subtitle = pickText(settings?.subtitle, locale, t('subtitle'));
+  const cta = pickText(settings?.cta, locale, t('cta'));
 
   return (
     <section className="relative min-h-[90vh] flex items-end overflow-hidden bg-ink">
@@ -60,14 +66,14 @@ function Hero() {
             <Logo as="span" size="xl" variant="light" />
           </h1>
           <p className="font-sans text-lg sm:text-2xl text-paper/90 leading-snug max-w-xl animate-fade-up" style={{ animationDelay: '100ms' }}>
-            {t('subtitle')}
+            {subtitle}
           </p>
           <div className="pt-4 animate-fade-up" style={{ animationDelay: '200ms' }}>
             <Link
-              href="/gallery"
+              href={`/${locale}/gallery`}
               className="inline-flex items-center gap-2 px-6 py-3 bg-paper text-ink text-xs tracking-[0.18em] uppercase hover:bg-accent hover:text-paper transition-colors"
             >
-              {t('cta')}
+              {cta}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

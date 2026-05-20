@@ -60,6 +60,7 @@ model Photo {
   currency  String  @default("EUR")
   published Boolean @default(false)
   featured  Boolean @default(false)
+  isHero    Boolean @default(false) // pinned as home hero
   sortOrder Int     @default(0)
 
   orders    Order[]
@@ -71,6 +72,12 @@ model Photo {
   @@index([countryCode])
   @@index([sortOrder])
   @@index([takenAt])
+}
+
+model SiteSetting {
+  key       String   @id // 'home.hero', 'home.about', 'about', 'legal.cgv', etc.
+  value     Json
+  updatedAt DateTime @updatedAt
 }
 
 model Country {
