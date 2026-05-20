@@ -7,6 +7,7 @@ import { Input, Label, Textarea } from '@/components/ui/input';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2';
 import { updatePhoto, deletePhoto } from '@/app/admin/actions';
+import { setHeroPhoto } from '@/app/admin/settings-actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +41,13 @@ export default async function EditPhotoPage({ params }: { params: { id: string }
               {photo.published ? 'Published' : 'Draft'}
             </span>
             {photo.featured && <span className="text-accent">★ Featured</span>}
+            {photo.isHero && <span className="text-accent font-medium">◆ Hero</span>}
           </div>
+          <form action={setHeroPhoto.bind(null, photo.id)} className="pt-2">
+            <Button type="submit" size="sm" variant={photo.isHero ? 'ghost' : 'secondary'} disabled={photo.isHero}>
+              {photo.isHero ? 'Already the home hero' : 'Set as home hero'}
+            </Button>
+          </form>
         </div>
         {photo.published && (
           <a
