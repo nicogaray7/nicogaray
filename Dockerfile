@@ -1,5 +1,7 @@
 FROM node:20-alpine AS base
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat openssl \
+    fontconfig ttf-dejavu font-noto \
+  && fc-cache -fv
 WORKDIR /app
 
 # Dependencies (all, including dev — needed for prisma CLI, tsx, sharp)
