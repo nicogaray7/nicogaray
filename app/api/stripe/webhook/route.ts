@@ -34,6 +34,13 @@ export async function POST(req: Request) {
     const expiryHours = Number(process.env.DOWNLOAD_TOKEN_EXPIRY_HOURS ?? 48);
     const downloadExpiry = new Date(Date.now() + expiryHours * 3600 * 1000);
 
+    // Buyer details collected natively by Stripe Checkout
+    const cd = session.customer_details;
+    const buyerEmail = cd?.email ?? session.customer_email ?? null;
+    const buyerName = cd?.name ?? null;
+    const buyerPhone = cd?.phone ?? null;
+    const buyerCountry = cd?.address?.country ?? null;
+
     const order = await prisma.order.update({
       where: { id: orderId },
       data: {
@@ -42,18 +49,24 @@ export async function POST(req: Request) {
         stripePaymentIntentId:
           typeof session.payment_intent === 'string' ? session.payment_intent : null,
         downloadExpiry,
+        buyerEmail,
+        buyerName,
+        buyerPhone,
+        buyerCountry,
       },
       include: { photo: true },
     });
 
-    await sendPurchaseEmail({
-      to: order.buyerEmail,
-      photoTitle: order.photo.title,
-      downloadToken: order.downloadToken,
-      total: order.total,
-      currency: order.currency,
-      locale,
-    }).catch((err) => console.error('[email] send failed', err));
+    if (buyerEmail) {
+      await sendPurchaseEmail({
+        to: buyerEmail,
+        photoTitle: order.photo.title,
+        downloadToken: order.downloadToken,
+        total: order.total,
+        currency: order.currency,
+        locale,
+      }).catch((err) => console.error('[email] send failed', err));
+    }
   } else if (event.type === 'checkout.session.expired' || event.type === 'checkout.session.async_payment_failed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const orderId = session.metadata?.orderId;
