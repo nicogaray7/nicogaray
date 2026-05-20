@@ -6,6 +6,7 @@ import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { r2PublicUrl } from '@/lib/r2';
+import { ProtectedImg } from '@/components/ProtectedImg';
 
 export const revalidate = 60;
 
@@ -52,7 +53,7 @@ function Hero({ hero }: { hero: Awaited<ReturnType<typeof getHeroPhoto>> }) {
   return (
     <section className="relative min-h-[90vh] flex items-end overflow-hidden bg-ink">
       {heroUrl && (
-        <img
+        <ProtectedImg
           src={heroUrl}
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-90"

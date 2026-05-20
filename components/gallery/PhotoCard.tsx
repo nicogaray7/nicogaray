@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Photo } from '@prisma/client';
 import { r2PublicUrl } from '@/lib/r2';
 import { cn } from '@/lib/utils';
+import { ProtectedImg } from '@/components/ProtectedImg';
 
 export function PhotoCard({
   photo,
@@ -36,7 +37,7 @@ export function PhotoCard({
     <Link href={`/${locale}/gallery/${photo.slug}`} className="group block">
       <div className={cn('relative w-full overflow-hidden bg-paper-cool', aspectClass)}>
         {thumbUrl ? (
-          <img
+          <ProtectedImg
             src={thumbUrl}
             alt={title}
             loading={priority ? 'eager' : 'lazy'}
