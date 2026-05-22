@@ -64,6 +64,7 @@ export async function POST(req: Request) {
         downloadToken: order.downloadToken,
         total: order.total,
         currency: order.currency,
+        paymentIntentId: order.stripePaymentIntentId,
         locale,
       }).catch((err) => console.error('[email] send failed', err));
     }
