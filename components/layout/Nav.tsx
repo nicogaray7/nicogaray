@@ -26,43 +26,47 @@ export function Nav() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40 bg-paper/90 backdrop-blur-md border-b border-line">
-      <Container>
-        <div className="h-16 sm:h-20 flex items-center justify-between">
-          <Logo href={`/${locale}`} size="md" variant="dark" />
+    <>
+      <header className="fixed top-0 inset-x-0 z-40 bg-paper/90 backdrop-blur-md border-b border-line">
+        <Container>
+          <div className="h-16 sm:h-20 flex items-center justify-between">
+            <Logo href={`/${locale}`} size="md" variant="dark" />
 
-          <nav className="hidden md:flex items-center gap-8">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={cn(
-                  'text-xs tracking-[0.18em] uppercase transition-colors',
-                  isActive(l.href) ? 'text-accent' : 'text-ink-muted hover:text-ink',
-                )}
+            <nav className="hidden md:flex items-center gap-8">
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={cn(
+                    'text-xs tracking-[0.18em] uppercase transition-colors',
+                    isActive(l.href) ? 'text-accent' : 'text-ink-muted hover:text-ink',
+                  )}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-3">
+              <LocaleSwitcher />
+              <button
+                type="button"
+                aria-label="Menu"
+                onClick={() => setOpen((v) => !v)}
+                className="md:hidden w-9 h-9 -mr-2 flex items-center justify-center text-ink-muted hover:text-ink transition-colors"
               >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <LocaleSwitcher />
-            <button
-              type="button"
-              aria-label="Menu"
-              onClick={() => setOpen((v) => !v)}
-              className="md:hidden w-9 h-9 -mr-2 flex items-center justify-center text-ink-muted hover:text-ink transition-colors"
-            >
-              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+                {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </header>
 
+      {/* Mobile menu overlay — kept OUTSIDE <header> so the header's
+          backdrop-filter doesn't trap this fixed element to the header box. */}
       <div
         className={cn(
-          'md:hidden fixed inset-0 z-50 bg-paper transition-all duration-300',
+          'md:hidden fixed inset-0 z-50 bg-paper transition-opacity duration-300',
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
         )}
       >
@@ -91,6 +95,6 @@ export function Nav() {
           ))}
         </nav>
       </div>
-    </header>
+    </>
   );
 }
