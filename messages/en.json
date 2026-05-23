@@ -100,5 +100,10 @@
     "cgv": { "title": "Terms of sale", "body": "Terms of sale, to be completed." },
     "license": { "title": "License", "body": "License, to be completed." },
     "mentions": { "title": "Legal notice", "body": "Legal notice, to be completed." }
+  },
+  "consent": {
+    "description": "We use Google Analytics to improve your experience. You can reject advertising cookies while keeping essential analytics.",
+    "accept": "Accept",
+    "reject": "Reject"
   }
 }

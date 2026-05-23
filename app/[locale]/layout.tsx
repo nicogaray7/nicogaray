@@ -8,6 +8,7 @@ import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { ToastProvider } from '@/components/ui/toast';
 import { PageViewTracker } from '@/components/analytics/PageViewTracker';
+import { ConsentBanner } from '@/components/layout/ConsentBanner';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -53,6 +54,9 @@ export default async function LocaleLayout({
       <ToastProvider>
         <Suspense fallback={null}>
           <PageViewTracker />
+        </Suspense>
+        <Suspense fallback={null}>
+          <ConsentBanner />
         </Suspense>
         <Nav />
         <main className="min-h-screen pt-16 sm:pt-20">{children}</main>
