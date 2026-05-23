@@ -100,5 +100,10 @@
     "cgv": { "title": "Conditions générales de vente", "body": "Contenu CGV, à compléter." },
     "license": { "title": "Licence d'utilisation", "body": "Contenu licence, à compléter." },
     "mentions": { "title": "Mentions légales", "body": "Mentions légales, à compléter." }
+  },
+  "consent": {
+    "description": "Nous utilisons Google Analytics pour améliorer votre expérience. Vous pouvez refuser les cookies publicitaires tout en gardant l'analytique essentielle.",
+    "accept": "Accepter",
+    "reject": "Refuser"
   }
 }
