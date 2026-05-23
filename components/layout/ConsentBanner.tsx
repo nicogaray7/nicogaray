@@ -38,7 +38,12 @@ export function ConsentBanner() {
       <div className="max-w-7xl mx-auto">
         <p className="text-sm mb-4">{t('description')}</p>
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-          <Button variant="secondary" size="sm" onClick={() => updateConsent(false)}>
+          <Button
+            variant="primary"
+            size="sm"
+            className="bg-paper text-ink hover:bg-paper/90"
+            onClick={() => updateConsent(false)}
+          >
             {t('reject')}
           </Button>
           <Button variant="accent" size="sm" onClick={() => updateConsent(true)}>
