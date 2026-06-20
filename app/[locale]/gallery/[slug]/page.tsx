@@ -108,7 +108,7 @@ function PhotoView({
   const intl = locale === 'en' ? 'en-GB' : 'fr-FR';
   const formattedPrice = formatPrice(photo.price, photo.currency, intl);
   const dateFmt = photo.takenAt
-    ? new Intl.DateTimeFormat(intl, { year: 'numeric', month: 'long', day: 'numeric' }).format(photo.takenAt)
+    ? new Intl.DateTimeFormat(intl, { year: 'numeric', month: 'long' }).format(photo.takenAt)
     : null;
 
   return (
