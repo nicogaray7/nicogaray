@@ -103,7 +103,19 @@
   },
   "consent": {
     "description": "Nous utilisons Google Analytics pour améliorer votre expérience. Vous pouvez refuser les cookies publicitaires tout en gardant l'analytique essentielle.",
+    "short": "Nous utilisons des cookies d'analyse pour améliorer le site.",
     "accept": "Accepter",
     "reject": "Refuser"
+  },
+  "lightbox": {
+    "prev": "Image précédente",
+    "next": "Image suivante",
+    "close": "Fermer",
+    "fullscreen": "Plein écran",
+    "viewBuy": "Voir / Acheter"
+  },
+  "photoNav": {
+    "prev": "Précédent",
+    "next": "Suivant"
   }
 }
