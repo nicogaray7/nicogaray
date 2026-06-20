@@ -7,6 +7,8 @@ import { Container } from '@/components/layout/Container';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { PhotoPageTracker } from '@/components/gallery/PhotoPageTracker';
 import { BuyButton } from '@/components/gallery/BuyButton';
+import { PhotoNav } from '@/components/gallery/PhotoNav';
+import { PhotoImageSwipe } from '@/components/gallery/PhotoImageSwipe';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2';
@@ -18,6 +20,24 @@ export const revalidate = 60;
 async function getPhoto(slug: string) {
   try {
     return await prisma.photo.findUnique({ where: { slug } });
+  } catch {
+    return null;
+  }
+}
+
+async function getSiblings(slug: string) {
+  try {
+    const rows = await prisma.photo.findMany({
+      where: { published: true },
+      orderBy: [{ takenAt: 'desc' }, { createdAt: 'desc' }],
+      select: { slug: true },
+    });
+    const slugs = rows.map((r) => r.slug);
+    const i = slugs.indexOf(slug);
+    if (i === -1 || slugs.length < 2) return null;
+    const prevSlug = slugs[(i - 1 + slugs.length) % slugs.length];
+    const nextSlug = slugs[(i + 1) % slugs.length];
+    return { prevSlug, nextSlug };
   } catch {
     return null;
   }
@@ -56,17 +76,22 @@ export default async function PhotoPage({ params }: { params: { locale: string; 
   const photo = await getPhoto(params.slug);
   if (!photo) notFound();
 
-  const related = await getRelated(photo.id, photo.country);
-  return <PhotoView photo={photo} related={related} locale={params.locale} />;
+  const [related, siblings] = await Promise.all([
+    getRelated(photo.id, photo.country),
+    getSiblings(photo.slug),
+  ]);
+  return <PhotoView photo={photo} related={related} siblings={siblings} locale={params.locale} />;
 }
 
 function PhotoView({
   photo,
   related,
+  siblings,
   locale,
 }: {
   photo: NonNullable<Awaited<ReturnType<typeof getPhoto>>>;
   related: Awaited<ReturnType<typeof getRelated>>;
+  siblings: Awaited<ReturnType<typeof getSiblings>>;
   locale: string;
 }) {
   const t = useTranslations('photo');
@@ -112,13 +137,42 @@ function PhotoView({
               {tCommon('back')}
             </Link>
           </div>
-          <div className="relative w-full bg-ink">
-            {previewUrl ? (
-              <ProtectedImg src={previewUrl} alt={title} className="w-full h-auto block max-h-[88vh] object-contain mx-auto" />
-            ) : (
-              <div className="aspect-[3/2] flex items-center justify-center text-ink-dim">No preview</div>
-            )}
-          </div>
+          {siblings ? (
+            <PhotoImageSwipe
+              prevSlug={siblings.prevSlug}
+              nextSlug={siblings.nextSlug}
+              locale={locale}
+              className="relative w-full bg-ink"
+            >
+              {previewUrl ? (
+                <ProtectedImg src={previewUrl} alt={title} className="w-full h-auto block max-h-[88vh] object-contain mx-auto" />
+              ) : (
+                <div className="aspect-[3/2] flex items-center justify-center text-ink-dim">No preview</div>
+              )}
+              <PhotoNav
+                prevSlug={siblings.prevSlug}
+                nextSlug={siblings.nextSlug}
+                locale={locale}
+                variant="side"
+              />
+            </PhotoImageSwipe>
+          ) : (
+            <div className="relative w-full bg-ink">
+              {previewUrl ? (
+                <ProtectedImg src={previewUrl} alt={title} className="w-full h-auto block max-h-[88vh] object-contain mx-auto" />
+              ) : (
+                <div className="aspect-[3/2] flex items-center justify-center text-ink-dim">No preview</div>
+              )}
+            </div>
+          )}
+          {siblings && (
+            <PhotoNav
+              prevSlug={siblings.prevSlug}
+              nextSlug={siblings.nextSlug}
+              locale={locale}
+              variant="bar"
+            />
+          )}
         </Container>
       </section>
 

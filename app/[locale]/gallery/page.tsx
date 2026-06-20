@@ -2,11 +2,13 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
-import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { FilterBar } from '@/components/gallery/FilterBar';
 import { GalleryTracker } from '@/components/gallery/GalleryTracker';
+import { GalleryGrid } from '@/components/gallery/GalleryGrid';
+import type { LightboxPhoto } from '@/components/gallery/GalleryLightbox';
+import { r2PublicUrl } from '@/lib/r2-url';
 import { COUNTRY_NAMES } from '@/lib/country-names';
-import type { Prisma } from '@prisma/client';
+import type { Prisma, Photo } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -72,6 +74,7 @@ function GalleryView({
   locale: string;
 }) {
   const t = useTranslations('gallery');
+  const lightboxPhotos = photos.map((p) => toLightboxPhoto(p, locale));
   return (
     <>
       <section className="pt-16 pb-10 sm:pt-24 sm:pb-14">
@@ -93,24 +96,36 @@ function GalleryView({
           ) : (
             <>
               <GalleryTracker photos={photos} listId="gallery" listName="Gallery" />
-              <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 sm:gap-8 [column-fill:_balance]">
-                {photos.map((p, i) => (
-                  <div key={p.id} className="mb-6 sm:mb-8 break-inside-avoid">
-                    <PhotoCard
-                      photo={p}
-                      locale={locale}
-                      priority={i < 4}
-                      index={i}
-                      listId="gallery"
-                      listName="Gallery"
-                    />
-                  </div>
-                ))}
-              </div>
+              <GalleryGrid photos={photos} lightboxPhotos={lightboxPhotos} locale={locale} />
             </>
           )}
         </Container>
       </section>
     </>
   );
+}
+
+function toLightboxPhoto(photo: Photo, locale: string): LightboxPhoto {
+  const title = locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
+  const countryName =
+    photo.countryCode && COUNTRY_NAMES[photo.countryCode]
+      ? COUNTRY_NAMES[photo.countryCode][locale === 'en' ? 'en' : 'fr']
+      : photo.country;
+  const location = [photo.city, countryName].filter(Boolean).join(', ');
+  const dateLabel = photo.takenAt
+    ? new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fr-FR', {
+        month: 'long',
+        year: 'numeric',
+      }).format(photo.takenAt)
+    : null;
+  return {
+    id: photo.id,
+    slug: photo.slug,
+    url: r2PublicUrl(photo.previewKey) ?? '',
+    title,
+    location,
+    dateLabel,
+    width: photo.width,
+    height: photo.height,
+  };
 }

@@ -103,7 +103,19 @@
   },
   "consent": {
     "description": "We use Google Analytics to improve your experience. You can reject advertising cookies while keeping essential analytics.",
+    "short": "We use analytics cookies to improve the site.",
     "accept": "Accept",
     "reject": "Reject"
+  },
+  "lightbox": {
+    "prev": "Previous image",
+    "next": "Next image",
+    "close": "Close",
+    "fullscreen": "Fullscreen",
+    "viewBuy": "View / Buy"
+  },
+  "photoNav": {
+    "prev": "Previous",
+    "next": "Next"
   }
 }

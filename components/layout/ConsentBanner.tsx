@@ -34,10 +34,10 @@ export function ConsentBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink text-paper border-t border-ink/20 p-4 sm:p-6">
-      <div className="max-w-7xl mx-auto">
-        <p className="text-sm mb-4">{t('description')}</p>
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink/95 text-paper border-t border-paper/10 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-4 py-2.5 sm:px-6 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs text-paper/80 leading-snug">{t('short')}</p>
+        <div className="flex shrink-0 items-center gap-2 self-end sm:self-auto">
           <Button
             variant="primary"
             size="sm"
