@@ -41,6 +41,17 @@ export async function POST(req: Request) {
     const buyerPhone = cd?.phone ?? null;
     const buyerCountry = cd?.address?.country ?? null;
 
+    // Idempotency: Stripe may deliver this event more than once. Only the
+    // first transition pending -> paid should fulfil the order and email the
+    // buyer. updateMany with a paymentStatus guard makes this atomic.
+    const claimed = await prisma.order.updateMany({
+      where: { id: orderId, paymentStatus: { not: 'paid' } },
+      data: { paymentStatus: 'paid', paidAt: new Date() },
+    });
+    if (claimed.count === 0) {
+      return NextResponse.json({ received: true });
+    }
+
     const order = await prisma.order.update({
       where: { id: orderId },
       data: {
