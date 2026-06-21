@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import slugify from 'slugify';
+import sharp from 'sharp';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { r2Put, r2Delete } from '@/lib/r2';
@@ -127,13 +128,32 @@ export async function toggleFeatured(id: string) {
   revalidatePath('/en');
 }
 
+const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50 MB
+const ALLOWED_UPLOAD_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/tiff',
+]);
+
 export async function uploadPhoto(formData: FormData) {
   await requireAdmin();
   const file = formData.get('file');
   const title = (formData.get('title') as string) || 'Untitled';
   if (!(file instanceof File) || file.size === 0) throw new Error('Missing file');
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error('File too large (max 50 MB)');
+  if (file.type && !ALLOWED_UPLOAD_TYPES.has(file.type)) {
+    throw new Error('Unsupported file type');
+  }
 
   const buffer = Buffer.from(await file.arrayBuffer());
+
+  // Verify the bytes really are a supported raster image (don't trust the
+  // client-provided MIME type). sharp throws on non-images.
+  const probe = await sharp(buffer, { failOn: 'none' }).metadata();
+  if (!probe.format || !['jpeg', 'png', 'webp', 'tiff'].includes(probe.format)) {
+    throw new Error('Unsupported image format');
+  }
   const { original, preview, thumb, width, height, orientation } = await processImage(buffer);
   const exif = await extractExif(buffer);
 
