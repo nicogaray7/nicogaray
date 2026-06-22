@@ -1,7 +1,15 @@
 'use server';
 import { z } from 'zod';
+import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { getStripe, buyerFees } from '@/lib/stripe';
+
+/** Extrait le client_id GA4 du cookie _ga (format GA1.1.<cid1>.<cid2>). */
+function gaClientIdFromCookies(): string {
+  const ga = cookies().get('_ga')?.value ?? '';
+  const parts = ga.split('.');
+  return parts.length >= 4 ? `${parts[parts.length - 2]}.${parts[parts.length - 1]}` : '';
+}
 
 const schema = z.object({
   photoId: z.string().min(1),
@@ -61,6 +69,7 @@ export async function createCheckoutSession(
       orderId: order.id,
       photoId: photo.id,
       locale,
+      gaClientId: gaClientIdFromCookies(),
     },
     success_url: `${siteUrl}/${locale}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/${locale}/gallery/${photo.slug}`,
