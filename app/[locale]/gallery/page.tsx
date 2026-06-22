@@ -127,5 +127,10 @@ function toLightboxPhoto(photo: Photo, locale: string): LightboxPhoto {
     dateLabel,
     width: photo.width,
     height: photo.height,
+    price: photo.price,
+    currency: photo.currency,
+    country: photo.country,
+    city: photo.city,
+    orientation: photo.orientation,
   };
 }

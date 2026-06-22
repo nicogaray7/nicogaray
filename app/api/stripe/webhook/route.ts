@@ -4,6 +4,7 @@ import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 import { sendPurchaseEmail } from '@/lib/email';
+import { sendPurchaseToGA4 } from '@/lib/ga-mp';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -79,6 +80,25 @@ export async function POST(req: Request) {
         locale,
       }).catch((err) => console.error('[email] send failed', err));
     }
+
+    // Filet de sécurité GA4 : purchase server-side via Measurement Protocol.
+    // Dédupliqué par transaction_id (= order.id) avec le purchase client-side.
+    await sendPurchaseToGA4({
+      clientId: session.metadata?.gaClientId ?? '',
+      transactionId: order.id,
+      value: order.total,
+      currency: order.currency,
+      items: [
+        {
+          item_id: order.photo.slug,
+          item_name: order.photo.title,
+          price: order.amount,
+          quantity: 1,
+          item_category: order.photo.country ?? undefined,
+          item_variant: order.photo.orientation ?? undefined,
+        },
+      ],
+    }).catch((err) => console.error('[ga4-mp] purchase send failed', err));
   } else if (event.type === 'checkout.session.expired' || event.type === 'checkout.session.async_payment_failed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const orderId = session.metadata?.orderId;

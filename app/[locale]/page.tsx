@@ -9,6 +9,7 @@ import { r2PublicUrl } from '@/lib/r2';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { Logo } from '@/components/layout/Logo';
 import { getSetting, pickText, type HomeSettings } from '@/lib/settings';
+import { HeroCtaLink } from '@/components/analytics/HeroCtaLink';
 
 export const revalidate = 60;
 
@@ -69,13 +70,7 @@ function Hero({ locale, settings }: { locale: string; settings: HomeSettings | n
             {subtitle}
           </p>
           <div className="pt-4 animate-fade-up" style={{ animationDelay: '200ms' }}>
-            <Link
-              href={`/${locale}/gallery`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-paper text-ink text-xs tracking-[0.18em] uppercase hover:bg-accent hover:text-paper transition-colors"
-            >
-              {cta}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <HeroCtaLink href={`/${locale}/gallery`} label={cta} />
           </div>
         </div>
       </Container>
