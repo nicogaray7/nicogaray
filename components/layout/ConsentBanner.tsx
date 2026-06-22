@@ -22,7 +22,7 @@ export function ConsentBanner() {
       ad_storage: accepted ? 'granted' : 'denied',
       ad_user_data: accepted ? 'granted' : 'denied',
       ad_personalization: accepted ? 'granted' : 'denied',
-      analytics_storage: 'granted',
+      analytics_storage: accepted ? 'granted' : 'denied',
       functionality_storage: 'granted',
       security_storage: 'granted',
     });

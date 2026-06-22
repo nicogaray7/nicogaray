@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { X, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
 import { ProtectedImg } from '@/components/ProtectedImg';
+import { track, toItem } from '@/lib/analytics';
 
 export interface LightboxPhoto {
   id: string;
@@ -15,6 +16,11 @@ export interface LightboxPhoto {
   dateLabel: string | null;
   width: number | null;
   height: number | null;
+  price: number;
+  currency: string;
+  country?: string | null;
+  city?: string | null;
+  orientation?: string | null;
 }
 
 interface Props {
@@ -37,6 +43,25 @@ export function GalleryLightbox({ photos, index, locale, onClose, onIndexChange 
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const photo = photos[index];
+
+  // view_item à l'ouverture/affichage d'une photo dans le lightbox (1 fois par photo)
+  const viewedItems = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!photo || viewedItems.current.has(photo.id)) return;
+    viewedItems.current.add(photo.id);
+    track.viewItem(
+      toItem({
+        id: photo.id,
+        slug: photo.slug,
+        title: photo.title,
+        price: photo.price,
+        currency: photo.currency,
+        country: photo.country ?? null,
+        city: photo.city ?? null,
+        orientation: photo.orientation ?? null,
+      }),
+    );
+  }, [photo]);
 
   const goNext = useCallback(() => {
     onIndexChange((index + 1) % total);
