@@ -44,6 +44,20 @@ export async function createCheckoutSession(
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com';
   const stripe = getStripe();
+
+  // Metadata partagées entre la Checkout Session et le PaymentIntent. Les
+  // copier sur le PaymentIntent permet de retrouver la photo directement sur
+  // la page paiement du Dashboard Stripe, avec slug + titre lisibles (pas que
+  // le cuid interne).
+  const metadata = {
+    orderId: order.id,
+    photoId: photo.id,
+    photoSlug: photo.slug,
+    photoTitle: photo.title,
+    locale,
+    gaClientId: gaClientIdFromCookies(),
+  };
+
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
@@ -65,12 +79,8 @@ export async function createCheckoutSession(
         },
       },
     ],
-    metadata: {
-      orderId: order.id,
-      photoId: photo.id,
-      locale,
-      gaClientId: gaClientIdFromCookies(),
-    },
+    metadata,
+    payment_intent_data: { metadata },
     success_url: `${siteUrl}/${locale}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/${locale}/gallery/${photo.slug}`,
   });
