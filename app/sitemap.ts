@@ -2,6 +2,10 @@ import type { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2-url';
 
+// Généré au runtime (pas au build) : sinon la DB n'est pas joignable pendant le
+// build Docker et le sitemap sort sans aucune photo.
+export const dynamic = 'force-dynamic';
+
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
