@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
@@ -59,16 +60,45 @@ async function getRelated(currentId: string, country: string | null) {
   }
 }
 
-export async function generateMetadata({ params }: { params: { locale: string; slug: string } }) {
+export async function generateMetadata({ params }: { params: { locale: string; slug: string } }): Promise<Metadata> {
   const photo = await getPhoto(params.slug);
   if (!photo) return {};
-  const title = params.locale === 'en' && photo.titleEn ? photo.titleEn : photo.title;
+  const isEn = params.locale === 'en';
+  const title = isEn && photo.titleEn ? photo.titleEn : photo.title;
   const description =
-    (params.locale === 'en' && photo.descriptionEn) ||
+    (isEn && photo.descriptionEn) ||
     photo.description ||
     [photo.city, photo.country].filter(Boolean).join(', ') ||
     title;
-  return { title, description };
+  const url = `/${params.locale}/gallery/${photo.slug}`;
+  const image = r2PublicUrl(photo.previewKey) ?? undefined;
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+      languages: {
+        fr: `/fr/gallery/${photo.slug}`,
+        en: `/en/gallery/${photo.slug}`,
+        'x-default': `/fr/gallery/${photo.slug}`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+      images: image
+        ? [{ url: image, width: photo.width || undefined, height: photo.height || undefined, alt: title }]
+        : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
 }
 
 export default async function PhotoPage({ params }: { params: { locale: string; slug: string } }) {
@@ -111,8 +141,58 @@ function PhotoView({
     ? new Intl.DateTimeFormat(intl, { year: 'numeric', month: 'long' }).format(photo.takenAt)
     : null;
 
+  const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com';
+  const pageUrl = `${BASE}/${locale}/gallery/${photo.slug}`;
+  const imageLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageObject',
+    name: title,
+    ...(description ? { description } : {}),
+    contentUrl: previewUrl,
+    thumbnailUrl: r2PublicUrl(photo.thumbKey) ?? undefined,
+    ...(photo.width ? { width: photo.width } : {}),
+    ...(photo.height ? { height: photo.height } : {}),
+    ...(photo.takenAt ? { dateCreated: photo.takenAt.toISOString() } : {}),
+    datePublished: photo.createdAt.toISOString(),
+    author: { '@type': 'Person', name: 'Nico Garay', url: BASE },
+    creator: { '@type': 'Person', name: 'Nico Garay' },
+    copyrightNotice: '© Nico Garay',
+    creditText: 'Nico Garay',
+    license: `${BASE}/${locale}/legal/license`,
+    acquireLicensePage: pageUrl,
+    representativeOfPage: true,
+    ...(photo.tags?.length ? { keywords: photo.tags.join(', ') } : {}),
+    ...(location
+      ? {
+          contentLocation: {
+            '@type': 'Place',
+            name: location,
+            ...(photo.latitude != null && photo.longitude != null
+              ? { geo: { '@type': 'GeoCoordinates', latitude: photo.latitude, longitude: photo.longitude } }
+              : {}),
+          },
+        }
+      : {}),
+  };
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Galerie', item: `${BASE}/${locale}/gallery` },
+      { '@type': 'ListItem', position: 2, name: title, item: pageUrl },
+    ],
+  };
+
   return (
     <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(imageLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       <PhotoPageTracker
         photo={{
           id: photo.id,
