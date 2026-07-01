@@ -54,7 +54,7 @@ function Hero({ locale, settings }: { locale: string; settings: HomeSettings | n
       {heroUrl && (
         <ProtectedImg
           src={heroUrl}
-          alt=""
+          alt={locale === 'en' ? 'Travel photography by Nico Garay' : 'Photographie de voyage de Nico Garay'}
           className="absolute inset-0 w-full h-full object-cover opacity-90"
         />
       )}
