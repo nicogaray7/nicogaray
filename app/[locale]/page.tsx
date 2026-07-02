@@ -13,6 +13,48 @@ import { HeroCtaLink } from '@/components/analytics/HeroCtaLink';
 
 export const revalidate = 60;
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://photos.nicogaray.com';
+
+function HomeJsonLd({ locale }: { locale: string }) {
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: locale === 'en' ? 'Nico Garay Photography' : 'Nico Garay Photographie',
+    url: SITE_URL,
+    description:
+      locale === 'en'
+        ? 'Travel photography in high-resolution digital editions.'
+        : 'Photographies de voyage en edition numerique haute resolution.',
+    inLanguage: locale === 'en' ? 'en' : 'fr',
+  };
+
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Nico Garay',
+    url: 'https://nicogaray.com',
+    image: `${SITE_URL}/icon.svg`,
+    jobTitle: locale === 'en' ? 'Travel Photographer' : 'Photographe de voyage',
+    sameAs: [
+      'https://nicogaray.com',
+      'https://www.instagram.com/nicogaray/',
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
+    </>
+  );
+}
+
 async function getFeaturedPhotos() {
   try {
     return await prisma.photo.findMany({
@@ -36,6 +78,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
 
   return (
     <>
+      <HomeJsonLd locale={params.locale} />
       <Hero locale={params.locale} settings={homeSettings} />
       <FeaturedSection photos={featured} locale={params.locale} />
       <AboutTeaser locale={params.locale} />

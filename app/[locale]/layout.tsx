@@ -16,7 +16,10 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
   const isEn = params.locale === 'en';
-  const title = isEn ? 'Nico Garay · Travel photography' : 'Nico Garay · Photographie de voyage';
+  // Utiliser "absolute" pour bypasser le template root (qui ajouterait "· Nico Garay" en suffixe)
+  const title = isEn
+    ? { absolute: 'Nico Garay · Travel photography' }
+    : { absolute: 'Nico Garay · Photographie de voyage' };
   const description = isEn
     ? "Travel photography in high-resolution digital editions. Traveller before photographer, I capture the landscapes and subjects that inspire me."
     : "Photographies de voyage en édition numérique haute résolution. Voyageur avant photographe, je capture les paysages et les sujets qui m'inspirent.";
@@ -28,12 +31,15 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
       languages: { fr: '/fr', en: '/en', 'x-default': '/fr' },
     },
     openGraph: {
-      title,
+      title: isEn ? 'Nico Garay · Travel photography' : 'Nico Garay · Photographie de voyage',
       description,
       locale: isEn ? 'en_GB' : 'fr_FR',
       alternateLocale: isEn ? ['fr_FR'] : ['en_GB'],
     },
-    twitter: { title, description },
+    twitter: {
+      title: isEn ? 'Nico Garay · Travel photography' : 'Nico Garay · Photographie de voyage',
+      description,
+    },
   };
 }
 
