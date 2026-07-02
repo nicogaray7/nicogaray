@@ -14,7 +14,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .catch(() => []);
   const locales = ['fr', 'en'] as const;
 
-  const staticPaths = ['', '/gallery', '/about', '/legal/cgv', '/legal/license', '/legal/mentions'];
+  const collectionSlugs = ['japon', 'islande', 'photographie-voyage'];
+  const staticPaths = [
+    '',
+    '/gallery',
+    '/about',
+    '/legal/cgv',
+    '/legal/license',
+    '/legal/mentions',
+    ...collectionSlugs.map((s) => `/collection/${s}`),
+  ];
   const out: MetadataRoute.Sitemap = [];
 
   for (const locale of locales) {
