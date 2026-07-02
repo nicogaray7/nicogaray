@@ -83,7 +83,7 @@ These photographs were taken across several trips, both in summer and winter. So
     titleFr: 'Photographie de voyage : le monde en images',
     titleEn: 'Travel photography: the world in pictures',
     descriptionFr:
-      'Collection de photographie de voyage : Asie, Europe, Amérique du Sud, Afrique. Portraits, paysages, architecture et instants de vie du monde entier. Tirages photo d'art disponibles.',
+      "Collection de photographie de voyage : Asie, Europe, Amérique du Sud, Afrique. Portraits, paysages, architecture et instants de vie du monde entier. Tirages photo d'art disponibles.",
     descriptionEn:
       'Travel photography collection: Asia, Europe, South America, Africa. Portraits, landscapes, architecture and moments of life from around the world. Fine art prints available.',
     introFr: `La photographie de voyage est une façon de voir le monde deux fois — une première fois à travers l'objectif, une deuxième en revoyant les images longtemps après. Ce qui reste, ce n'est jamais le monument ou le paysage attendu : c'est la lumière d'un matin particulier, la texture d'un mur, un regard capté par hasard dans une rue.
