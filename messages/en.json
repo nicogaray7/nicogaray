@@ -64,7 +64,11 @@
     "buyDescription": "Original file, personal and print use. Download available immediately after payment.",
     "buyCta": "Buy, {price}",
     "license": "Personal license included",
-    "expiry": "Download link valid for 48h, 3 downloads maximum"
+    "expiry": "Download link valid for 48h, 3 downloads maximum",
+    "trustTitle": "Secure payment",
+    "trustStripe": "Encrypted Stripe payment, never stored",
+    "trustInstant": "File available immediately after payment",
+    "trustFile": "High-resolution RAW file, personal license included"
   },
   "about": {
     "eyebrow": "Statement",

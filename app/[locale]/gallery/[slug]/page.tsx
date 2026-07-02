@@ -8,6 +8,7 @@ import { Container } from '@/components/layout/Container';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { PhotoPageTracker } from '@/components/gallery/PhotoPageTracker';
 import { BuyButton } from '@/components/gallery/BuyButton';
+import { MobileStickyBuy } from '@/components/gallery/MobileStickyBuy';
 import { PhotoNav } from '@/components/gallery/PhotoNav';
 import { PhotoImageSwipe } from '@/components/gallery/PhotoImageSwipe';
 import { ProtectedImg } from '@/components/ProtectedImg';
@@ -301,12 +302,17 @@ function PhotoView({
 
             <aside className="lg:col-span-5 lg:sticky lg:top-24 self-start">
               <div className="bg-paper-warm p-6 sm:p-8 space-y-5 border border-line">
-                <p className="text-2xl font-display text-ink">{formattedPrice}</p>
+                {/* Prix + libellé */}
+                <div>
+                  <p className="text-2xl font-display text-ink">{formattedPrice}</p>
+                  <p className="text-xs text-ink-muted mt-0.5">{t('buyTitle')}</p>
+                </div>
                 <p className="text-sm text-ink-soft">{t('buyDescription')}</p>
                 <ul className="text-xs text-ink-muted space-y-1.5">
                   <li>· {t('license')}</li>
                   <li>· {t('expiry')}</li>
                 </ul>
+                {/* CTA achat - pleine largeur, visible sans scroll */}
                 <BuyButton
                   href={`/${locale}/checkout/${photo.id}`}
                   label={t('buyCta', { price: formattedPrice })}
@@ -321,8 +327,42 @@ function PhotoView({
                     orientation: photo.orientation,
                   }}
                 />
+                {/* Bloc confiance */}
+                <div className="border-t border-line pt-4 space-y-2">
+                  <p className="text-xs text-ink-muted font-medium uppercase tracking-wider">{t('trustTitle')}</p>
+                  <ul className="text-xs text-ink-muted space-y-1.5">
+                    <li className="flex items-center gap-1.5">
+                      <span aria-hidden="true">🔒</span>
+                      {t('trustStripe')}
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span aria-hidden="true">⚡</span>
+                      {t('trustInstant')}
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span aria-hidden="true">📁</span>
+                      {t('trustFile')}
+                    </li>
+                  </ul>
+                </div>
               </div>
             </aside>
+
+            {/* Sticky CTA mobile - visible seulement sous lg */}
+            <MobileStickyBuy
+              href={`/${locale}/checkout/${photo.id}`}
+              label={t('buyCta', { price: formattedPrice })}
+              photo={{
+                id: photo.id,
+                slug: photo.slug,
+                title,
+                price: photo.price,
+                currency: photo.currency,
+                country: photo.country,
+                city: photo.city,
+                orientation: photo.orientation,
+              }}
+            />
           </div>
         </Container>
       </section>
