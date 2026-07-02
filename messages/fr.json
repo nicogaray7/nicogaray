@@ -68,7 +68,7 @@
     "trustTitle": "Paiement sécurisé",
     "trustStripe": "Paiement Stripe crypté, jamais stocké",
     "trustInstant": "Fichier disponible immédiatement après paiement",
-    "trustFile": "Fichier RAW haute résolution, licence personnelle incluse"
+    "trustFile": "Fichier haute résolution, licence personnelle incluse"
   },
   "about": {
     "eyebrow": "Manifeste",

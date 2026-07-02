@@ -68,7 +68,7 @@
     "trustTitle": "Secure payment",
     "trustStripe": "Encrypted Stripe payment, never stored",
     "trustInstant": "File available immediately after payment",
-    "trustFile": "High-resolution RAW file, personal license included"
+    "trustFile": "High-resolution file, personal license included"
   },
   "about": {
     "eyebrow": "Statement",
