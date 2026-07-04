@@ -62,7 +62,7 @@ export function Nav() {
         </Container>
       </header>
 
-      {/* Mobile menu overlay — kept OUTSIDE <header> so the header's
+      {/* Mobile menu overlay - kept OUTSIDE <header> so the header's
           backdrop-filter doesn't trap this fixed element to the header box. */}
       <div
         className={cn(

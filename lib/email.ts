@@ -43,7 +43,7 @@ export async function sendPurchaseEmail(params: {
     ? `\nRéférence de commande : ${ref}\n(à conserver, elle permet de retrouver votre paiement côté Stripe)\n`
     : '';
   const refBlockEn = ref
-    ? `\nOrder reference: ${ref}\n(keep it — it locates your payment on the Stripe side)\n`
+    ? `\nOrder reference: ${ref}\n(keep it - it locates your payment on the Stripe side)\n`
     : '';
 
   const body = isFr
