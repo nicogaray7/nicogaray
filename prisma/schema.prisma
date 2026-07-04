@@ -38,7 +38,7 @@ model Photo {
 
   // EXIF / metadata
   country     String?
-  countryCode String? // ISO 3166-1 alpha-2 (eg "FR", "JP") — used by the world map
+  countryCode String? // ISO 3166-1 alpha-2 (eg "FR", "JP") - used by the world map
   region      String?
   city        String?
   latitude    Float?

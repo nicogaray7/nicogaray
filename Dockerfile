@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat openssl \
   && fc-cache -fv
 WORKDIR /app
 
-# Dependencies (all, including dev — needed for prisma CLI, tsx, sharp)
+# Dependencies (all, including dev - needed for prisma CLI, tsx, sharp)
 FROM base AS deps
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma
