@@ -107,8 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 ad_personalization: 'denied',
                 analytics_storage: 'granted',
                 functionality_storage: 'granted',
-                security_storage: 'granted',
-                wait_for_update: 500
+                security_storage: 'granted'
               });
               gtag('js', new Date());
               gtag('config', '${GA_ID}', { anonymize_ip: true });
