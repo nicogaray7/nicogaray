@@ -3,16 +3,14 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 // --- Content-Security-Policy ---------------------------------------------
-// Shipped in *Report-Only* mode first so it never breaks the Stripe checkout
-// or analytics; violations are reported to the browser console without being
-// blocked. Once Nico confirms the report is clean, flip CSP_ENFORCE=true (or
-// rename the header to `Content-Security-Policy`) to enforce it.
+// Enforced (Content-Security-Policy, not Report-Only).
 //
 // Origins allowed:
 //   - self
 //   - GTM / GA4 (googletagmanager, google-analytics)
-//   - Stripe (js.stripe.com scripts + frame, api.stripe.com xhr)
-//   - R2 public image host (derived from R2 public URL env var)
+//   - Stripe (js.stripe.com scripts + frames, api.stripe.com + q.stripe.com xhr)
+//   - R2 public image hosts: *.r2.cloudflarestorage.com, *.r2.dev, photos.nicogaray.com
+//   - R2 public URL env var origin (runtime fallback)
 //   - Google avatar/thumbnail hosts used by next/image remotePatterns
 const r2PublicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || process.env.R2_PUBLIC_URL || '';
 let r2Origin = '';
@@ -26,12 +24,18 @@ const imgSrc = [
   "'self'",
   'data:',
   'blob:',
+  // Cloudflare R2 - bucket URLs (cloudflarestorage.com) and R2 public dev URLs
   'https://*.r2.cloudflarestorage.com',
+  'https://*.r2.dev',
+  // Custom domain fronting the R2 bucket
+  'https://photos.nicogaray.com',
+  // Google user content (next/image remotePatterns)
   'https://lh3.googleusercontent.com',
   'https://yt3.ggpht.com',
   'https://yt3.googleusercontent.com',
   'https://www.google-analytics.com',
   'https://www.googletagmanager.com',
+  // Dynamic R2 origin from env var (may duplicate one of the above, filtered)
   r2Origin,
 ]
   .filter(Boolean)
@@ -49,7 +53,8 @@ const cspDirectives = [
   "style-src 'self' 'unsafe-inline'",
   `img-src ${imgSrc}`,
   "font-src 'self' data:",
-  "connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+  // q.stripe.com is used by Stripe.js for fraud signals / telemetry
+  "connect-src 'self' https://api.stripe.com https://q.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
   "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
   'upgrade-insecure-requests',
 ].join('; ');
@@ -63,6 +68,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**.r2.cloudflarestorage.com',
+      },
+      // Cloudflare R2 public dev URLs (pub-<hash>.r2.dev)
+      {
+        protocol: 'https',
+        hostname: '**.r2.dev',
       },
       {
         protocol: 'https',
@@ -135,13 +145,13 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
           },
-          // Report-Only first so we never break checkout/analytics. Flip to
-          // `Content-Security-Policy` (enforcing) once the report is clean.
+          // Enforced CSP. To temporarily revert to report-only for debugging,
+          // set CSP_REPORT_ONLY=true in the environment.
           {
             key:
-              process.env.CSP_ENFORCE === 'true'
-                ? 'Content-Security-Policy'
-                : 'Content-Security-Policy-Report-Only',
+              process.env.CSP_REPORT_ONLY === 'true'
+                ? 'Content-Security-Policy-Report-Only'
+                : 'Content-Security-Policy',
             value: cspDirectives,
           },
         ],
