@@ -20,14 +20,16 @@ async function getPhotosForCountry(code: string) {
   });
 }
 
-export async function generateMetadata({ params }: { params: { locale: string; code: string } }) {
+export async function generateMetadata(props: { params: Promise<{ locale: string; code: string }> }) {
+  const params = await props.params;
   const country = await getCountry(params.code);
   if (!country) return {};
   const name = params.locale === 'en' ? country.nameEn : country.nameFr;
   return { title: name, description: params.locale === 'en' ? country.introEn : country.intro };
 }
 
-export default async function CountryPage({ params }: { params: { locale: string; code: string } }) {
+export default async function CountryPage(props: { params: Promise<{ locale: string; code: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const country = await getCountry(params.code);
   if (!country) notFound();

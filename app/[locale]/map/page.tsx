@@ -37,7 +37,8 @@ async function getPhotoDots() {
   return rows.map((r) => ({ lat: r.latitude!, lng: r.longitude!, countryCode: r.countryCode! }));
 }
 
-export default async function MapPage({ params }: { params: { locale: string } }) {
+export default async function MapPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const [countries, photoDots] = await Promise.all([
     getVisitedCountries(params.locale),

@@ -69,7 +69,8 @@ async function getFeaturedPhotos() {
 
 const HERO_KEY = 'hero/main.jpg';
 
-export default async function HomePage({ params }: { params: { locale: string } }) {
+export default async function HomePage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const [featured, homeSettings] = await Promise.all([
     getFeaturedPhotos(),

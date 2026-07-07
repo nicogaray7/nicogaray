@@ -15,7 +15,8 @@ async function getPhoto(id: string) {
   return prisma.photo.findUnique({ where: { id } });
 }
 
-export default async function EditPhotoPage({ params }: { params: { id: string } }) {
+export default async function EditPhotoPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const photo = await getPhoto(params.id);
   if (!photo) notFound();
 

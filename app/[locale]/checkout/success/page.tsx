@@ -19,13 +19,14 @@ async function getOrder(sessionId: string) {
   });
 }
 
-export default async function CheckoutSuccessPage({
-  params,
-  searchParams,
-}: {
-  params: { locale: string };
-  searchParams: { session_id?: string };
-}) {
+export default async function CheckoutSuccessPage(
+  props: {
+    params: Promise<{ locale: string }>;
+    searchParams: Promise<{ session_id?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   setRequestLocale(params.locale);
   const order = searchParams.session_id ? await getOrder(searchParams.session_id) : null;
   return (

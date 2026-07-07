@@ -14,7 +14,8 @@ async function getOrder(token: string) {
   });
 }
 
-export default async function DownloadPage({ params }: { params: { locale: string; token: string } }) {
+export default async function DownloadPage(props: { params: Promise<{ locale: string; token: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const order = await getOrder(params.token);
 

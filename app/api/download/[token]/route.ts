@@ -5,7 +5,8 @@ import { r2SignedGetUrl } from '@/lib/r2';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function GET(_: Request, { params }: { params: { token: string } }) {
+export async function GET(_: Request, props: { params: Promise<{ token: string }> }) {
+  const params = await props.params;
   const order = await prisma.order.findUnique({
     where: { downloadToken: params.token },
     include: { photo: true },

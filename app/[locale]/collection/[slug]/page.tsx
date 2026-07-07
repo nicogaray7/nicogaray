@@ -137,11 +137,12 @@ export async function generateStaticParams() {
 // Metadata
 // ---------------------------------------------------------------------------
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string; slug: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ locale: string; slug: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
   const collection = getCollection(params.slug);
   if (!collection) return {};
   const isEn = params.locale === 'en';
@@ -167,11 +168,12 @@ export async function generateMetadata({
 // Page component
 // ---------------------------------------------------------------------------
 
-export default async function CollectionPage({
-  params,
-}: {
-  params: { locale: string; slug: string };
-}) {
+export default async function CollectionPage(
+  props: {
+    params: Promise<{ locale: string; slug: string }>;
+  }
+) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const collection = getCollection(params.slug);
   if (!collection) notFound();

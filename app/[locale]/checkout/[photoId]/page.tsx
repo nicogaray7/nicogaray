@@ -16,7 +16,8 @@ async function getPhoto(id: string) {
   return prisma.photo.findUnique({ where: { id } });
 }
 
-export default async function CheckoutPage({ params }: { params: { locale: string; photoId: string } }) {
+export default async function CheckoutPage(props: { params: Promise<{ locale: string; photoId: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const photo = await getPhoto(params.photoId);
   if (!photo || !photo.published) notFound();

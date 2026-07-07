@@ -5,7 +5,8 @@ import { getSetting, pickText, type AboutSettings } from '@/lib/settings';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AboutPage({ params }: { params: { locale: string } }) {
+export default async function AboutPage(props: { params: Promise<{ locale: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const settings = await getSetting<AboutSettings>('about');
   return <AboutView locale={params.locale} settings={settings} />;
