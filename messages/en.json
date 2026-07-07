@@ -97,8 +97,14 @@
     }
   },
   "footer": {
-    "rights": "© {year} Nico Garay. All rights reserved.",
-    "edition": "Digital edition"
+    "rights": "© {year} · All rights reserved",
+    "edition": "Digital edition",
+    "gallery": "Gallery",
+    "map": "Map",
+    "about": "About",
+    "cgv": "Terms",
+    "license": "License",
+    "mentions": "Legal notice"
   },
   "legal": {
     "cgv": {
