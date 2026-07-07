@@ -13,7 +13,8 @@ async function getCountry(code: string) {
   return prisma.country.findUnique({ where: { code: code.toUpperCase() } });
 }
 
-export default async function EditCountryPage({ params }: { params: { code: string } }) {
+export default async function EditCountryPage(props: { params: Promise<{ code: string }> }) {
+  const params = await props.params;
   const country = await getCountry(params.code);
   if (!country) notFound();
   const photoCount = await prisma.photo.count({ where: { countryCode: country.code } });

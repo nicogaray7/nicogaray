@@ -4,11 +4,12 @@ import { LoginForm } from './LoginForm';
 
 export const dynamic = 'force-dynamic';
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: { redirect?: string; error?: string };
-}) {
+export default async function LoginPage(
+  props: {
+    searchParams: Promise<{ redirect?: string; error?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const session = await auth();
   if (session?.user) redirect(searchParams.redirect ?? '/admin');
 

@@ -9,7 +9,8 @@ type LegalSlug = (typeof SLUGS)[number];
 
 export const dynamic = 'force-dynamic';
 
-export default async function LegalPage({ params }: { params: { locale: string; slug: string } }) {
+export default async function LegalPage(props: { params: Promise<{ locale: string; slug: string }> }) {
+  const params = await props.params;
   if (!SLUGS.includes(params.slug as LegalSlug)) notFound();
   setRequestLocale(params.locale);
   const settings = await getSetting<LegalSettings>('legal');

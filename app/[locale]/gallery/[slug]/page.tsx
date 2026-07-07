@@ -61,7 +61,8 @@ async function getRelated(currentId: string, country: string | null) {
   }
 }
 
-export async function generateMetadata({ params }: { params: { locale: string; slug: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const photo = await getPhoto(params.slug);
   if (!photo) return {};
   const isEn = params.locale === 'en';
@@ -102,7 +103,8 @@ export async function generateMetadata({ params }: { params: { locale: string; s
   };
 }
 
-export default async function PhotoPage({ params }: { params: { locale: string; slug: string } }) {
+export default async function PhotoPage(props: { params: Promise<{ locale: string; slug: string }> }) {
+  const params = await props.params;
   setRequestLocale(params.locale);
   const photo = await getPhoto(params.slug);
   if (!photo) notFound();

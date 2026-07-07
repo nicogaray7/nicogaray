@@ -14,7 +14,8 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+export async function generateMetadata(props: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const isEn = params.locale === 'en';
   // Utiliser "absolute" pour bypasser le template root (qui ajouterait "· Nico Garay" en suffixe)
   const title = isEn
@@ -43,13 +44,18 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
   };
 }
 
-export default async function LocaleLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default async function LocaleLayout(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   if (!locales.includes(params.locale as Locale)) notFound();
   setRequestLocale(params.locale);
 

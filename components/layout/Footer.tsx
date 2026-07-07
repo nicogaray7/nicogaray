@@ -14,15 +14,15 @@ export function Footer() {
         <div className="py-10 sm:py-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-2">
             <Logo href={`/${locale}`} size="md" />
-            <p className="text-sm text-ink-muted">© {year} · Tous droits réservés</p>
+            <p className="text-sm text-ink-muted">{t('rights', { year })}</p>
           </div>
           <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-muted">
-            <Link href={`/${locale}/gallery`} className="hover:text-accent transition-colors">Galerie</Link>
-            <Link href={`/${locale}/map`} className="hover:text-accent transition-colors">Carte</Link>
-            <Link href={`/${locale}/about`} className="hover:text-accent transition-colors">À propos</Link>
-            <Link href={`/${locale}/legal/cgv`} className="hover:text-accent transition-colors">CGV</Link>
-            <Link href={`/${locale}/legal/license`} className="hover:text-accent transition-colors">Licence</Link>
-            <Link href={`/${locale}/legal/mentions`} className="hover:text-accent transition-colors">Mentions</Link>
+            <Link href={`/${locale}/gallery`} className="hover:text-accent transition-colors">{t('gallery')}</Link>
+            <Link href={`/${locale}/map`} className="hover:text-accent transition-colors">{t('map')}</Link>
+            <Link href={`/${locale}/about`} className="hover:text-accent transition-colors">{t('about')}</Link>
+            <Link href={`/${locale}/legal/cgv`} className="hover:text-accent transition-colors">{t('cgv')}</Link>
+            <Link href={`/${locale}/legal/license`} className="hover:text-accent transition-colors">{t('license')}</Link>
+            <Link href={`/${locale}/legal/mentions`} className="hover:text-accent transition-colors">{t('mentions')}</Link>
           </nav>
         </div>
       </Container>

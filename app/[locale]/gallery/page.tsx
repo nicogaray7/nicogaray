@@ -52,13 +52,14 @@ async function getPhotos(params: GallerySearchParams) {
   }
 }
 
-export default async function GalleryPage({
-  params,
-  searchParams,
-}: {
-  params: { locale: string };
-  searchParams: GallerySearchParams;
-}) {
+export default async function GalleryPage(
+  props: {
+    params: Promise<{ locale: string }>;
+    searchParams: Promise<GallerySearchParams>;
+  }
+) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   setRequestLocale(params.locale);
   const [photos, countries] = await Promise.all([getPhotos(searchParams), getCountries(params.locale)]);
   return <GalleryView photos={photos} countries={countries} locale={params.locale} />;
