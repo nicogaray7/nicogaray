@@ -8,16 +8,15 @@ export default function NewPhotoPage() {
     <Container size="narrow">
       <Link
         href="/admin/photos"
-        className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors mb-8"
+        className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors mb-8"
       >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        Back to photos
+        <ArrowLeft className="w-4 h-4" />
+        Retour aux photos
       </Link>
-      <div className="space-y-3 mb-10">
-        <p className="eyebrow text-accent">Upload</p>
-        <h1 className="text-display-lg font-display text-ink">New photo</h1>
-        <p className="caption">
-          The image will be processed (preview + thumbnail), EXIF extracted, and saved as a draft. You'll edit metadata on the next screen.
+      <div className="space-y-2 mb-10">
+        <h1 className="text-2xl font-semibold text-ink">Ajouter une photo</h1>
+        <p className="text-sm text-ink-muted">
+          L'image sera traitee (preview + miniature), les EXIF extraits, et sauvegardee en brouillon. Vous editerez les metadonnees a l'etape suivante.
         </p>
       </div>
       <UploadForm />

@@ -30,10 +30,10 @@ export default async function SecurityPage() {
               status={user.totpEnabled ? 'enabled' : 'disabled'}
               tone={user.totpEnabled ? 'green' : 'neutral'}
             />
-            <span className="caption text-ink-muted">
+            <span className="text-sm text-ink-muted">
               {user.totpEnabled
                 ? "La 2FA est active sur votre compte."
-                : "La 2FA n'est pas encore activée."}
+                : "La 2FA n'est pas encore activee."}
             </span>
           </div>
           <SecurityClient enabled={user.totpEnabled} />
@@ -49,7 +49,7 @@ export default async function SecurityPage() {
               }).format(user.lastLoginAt)}
             </p>
           ) : (
-            <p className="caption text-ink-muted">Aucune connexion enregistree.</p>
+            <p className="text-sm text-ink-muted">Aucune connexion enregistree.</p>
           )}
         </Card>
 
@@ -61,27 +61,27 @@ export default async function SecurityPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-line">
-                    <th className="text-left py-2 pr-4 caption text-ink-muted font-normal">Date</th>
-                    <th className="text-left py-2 pr-4 caption text-ink-muted font-normal">Action</th>
-                    <th className="text-left py-2 pr-4 caption text-ink-muted font-normal">Acteur</th>
-                    <th className="text-left py-2 caption text-ink-muted font-normal">Cible</th>
+                  <tr className="border-b border-line bg-paper-cool">
+                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Date</th>
+                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Action</th>
+                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Acteur</th>
+                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Cible</th>
                   </tr>
                 </thead>
                 <tbody>
                   {auditLogs.map((log) => (
-                    <tr key={log.id} className="border-b border-line last:border-0">
-                      <td className="py-2 pr-4 caption text-ink-muted whitespace-nowrap">
+                    <tr key={log.id} className="border-b border-line last:border-0 hover:bg-paper-cool/60">
+                      <td className="py-3 px-3 text-xs text-ink-muted whitespace-nowrap">
                         {new Intl.DateTimeFormat('fr-FR', {
                           dateStyle: 'short',
                           timeStyle: 'short',
                         }).format(log.createdAt)}
                       </td>
-                      <td className="py-2 pr-4">
+                      <td className="py-3 px-3">
                         <StatusPill status={log.action} tone="neutral" />
                       </td>
-                      <td className="py-2 pr-4 caption text-ink-muted">{log.actorEmail ?? '-'}</td>
-                      <td className="py-2 caption text-ink-muted">{log.target ?? '-'}</td>
+                      <td className="py-3 px-3 text-sm text-ink-muted">{log.actorEmail ?? '-'}</td>
+                      <td className="py-3 px-3 text-sm text-ink-muted">{log.target ?? '-'}</td>
                     </tr>
                   ))}
                 </tbody>

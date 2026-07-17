@@ -20,10 +20,9 @@ export default async function AdminCountries() {
   const countries = await getCountries();
   return (
     <Container size="wide">
-      <div className="mb-10 space-y-3">
-        <p className="eyebrow text-accent">Countries</p>
-        <h1 className="text-display-lg font-display text-ink">Country intros</h1>
-        <p className="caption">{countries.length} countries</p>
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-ink">Country intros</h1>
+        <p className="text-sm text-ink-muted mt-1">{countries.length} countries</p>
       </div>
 
       {countries.length === 0 ? (
@@ -31,7 +30,7 @@ export default async function AdminCountries() {
           <p className="caption">No countries yet. Run the geocoding script first.</p>
         </div>
       ) : (
-        <div className="bg-paper border border-line overflow-hidden">
+        <div className="bg-white rounded-xl border border-line overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-paper-cool">
               <tr className="text-left">
@@ -69,7 +68,7 @@ export default async function AdminCountries() {
 }
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th className="px-3 py-2.5 text-[10px] tracking-widest uppercase text-ink-muted font-normal">{children}</th>;
+  return <th className="px-3 py-2.5 text-[11px] font-medium text-ink-muted text-left">{children}</th>;
 }
 
 function flagEmoji(code: string): string {

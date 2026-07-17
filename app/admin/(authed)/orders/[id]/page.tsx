@@ -182,8 +182,8 @@ export default async function OrderDetailPage(props: {
         <div className="space-y-6">
           {/* Photo */}
           {order.photo && (
-            <section className="bg-paper border border-line p-4">
-              <h2 className="eyebrow text-ink-muted mb-3">Photo</h2>
+            <section className="bg-white rounded-xl border border-line p-4">
+              <h2 className="text-sm font-semibold text-ink mb-3">Photo</h2>
               {thumbUrl && (
                 <div className="aspect-square bg-paper-cool overflow-hidden mb-3 relative">
                   <Image
@@ -199,18 +199,18 @@ export default async function OrderDetailPage(props: {
                 <p className="text-sm text-ink font-medium">{order.photo.title}</p>
                 <Link
                   href={`/admin/photos/${order.photo.id}`}
-                  className="inline-flex items-center gap-1 text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors"
+                  className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-accent transition-colors"
                 >
                   Voir
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </section>
           )}
 
           {/* Actions */}
-          <section className="bg-paper border border-line p-4">
-            <h2 className="eyebrow text-ink-muted mb-3">Actions</h2>
+          <section className="bg-white rounded-xl border border-line p-4">
+            <h2 className="text-sm font-semibold text-ink mb-3">Actions</h2>
             <OrderActions orderId={order.id} paymentStatus={order.paymentStatus} />
           </section>
         </div>

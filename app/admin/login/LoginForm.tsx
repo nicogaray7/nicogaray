@@ -40,7 +40,7 @@ export function LoginForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6 bg-paper p-8 sm:p-10 border border-line">
+    <form onSubmit={onSubmit} className="space-y-6 bg-white rounded-xl p-8 sm:p-10 border border-line shadow-sm">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" required autoComplete="email" />
@@ -61,7 +61,7 @@ export function LoginForm({
           onChange={(e) => setTotp(e.target.value)}
           autoComplete="one-time-code"
         />
-        <p className="caption text-ink-muted">Si la 2FA est activée</p>
+        <p className="text-xs text-ink-muted">Si la 2FA est activee</p>
       </div>
       {error && (
         <p className="text-xs text-red-700 border-l-2 border-red-700 pl-3 py-1">{error}</p>

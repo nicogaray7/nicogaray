@@ -36,9 +36,9 @@ export function OrderActions({
           <button
             type="button"
             disabled={!canRefund || isPending}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-xs tracking-widest uppercase border transition-colors disabled:opacity-40 disabled:cursor-not-allowed border-red-300 text-red-700 hover:bg-red-50"
+            className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium border border-red-300 text-red-700 hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-4 h-4" />
             Rembourser
           </button>
         }
@@ -54,9 +54,9 @@ export function OrderActions({
           <button
             type="button"
             disabled={isPending}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-xs tracking-widest uppercase border border-line text-ink-muted hover:text-ink transition-colors disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm border border-line text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
-            <Mail className="w-3.5 h-3.5" />
+            <Mail className="w-4 h-4" />
             Renvoyer le lien
           </button>
         }
@@ -71,10 +71,10 @@ export function OrderActions({
           <button
             type="button"
             disabled={isPending}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-xs tracking-widest uppercase border border-line text-ink-muted hover:text-ink transition-colors disabled:opacity-40"
+            className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm border border-line text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Réinitialiser les DL
+            <RotateCcw className="w-4 h-4" />
+            Reinitialiser les DL
           </button>
         }
         title="Réinitialiser les téléchargements"

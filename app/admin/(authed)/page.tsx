@@ -70,11 +70,11 @@ export default async function AdminDashboard() {
                       >
                         {p.title}
                       </Link>
-                      <p className="caption text-ink-muted">
+                      <p className="text-xs text-ink-muted">
                         {p.sales} vente{p.sales !== 1 ? 's' : ''}
                       </p>
                     </div>
-                    <span className="font-display text-sm text-ink shrink-0">
+                    <span className="text-sm font-medium text-ink shrink-0">
                       {formatPrice(p.revenue)}
                     </span>
                   </li>
@@ -94,12 +94,12 @@ export default async function AdminDashboard() {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-ink truncate">{o.photo?.title ?? 'Photo supprimee'}</p>
                     {o.buyerEmail && (
-                      <p className="caption text-ink-muted truncate">{o.buyerEmail}</p>
+                      <p className="text-xs text-ink-muted truncate">{o.buyerEmail}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <StatusPill status={o.paymentStatus} />
-                    <span className="font-display text-sm text-ink tabular-nums">
+                    <span className="text-sm font-medium text-ink tabular-nums">
                       {formatPrice(o.amount, o.currency)}
                     </span>
                   </div>

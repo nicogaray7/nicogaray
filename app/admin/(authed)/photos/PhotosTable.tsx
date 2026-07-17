@@ -97,7 +97,7 @@ export function PhotosTable({
           <Link href={`/admin/photos/${p.id}`} className="text-ink hover:text-accent transition-colors">
             {p.title}
           </Link>
-          <p className="caption text-ink-muted">{p.slug}</p>
+          <p className="text-xs text-ink-muted">{p.slug}</p>
         </div>
       ),
     },
@@ -130,7 +130,7 @@ export function PhotosTable({
       header: 'Date',
       sortable: true,
       render: (p) => (
-        <span className="caption text-ink-muted">{shortDate(p.createdAt)}</span>
+        <span className="text-xs text-ink-muted">{shortDate(p.createdAt)}</span>
       ),
     },
   ];

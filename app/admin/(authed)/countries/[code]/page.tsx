@@ -23,30 +23,30 @@ export default async function EditCountryPage(props: { params: Promise<{ code: s
     <Container size="wide">
       <Link
         href="/admin/countries"
-        className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors mb-8"
+        className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors mb-8"
       >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        Back to countries
+        <ArrowLeft className="w-4 h-4" />
+        Retour aux pays
       </Link>
 
       <div className="flex items-end justify-between mb-10 gap-6 flex-wrap">
-        <div className="space-y-3">
-          <p className="eyebrow text-accent">Country · {country.code}</p>
-          <h1 className="text-display-lg font-display text-ink">{country.nameFr}</h1>
-          <p className="caption">{photoCount} photo(s)</p>
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-accent uppercase tracking-wide">Country - {country.code}</p>
+          <h1 className="text-2xl font-semibold text-ink">{country.nameFr}</h1>
+          <p className="text-sm text-ink-muted">{photoCount} photo(s)</p>
         </div>
         <a
           href={`/fr/country/${country.code}`}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors"
         >
-          View live
-          <ExternalLink className="w-3 h-3" />
+          Voir en ligne
+          <ExternalLink className="w-4 h-4" />
         </a>
       </div>
 
-      <form action={updateCountry} className="space-y-6 bg-paper border border-line p-6 sm:p-8 max-w-3xl">
+      <form action={updateCountry} className="space-y-6 bg-white rounded-xl border border-line p-6 sm:p-8 max-w-3xl">
         <input type="hidden" name="code" value={country.code} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -69,12 +69,12 @@ export function SecurityClient({ enabled }: { enabled: boolean }) {
           </Button>
         ) : (
           <div className="space-y-4">
-            <p className="caption text-ink-muted">
+            <p className="text-sm text-ink-muted">
               Scannez ce QR code avec votre application d'authentification (ex. Google Authenticator, Authy).
             </p>
             <img src={setup.qr} alt="QR code 2FA" className="w-48 h-48 border border-line" />
             <div className="space-y-1">
-              <p className="caption text-ink-muted">Ou entrez le secret manuellement :</p>
+              <p className="text-sm text-ink-muted">Ou entrez le secret manuellement :</p>
               <code className="text-xs font-mono bg-paper-cool border border-line px-2 py-1 block break-all">
                 {setup.secret}
               </code>
