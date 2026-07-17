@@ -1,60 +1,144 @@
 import Link from 'next/link';
+import type { Prisma } from '@prisma/client';
 import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
-import { r2PublicUrl } from '@/lib/r2';
+import { parseListParams, buildQuery } from '@/lib/admin/list-params';
+import { PageHeader, SearchInput, Toolbar, Pagination } from '@/components/admin';
 import { PhotosTable } from './PhotosTable';
 
 export const dynamic = 'force-dynamic';
 
-async function getPhotos() {
-  return prisma.photo.findMany({
-    orderBy: [{ takenAt: 'desc' }, { createdAt: 'desc' }],
-    select: {
-      id: true,
-      title: true,
-      titleEn: true,
-      country: true,
-      city: true,
-      price: true,
-      currency: true,
-      published: true,
-      featured: true,
-      isHero: true,
-      thumbKey: true,
-    },
-  });
+type SearchParams = Record<string, string | string[] | undefined>;
+
+function sp(v: string | string[] | undefined): string | undefined {
+  return Array.isArray(v) ? v[0] : v;
 }
 
-export default async function AdminPhotos() {
-  const rows = await getPhotos();
-  const photos = rows.map((p) => ({
-    ...p,
-    thumbUrl: r2PublicUrl(p.thumbKey) ?? '',
-  }));
+export default async function AdminPhotosPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const { page, pageSize, sort, dir, q, skip, take } = parseListParams(params, {
+    sortable: ['createdAt', 'title', 'price', 'sortOrder'],
+    defaultSort: 'createdAt',
+    defaultDir: 'desc',
+    pageSize: 24,
+  });
+
+  const publishedRaw = sp(params['published']);
+  const featuredRaw = sp(params['featured']);
+  const countryRaw = sp(params['country']);
+
+  const where: Prisma.PhotoWhereInput = {};
+
+  if (q) {
+    where.OR = [
+      { title: { contains: q, mode: 'insensitive' } },
+      { country: { contains: q, mode: 'insensitive' } },
+    ];
+  }
+  if (publishedRaw === '1') where.published = true;
+  if (publishedRaw === '0') where.published = false;
+  if (featuredRaw === '1') where.featured = true;
+  if (countryRaw) where.countryCode = countryRaw;
+
+  const [photos, total] = await Promise.all([
+    prisma.photo.findMany({
+      where,
+      orderBy: { [sort]: dir },
+      skip,
+      take,
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        country: true,
+        countryCode: true,
+        price: true,
+        currency: true,
+        published: true,
+        featured: true,
+        thumbKey: true,
+        sortOrder: true,
+        createdAt: true,
+      },
+    }),
+    prisma.photo.count({ where }),
+  ]);
+
+  const baseQ = { q: q || undefined, sort, dir };
+
+  const filterLinks = (
+    <div className="flex items-center gap-2 flex-wrap">
+      <Link
+        href={`/admin/photos${buildQuery({ ...baseQ })}`}
+        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+          !publishedRaw && !featuredRaw
+            ? 'border-ink bg-ink text-paper'
+            : 'border-line text-ink-muted hover:text-ink'
+        }`}
+      >
+        Tous
+      </Link>
+      <Link
+        href={`/admin/photos${buildQuery({ ...baseQ, published: '1' })}`}
+        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+          publishedRaw === '1' && !featuredRaw
+            ? 'border-ink bg-ink text-paper'
+            : 'border-line text-ink-muted hover:text-ink'
+        }`}
+      >
+        Publies
+      </Link>
+      <Link
+        href={`/admin/photos${buildQuery({ ...baseQ, published: '0' })}`}
+        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+          publishedRaw === '0'
+            ? 'border-ink bg-ink text-paper'
+            : 'border-line text-ink-muted hover:text-ink'
+        }`}
+      >
+        Brouillons
+      </Link>
+      <Link
+        href={`/admin/photos${buildQuery({ ...baseQ, featured: '1' })}`}
+        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+          featuredRaw === '1'
+            ? 'border-ink bg-ink text-paper'
+            : 'border-line text-ink-muted hover:text-ink'
+        }`}
+      >
+        Featured
+      </Link>
+    </div>
+  );
 
   return (
     <Container size="wide">
-      <div className="flex items-end justify-between mb-8 gap-4 flex-wrap">
-        <div className="space-y-3">
-          <p className="eyebrow text-accent">Photos</p>
-          <h1 className="text-display-lg font-display text-ink">All photos</h1>
-          <p className="caption">{photos.length} total</p>
-        </div>
-        <Link
-          href="/admin/photos/new"
-          className="inline-flex items-center px-5 py-2.5 bg-ink text-paper text-[11px] tracking-widest uppercase hover:bg-accent transition-colors"
-        >
-          + New
-        </Link>
-      </div>
+      <PageHeader
+        eyebrow="Catalogue"
+        title="Photos"
+        actions={
+          <Link
+            href="/admin/photos/new"
+            className="inline-flex items-center px-5 py-2.5 bg-ink text-paper text-[11px] tracking-widest uppercase hover:bg-accent transition-colors"
+          >
+            + Upload
+          </Link>
+        }
+      />
 
-      {photos.length === 0 ? (
-        <div className="border border-dashed border-line py-32 text-center">
-          <p className="caption">No photos yet. Upload one or run the import script.</p>
-        </div>
-      ) : (
-        <PhotosTable photos={photos} />
-      )}
+      <Toolbar
+        search={<SearchInput placeholder="Rechercher une photo" />}
+        filters={filterLinks}
+        count={total}
+      />
+
+      <PhotosTable photos={photos} sort={sort} dir={dir} />
+
+      <Pagination page={page} pageSize={pageSize} total={total} />
     </Container>
   );
 }

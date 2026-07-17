@@ -1,86 +1,108 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '@/components/layout/Container';
-import { prisma } from '@/lib/prisma';
+import { PageHeader, Card, StatCard, StatusPill, EmptyState } from '@/components/admin';
 import { formatPrice } from '@/lib/utils';
+import { r2PublicUrl } from '@/lib/r2-url';
+import { getDashboardData } from '@/lib/admin/dashboard-data';
+import { RevenueChart } from './_dashboard/RevenueChart';
 
 export const dynamic = 'force-dynamic';
 
-async function getStats() {
-  const [photos, published, featured, pendingOrders, paidOrders, revenueRows] = await Promise.all([
-    prisma.photo.count(),
-    prisma.photo.count({ where: { published: true } }),
-    prisma.photo.count({ where: { featured: true } }),
-    prisma.order.count({ where: { paymentStatus: 'pending' } }),
-    prisma.order.count({ where: { paymentStatus: 'paid' } }),
-    prisma.order.aggregate({ where: { paymentStatus: 'paid' }, _sum: { amount: true } }),
-  ]);
-  return {
-    photos,
-    published,
-    featured,
-    pendingOrders,
-    paidOrders,
-    revenue: revenueRows._sum.amount ?? 0,
-  };
-}
-
-async function getRecentOrders() {
-  return prisma.order.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-    include: { photo: { select: { title: true, slug: true } } },
-  });
-}
-
 export default async function AdminDashboard() {
-  const stats = await getStats();
-  const orders = await getRecentOrders();
+  const data = await getDashboardData();
+
+  const {
+    totalRevenue,
+    paidOrders,
+    pendingOrders,
+    refundedOrders,
+    avgOrderValue,
+    publishedPhotos,
+    monthly,
+    topPhotos,
+    recent,
+  } = data;
+
   return (
     <Container size="wide">
-      <div className="mb-12 space-y-3">
-        <p className="eyebrow text-accent">Dashboard</p>
-        <h1 className="text-display-lg font-display text-ink">Overview</h1>
+      <PageHeader eyebrow="Dashboard" title="Overview" />
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+        <StatCard label="Revenue" value={formatPrice(totalRevenue)} />
+        <StatCard label="Paid orders" value={paidOrders} />
+        <StatCard label="Avg order" value={formatPrice(avgOrderValue)} />
+        <StatCard label="Published" value={publishedPhotos} />
+        <StatCard label="Pending" value={pendingOrders} />
+        <StatCard label="Refunded" value={refundedOrders} />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
-        <Stat label="Photos" value={stats.photos} />
-        <Stat label="Published" value={stats.published} />
-        <Stat label="Featured" value={stats.featured} />
-        <Stat label="Pending" value={stats.pendingOrders} />
-        <Stat label="Paid" value={stats.paidOrders} />
-        <Stat label="Revenue" value={formatPrice(stats.revenue, 'EUR')} />
-      </div>
+      <Card title="Revenue (12 mois)" className="mb-8">
+        <RevenueChart data={monthly} />
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card title="Quick actions">
-          <div className="flex flex-wrap gap-3">
-            <Link href="/admin/photos/new" className="inline-flex items-center px-5 py-2.5 bg-ink text-paper text-[11px] tracking-widest uppercase hover:bg-accent transition-colors">
-              + Upload photo
-            </Link>
-            <Link href="/admin/photos" className="inline-flex items-center px-5 py-2.5 border border-line text-[11px] tracking-widest uppercase text-ink hover:border-ink transition-colors">
-              Manage photos
-            </Link>
-          </div>
+        <Card title="Top photos">
+          {topPhotos.length === 0 ? (
+            <EmptyState title="Aucune vente" description="Les meilleures photos apparaitront ici." />
+          ) : (
+            <ul className="divide-y divide-line">
+              {topPhotos.map((p) => {
+                const thumb = r2PublicUrl(p.thumbKey);
+                return (
+                  <li key={p.id} className="py-3 flex items-center gap-3">
+                    {thumb ? (
+                      <Image
+                        src={thumb}
+                        alt={p.title}
+                        width={40}
+                        height={40}
+                        className="object-cover shrink-0 border border-line"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-paper-cool border border-line shrink-0" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/admin/photos/${p.id}`}
+                        className="text-sm text-ink hover:text-accent truncate block"
+                      >
+                        {p.title}
+                      </Link>
+                      <p className="caption text-ink-muted">
+                        {p.sales} vente{p.sales !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                    <span className="font-display text-sm text-ink shrink-0">
+                      {formatPrice(p.revenue)}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </Card>
 
         <Card title="Recent orders">
-          {orders.length === 0 ? (
-            <p className="caption">No orders yet.</p>
+          {recent.length === 0 ? (
+            <EmptyState title="Aucune commande" description="Les dernieres commandes apparaitront ici." />
           ) : (
             <ul className="divide-y divide-line">
-              {orders.map((o) => (
-                <li key={o.id} className="py-3 flex items-center justify-between gap-4 text-sm">
-                  <div className="min-w-0">
-                    <p className="truncate text-ink">{o.photo?.title ?? '-'}</p>
-                    <p className="caption">{o.buyerEmail}</p>
+              {recent.map((o) => (
+                <li key={o.id} className="py-3 flex items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-ink truncate">{o.photo?.title ?? 'Photo supprimee'}</p>
+                    {o.buyerEmail && (
+                      <p className="caption text-ink-muted truncate">{o.buyerEmail}</p>
+                    )}
                   </div>
-                  <span
-                    className={`text-[10px] tracking-widest uppercase ${
-                      o.paymentStatus === 'paid' ? 'text-green-700' : 'text-ink-muted'
-                    }`}
-                  >
-                    {o.paymentStatus}
-                  </span>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <StatusPill status={o.paymentStatus} />
+                    <span className="font-display text-sm text-ink tabular-nums">
+                      {formatPrice(o.amount, o.currency)}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -88,23 +110,5 @@ export default async function AdminDashboard() {
         </Card>
       </div>
     </Container>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number | string }) {
-  return (
-    <div className="bg-paper border border-line p-5">
-      <p className="eyebrow text-ink-muted mb-2">{label}</p>
-      <p className="font-display text-2xl text-ink tabular-nums">{value}</p>
-    </div>
-  );
-}
-
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="bg-paper border border-line p-6">
-      <p className="eyebrow text-accent mb-4">{title}</p>
-      {children}
-    </section>
   );
 }

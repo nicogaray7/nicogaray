@@ -3,6 +3,9 @@ import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { prisma } from './prisma';
+import { checkRate, resetRate } from './rate-limit';
+import { verifyTotp } from './totp';
+import { logAudit } from './audit';
 
 declare module 'next-auth' {
   interface Session {
@@ -16,6 +19,7 @@ declare module 'next-auth' {
 const credentialsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  totp: z.string().optional(),
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -30,17 +34,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Mot de passe', type: 'password' },
+        totp: { label: 'Code 2FA', type: 'text' },
       },
       async authorize(raw) {
         const parsed = credentialsSchema.safeParse(raw);
         if (!parsed.success) return null;
 
-        const { email, password } = parsed.data;
+        const { email, password, totp } = parsed.data;
+
+        const rl = checkRate('login:' + email);
+        if (!rl.allowed) {
+          await logAudit('auth.rate_limited', { meta: { email } });
+          return null;
+        }
+
         const user = await prisma.adminUser.findUnique({ where: { email: email.toLowerCase() } });
-        if (!user) return null;
+        if (!user) {
+          await logAudit('auth.login_failed', { meta: { email } });
+          return null;
+        }
 
         const ok = await bcrypt.compare(password, user.passwordHash);
-        if (!ok) return null;
+        if (!ok) {
+          await logAudit('auth.login_failed', { meta: { email } });
+          return null;
+        }
+
+        if (user.totpEnabled) {
+          if (!totp || !verifyTotp(totp, user.totpSecret!)) {
+            await logAudit('auth.totp_failed', { target: user.id });
+            return null;
+          }
+        }
+
+        await prisma.adminUser.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+        resetRate('login:' + email);
+        await logAudit('auth.login', { target: user.id });
 
         return {
           id: user.id,

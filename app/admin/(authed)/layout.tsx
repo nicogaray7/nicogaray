@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { auth, signOut } from '@/lib/auth';
-import { LayoutDashboard, ImageIcon, ShoppingBag, LogOut, Globe, Settings } from 'lucide-react';
+import { LayoutDashboard, ImageIcon, ShoppingBag, LogOut, Globe, Settings, Shield } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 
 export const dynamic = 'force-dynamic';
@@ -25,6 +25,7 @@ export default async function AuthedLayout({ children }: { children: React.React
               <AdminLink href="/admin/countries" icon={<Globe className="w-3.5 h-3.5" />} label="Countries" />
               <AdminLink href="/admin/orders" icon={<ShoppingBag className="w-3.5 h-3.5" />} label="Orders" />
               <AdminLink href="/admin/settings" icon={<Settings className="w-3.5 h-3.5" />} label="Settings" />
+              <AdminLink href="/admin/security" icon={<Shield className="w-3.5 h-3.5" />} label="Security" />
               <form
                 action={async () => {
                   'use server';
