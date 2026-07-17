@@ -140,9 +140,9 @@ export default async function AdminOrdersPage(props: {
         actions={
           <a
             href={exportHref}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-line text-xs tracking-widest uppercase text-ink-muted hover:text-ink transition-colors"
+            className="inline-flex items-center gap-2 rounded-md border border-line px-4 py-2 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-4 h-4" />
             Export CSV
           </a>
         }
@@ -163,10 +163,10 @@ export default async function AdminOrdersPage(props: {
                 <Link
                   key={s}
                   href={href}
-                  className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+                  className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
                     active
-                      ? 'bg-ink text-paper border-ink'
-                      : 'border-line text-ink-muted hover:text-ink'
+                      ? 'bg-ink text-white border-ink'
+                      : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
                   }`}
                 >
                   {label}

@@ -36,12 +36,12 @@ export function ConfirmDialog({
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-ink/40 z-40" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-paper border border-line p-6 max-w-sm w-full shadow-lg focus:outline-none">
-          <Dialog.Title className="font-display text-ink text-lg mb-2">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl border border-line p-6 max-w-sm w-full shadow-lg focus:outline-none">
+          <Dialog.Title className="text-base font-semibold text-ink mb-2">
             {title}
           </Dialog.Title>
           {description && (
-            <Dialog.Description className="caption text-ink-muted mb-6">
+            <Dialog.Description className="text-sm text-ink-muted mb-6">
               {description}
             </Dialog.Description>
           )}
@@ -49,7 +49,7 @@ export function ConfirmDialog({
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="text-sm text-ink-muted hover:text-ink transition-colors px-4 py-2 border border-line"
+                className="rounded-md border border-line px-4 py-2 text-sm text-ink-muted hover:bg-paper-cool transition-colors disabled:opacity-50"
                 disabled={pending}
               >
                 Annuler
@@ -59,10 +59,10 @@ export function ConfirmDialog({
               type="button"
               onClick={handleConfirm}
               disabled={pending}
-              className={`text-sm px-4 py-2 transition-colors disabled:opacity-50 ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 ${
                 destructive
-                  ? 'bg-red-700 text-white hover:bg-red-800'
-                  : 'bg-ink text-paper hover:bg-ink-soft'
+                  ? 'bg-red-600 text-white hover:bg-red-700'
+                  : 'bg-ink text-white hover:bg-ink-soft'
               }`}
             >
               {pending ? 'En cours...' : confirmLabel}

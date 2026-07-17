@@ -28,19 +28,19 @@ export function Pagination({
   }
 
   return (
-    <div className="flex items-center justify-between py-4 border-t border-line mt-2">
+    <div className="flex items-center justify-between py-4 mt-2">
       <button
         type="button"
         onClick={() => navigate(page - 1)}
         disabled={page <= 1}
-        className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-ink disabled:opacity-30 disabled:pointer-events-none transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool disabled:opacity-30 disabled:pointer-events-none transition-colors"
         aria-label="Page precedente"
       >
         <ChevronLeft className="w-4 h-4" />
         Précédent
       </button>
 
-      <span className="caption text-ink-muted">
+      <span className="text-sm text-ink-muted">
         {from}-{to} sur {total}
       </span>
 
@@ -48,7 +48,7 @@ export function Pagination({
         type="button"
         onClick={() => navigate(page + 1)}
         disabled={page >= totalPages}
-        className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-ink disabled:opacity-30 disabled:pointer-events-none transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool disabled:opacity-30 disabled:pointer-events-none transition-colors"
         aria-label="Page suivante"
       >
         Suivant

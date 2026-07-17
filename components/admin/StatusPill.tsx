@@ -2,16 +2,18 @@ const DEFAULT_TONE_MAP: Record<string, 'green' | 'amber' | 'red' | 'neutral'> = 
   paid: 'green',
   published: 'green',
   active: 'green',
+  enabled: 'green',
   pending: 'amber',
   failed: 'red',
   refunded: 'red',
+  disabled: 'neutral',
 };
 
 const TONE_CLASSES: Record<string, string> = {
-  green: 'text-green-700 bg-green-50 border-green-200',
-  amber: 'text-amber-600 bg-amber-50 border-amber-200',
-  red: 'text-red-700 bg-red-50 border-red-200',
-  neutral: 'text-ink-muted bg-paper-cool border-line',
+  green: 'bg-emerald-100 text-emerald-700',
+  amber: 'bg-amber-100 text-amber-700',
+  red: 'bg-red-100 text-red-700',
+  neutral: 'bg-zinc-100 text-zinc-600',
 };
 
 export function StatusPill({
@@ -26,7 +28,7 @@ export function StatusPill({
 
   return (
     <span
-      className={`inline-flex items-center border px-2 py-0.5 text-[10px] tracking-widest uppercase font-sans ${classes}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${classes}`}
     >
       {status}
     </span>

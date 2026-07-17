@@ -138,8 +138,8 @@ export function PhotosTable({
   return (
     <div className="space-y-3">
       {selectedIds.length > 0 && (
-        <div className="sticky top-16 z-10 bg-paper border border-line px-4 py-3 flex items-center gap-3 flex-wrap">
-          <span className="text-sm text-ink-muted">
+        <div className="sticky top-16 z-10 bg-white rounded-xl border border-line px-4 py-3 flex items-center gap-3 flex-wrap shadow-sm">
+          <span className="text-sm font-medium text-ink">
             {selectedIds.length} selection{selectedIds.length > 1 ? 's' : ''}
           </span>
 
@@ -147,7 +147,7 @@ export function PhotosTable({
             type="button"
             disabled={isPending}
             onClick={() => runAction(() => bulkSetPublished(selectedIds, true))}
-            className="text-[10px] tracking-widest uppercase px-3 py-1.5 border border-line text-ink-muted hover:text-ink hover:border-ink transition-colors disabled:opacity-40"
+            className="rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
             Publier
           </button>
@@ -156,16 +156,16 @@ export function PhotosTable({
             type="button"
             disabled={isPending}
             onClick={() => runAction(() => bulkSetPublished(selectedIds, false))}
-            className="text-[10px] tracking-widest uppercase px-3 py-1.5 border border-line text-ink-muted hover:text-ink hover:border-ink transition-colors disabled:opacity-40"
+            className="rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
-            Dépublier
+            Depublier
           </button>
 
           <button
             type="button"
             disabled={isPending}
             onClick={() => runAction(() => bulkSetFeatured(selectedIds, true))}
-            className="text-[10px] tracking-widest uppercase px-3 py-1.5 border border-line text-ink-muted hover:text-ink hover:border-ink transition-colors disabled:opacity-40"
+            className="rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
             Featured
           </button>
@@ -174,7 +174,7 @@ export function PhotosTable({
             type="button"
             disabled={isPending}
             onClick={() => runAction(() => bulkSetFeatured(selectedIds, false))}
-            className="text-[10px] tracking-widest uppercase px-3 py-1.5 border border-line text-ink-muted hover:text-ink hover:border-ink transition-colors disabled:opacity-40"
+            className="rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
             Retirer featured
           </button>
@@ -184,7 +184,7 @@ export function PhotosTable({
               <button
                 type="button"
                 disabled={isPending}
-                className="text-[10px] tracking-widest uppercase px-3 py-1.5 border border-red-300 text-red-700 hover:bg-red-700 hover:text-white transition-colors disabled:opacity-40"
+                className="rounded-md border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors disabled:opacity-40"
               >
                 Supprimer
               </button>

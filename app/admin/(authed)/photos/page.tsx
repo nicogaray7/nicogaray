@@ -74,40 +74,40 @@ export default async function AdminPhotosPage({
     <div className="flex items-center gap-2 flex-wrap">
       <Link
         href={`/admin/photos${buildQuery({ ...baseQ })}`}
-        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+        className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
           !publishedRaw && !featuredRaw
-            ? 'border-ink bg-ink text-paper'
-            : 'border-line text-ink-muted hover:text-ink'
+            ? 'bg-ink text-white border-ink'
+            : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
         }`}
       >
         Tous
       </Link>
       <Link
         href={`/admin/photos${buildQuery({ ...baseQ, published: '1' })}`}
-        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+        className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
           publishedRaw === '1' && !featuredRaw
-            ? 'border-ink bg-ink text-paper'
-            : 'border-line text-ink-muted hover:text-ink'
+            ? 'bg-ink text-white border-ink'
+            : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
         }`}
       >
-        Publies
+        Publiees
       </Link>
       <Link
         href={`/admin/photos${buildQuery({ ...baseQ, published: '0' })}`}
-        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+        className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
           publishedRaw === '0'
-            ? 'border-ink bg-ink text-paper'
-            : 'border-line text-ink-muted hover:text-ink'
+            ? 'bg-ink text-white border-ink'
+            : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
         }`}
       >
         Brouillons
       </Link>
       <Link
         href={`/admin/photos${buildQuery({ ...baseQ, featured: '1' })}`}
-        className={`text-[10px] tracking-widest uppercase px-3 py-1.5 border transition-colors ${
+        className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
           featuredRaw === '1'
-            ? 'border-ink bg-ink text-paper'
-            : 'border-line text-ink-muted hover:text-ink'
+            ? 'bg-ink text-white border-ink'
+            : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
         }`}
       >
         Featured
@@ -123,9 +123,9 @@ export default async function AdminPhotosPage({
         actions={
           <Link
             href="/admin/photos/new"
-            className="inline-flex items-center px-5 py-2.5 bg-ink text-paper text-[11px] tracking-widest uppercase hover:bg-accent transition-colors"
+            className="inline-flex items-center rounded-md bg-ink text-white px-4 py-2 text-sm font-medium hover:bg-ink-soft transition-colors"
           >
-            + Upload
+            Ajouter une photo
           </Link>
         }
       />

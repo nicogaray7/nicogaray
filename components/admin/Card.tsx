@@ -13,11 +13,11 @@ export function Card({
 }) {
   return (
     <section
-      className={`bg-paper border border-line p-6 ${className ?? ''}`}
+      className={`bg-white rounded-xl border border-line shadow-sm p-5 ${className ?? ''}`}
     >
       {(title || actions) && (
         <div className="flex items-center justify-between mb-4">
-          {title && <span className="eyebrow text-accent">{title}</span>}
+          {title && <span className="text-sm font-semibold text-ink">{title}</span>}
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </div>
       )}
@@ -38,17 +38,17 @@ export function StatCard({
   delta?: { value: string; positive?: boolean };
 }) {
   return (
-    <div className="bg-paper border border-line p-6">
-      <p className="eyebrow text-ink-muted mb-2">{label}</p>
-      <p className="font-display text-display-lg text-ink leading-none mb-1">
+    <div className="bg-white rounded-xl border border-line shadow-sm p-5">
+      <p className="text-xs text-ink-muted mb-2">{label}</p>
+      <p className="text-3xl font-semibold text-ink tabular-nums leading-none mb-1">
         {value}
       </p>
       <div className="flex items-center gap-3 mt-1">
-        {hint && <span className="caption text-ink-muted">{hint}</span>}
+        {hint && <span className="text-xs text-ink-muted">{hint}</span>}
         {delta && (
           <span
-            className={`caption font-sans text-[10px] tracking-widest ${
-              delta.positive ? 'text-green-700' : 'text-red-700'
+            className={`text-xs font-medium ${
+              delta.positive ? 'text-emerald-700' : 'text-red-700'
             }`}
           >
             {delta.value}
