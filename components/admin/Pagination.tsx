@@ -37,7 +37,7 @@ export function Pagination({
         aria-label="Page precedente"
       >
         <ChevronLeft className="w-4 h-4" />
-        Precedent
+        Précédent
       </button>
 
       <span className="caption text-ink-muted">

@@ -33,14 +33,14 @@ export default async function SecurityPage() {
             <span className="caption text-ink-muted">
               {user.totpEnabled
                 ? "La 2FA est active sur votre compte."
-                : "La 2FA n'est pas encore activee."}
+                : "La 2FA n'est pas encore activée."}
             </span>
           </div>
           <SecurityClient enabled={user.totpEnabled} />
         </Card>
 
         {/* Last login */}
-        <Card title="Derniere connexion">
+        <Card title="Dernière connexion">
           {user.lastLoginAt ? (
             <p className="text-ink text-sm">
               {new Intl.DateTimeFormat('fr-FR', {

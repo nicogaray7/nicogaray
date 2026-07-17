@@ -44,7 +44,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card title="Top photos">
           {topPhotos.length === 0 ? (
-            <EmptyState title="Aucune vente" description="Les meilleures photos apparaitront ici." />
+            <EmptyState title="Aucune vente" description="Les meilleures photos apparaîtront ici." />
           ) : (
             <ul className="divide-y divide-line">
               {topPhotos.map((p) => {
@@ -86,7 +86,7 @@ export default async function AdminDashboard() {
 
         <Card title="Recent orders">
           {recent.length === 0 ? (
-            <EmptyState title="Aucune commande" description="Les dernieres commandes apparaitront ici." />
+            <EmptyState title="Aucune commande" description="Les dernières commandes apparaîtront ici." />
           ) : (
             <ul className="divide-y divide-line">
               {recent.map((o) => (

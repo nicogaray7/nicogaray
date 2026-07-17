@@ -158,7 +158,7 @@ export function PhotosTable({
             onClick={() => runAction(() => bulkSetPublished(selectedIds, false))}
             className="text-[10px] tracking-widest uppercase px-3 py-1.5 border border-line text-ink-muted hover:text-ink hover:border-ink transition-colors disabled:opacity-40"
           >
-            Depublier
+            Dépublier
           </button>
 
           <button

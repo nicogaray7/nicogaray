@@ -60,8 +60,8 @@ export function OrderActions({
             Renvoyer le lien
           </button>
         }
-        title="Renvoyer le lien de telechargement"
-        description="Un email avec le lien de telechargement actuel sera renvoye a l'acheteur."
+        title="Renvoyer le lien de téléchargement"
+        description="Un email avec le lien de téléchargement actuel sera renvoyé à l'acheteur."
         confirmLabel="Envoyer"
         onConfirm={() => run(() => resendDownloadLink(orderId))}
       />
@@ -74,12 +74,12 @@ export function OrderActions({
             className="inline-flex items-center gap-2 px-4 py-2.5 text-xs tracking-widest uppercase border border-line text-ink-muted hover:text-ink transition-colors disabled:opacity-40"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            Reinitialiser les DL
+            Réinitialiser les DL
           </button>
         }
-        title="Reinitialiser les telechargements"
-        description="Le compteur sera remis a zero et un nouveau token genere. Valable 30 jours."
-        confirmLabel="Reinitialiser"
+        title="Réinitialiser les téléchargements"
+        description="Le compteur sera remis à zéro et un nouveau token généré. Valable 30 jours."
+        confirmLabel="Réinitialiser"
         onConfirm={() => run(() => resetDownloads(orderId))}
       />
     </div>

@@ -61,7 +61,7 @@ export function LoginForm({
           onChange={(e) => setTotp(e.target.value)}
           autoComplete="one-time-code"
         />
-        <p className="caption text-ink-muted">Si la 2FA est activee</p>
+        <p className="caption text-ink-muted">Si la 2FA est activée</p>
       </div>
       {error && (
         <p className="text-xs text-red-700 border-l-2 border-red-700 pl-3 py-1">{error}</p>

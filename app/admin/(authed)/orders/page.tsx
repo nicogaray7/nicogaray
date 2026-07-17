@@ -181,7 +181,7 @@ export default async function AdminOrdersPage(props: {
       {orders.length === 0 ? (
         <EmptyState
           title="Aucune commande"
-          description={params.q || status ? 'Aucun resultat pour ces filtres.' : 'Aucune commande pour le moment.'}
+          description={params.q || status ? 'Aucun résultat pour ces filtres.' : 'Aucune commande pour le moment.'}
         />
       ) : (
         <DataTable<OrderRow>

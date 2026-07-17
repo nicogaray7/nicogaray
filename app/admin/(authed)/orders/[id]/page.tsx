@@ -163,7 +163,7 @@ export default async function OrderDetailPage(props: {
             <h2 className="eyebrow text-ink-muted mb-4">Timeline</h2>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between">
-                <span className="text-ink-muted text-[10px] tracking-widest uppercase">Cree le</span>
+                <span className="text-ink-muted text-[10px] tracking-widest uppercase">Créé le</span>
                 <span className="text-ink">{formatDate(order.createdAt)}</span>
               </li>
               <li className="flex items-center justify-between">
@@ -171,7 +171,7 @@ export default async function OrderDetailPage(props: {
                 <span className="text-ink">{formatDate(order.paidAt)}</span>
               </li>
               <li className="flex items-center justify-between">
-                <span className="text-ink-muted text-[10px] tracking-widest uppercase">Rembourse le</span>
+                <span className="text-ink-muted text-[10px] tracking-widest uppercase">Remboursé le</span>
                 <span className="text-ink">{formatDate(order.refundedAt)}</span>
               </li>
             </ul>

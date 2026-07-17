@@ -55,7 +55,7 @@ export function SecurityClient({ enabled }: { enabled: boolean }) {
         setCode('');
         router.refresh();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erreur lors de la desactivation.');
+        setError(err instanceof Error ? err.message : 'Erreur lors de la désactivation.');
       }
     });
   }
@@ -96,7 +96,7 @@ export function SecurityClient({ enabled }: { enabled: boolean }) {
               <p className="text-xs text-red-700 border-l-2 border-red-700 pl-3 py-1">{error}</p>
             )}
             <Button onClick={handleEnable} disabled={isPending || code.length < 6}>
-              {isPending ? 'Verification...' : 'Verifier et activer'}
+              {isPending ? 'Vérification...' : 'Vérifier et activer'}
             </Button>
           </div>
         )}
@@ -110,7 +110,7 @@ export function SecurityClient({ enabled }: { enabled: boolean }) {
   return (
     <div className="space-y-4">
       <div className="space-y-2 max-w-xs">
-        <Label htmlFor="disable-code">Code 2FA pour confirmer la desactivation</Label>
+        <Label htmlFor="disable-code">Code 2FA pour confirmer la désactivation</Label>
         <Input
           id="disable-code"
           type="text"
@@ -128,12 +128,12 @@ export function SecurityClient({ enabled }: { enabled: boolean }) {
       <ConfirmDialog
         trigger={
           <Button variant="destructive" disabled={isPending || code.length < 6}>
-            Desactiver la 2FA
+            Désactiver la 2FA
           </Button>
         }
-        title="Desactiver la 2FA ?"
+        title="Désactiver la 2FA ?"
         description="Cela supprimera la double authentification de votre compte. Confirmez avec votre code 2FA."
-        confirmLabel="Desactiver"
+        confirmLabel="Désactiver"
         destructive
         onConfirm={handleDisable}
       />
