@@ -1,17 +1,16 @@
-import { generateSecret, generateURI, verifySync } from 'otplib';
+import { authenticator } from 'otplib';
 
 export function generateTotpSecret(): string {
-  return generateSecret();
+  return authenticator.generateSecret();
 }
 
 export function totpKeyUri(email: string, secret: string): string {
-  return generateURI({ issuer: 'Nico Garay Admin', label: email, secret });
+  return authenticator.keyuri(email, 'Nico Garay Admin', secret);
 }
 
 export function verifyTotp(token: string, secret: string): boolean {
   try {
-    const result = verifySync({ token, secret });
-    return result.valid;
+    return authenticator.verify({ token, secret });
   } catch {
     return false;
   }
