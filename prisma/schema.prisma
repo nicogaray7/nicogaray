@@ -12,10 +12,28 @@ model AdminUser {
   email        String   @unique
   name         String?
   passwordHash String
+  // 2FA (TOTP) - optionnel, active par utilisateur
+  totpSecret   String?
+  totpEnabled  Boolean  @default(false)
+  lastLoginAt  DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@index([email])
+}
+
+// Journal d'audit des actions admin (securite + tracabilite)
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorEmail String?
+  action     String   // ex: photo.publish, order.refund, auth.login, auth.login_failed
+  target     String?  // id de l'entite concernee
+  meta       Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
 }
 
 model Photo {
@@ -120,7 +138,10 @@ model Order {
 
   createdAt DateTime  @default(now())
   paidAt    DateTime?
+  refundedAt   DateTime?
+  refundReason String?
 
   @@index([buyerEmail])
   @@index([paymentStatus])
+  @@index([createdAt])
 }
