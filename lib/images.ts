@@ -131,7 +131,7 @@ export async function extractExif(buffer: Buffer): Promise<ExtractedExif> {
     const camera = [exif.Make, exif.Model].filter(Boolean).join(' ').trim() || undefined;
     const lens = [exif.LensMake, exif.LensModel].filter(Boolean).join(' ').trim() || undefined;
     const focalLength = exif.FocalLength ? `${Math.round(exif.FocalLength)}mm` : undefined;
-    const aperture = exif.FNumber ? `f/${exif.FNumber}` : undefined;
+    const aperture = exif.FNumber ? `f/${Math.round(exif.FNumber * 10) / 10}` : undefined;
     const shutterSpeed = exif.ExposureTime
       ? exif.ExposureTime >= 1
         ? `${exif.ExposureTime}s`
