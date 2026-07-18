@@ -27,26 +27,26 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
     <Container size="wide">
       <Link
         href="/admin/photos"
-        className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors mb-8"
+        className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors mb-8"
       >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        Back to photos
+        <ArrowLeft className="w-4 h-4" />
+        Retour aux photos
       </Link>
 
       <div className="flex items-end justify-between mb-10 gap-6 flex-wrap">
-        <div className="space-y-3">
-          <p className="eyebrow text-accent">Edit</p>
-          <h1 className="text-display-lg font-display text-ink">{photo.title}</h1>
-          <div className="flex items-center gap-3 text-xs">
-            <span className={photo.published ? 'text-green-700' : 'text-ink-dim'}>
-              {photo.published ? 'Published' : 'Draft'}
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-accent uppercase tracking-wide">Edition</p>
+          <h1 className="text-2xl font-semibold text-ink">{photo.title}</h1>
+          <div className="flex items-center gap-3 text-sm">
+            <span className={photo.published ? 'text-emerald-700 font-medium' : 'text-ink-muted'}>
+              {photo.published ? 'Publiee' : 'Brouillon'}
             </span>
-            {photo.featured && <span className="text-accent">★ Featured</span>}
-            {photo.isHero && <span className="text-accent font-medium">◆ Hero</span>}
+            {photo.featured && <span className="text-accent font-medium">Featured</span>}
+            {photo.isHero && <span className="text-accent font-medium">Hero</span>}
           </div>
-          <form action={setHeroPhoto.bind(null, photo.id)} className="pt-2">
+          <form action={setHeroPhoto.bind(null, photo.id)} className="pt-1">
             <Button type="submit" size="sm" variant={photo.isHero ? 'ghost' : 'secondary'} disabled={photo.isHero}>
-              {photo.isHero ? 'Already the home hero' : 'Set as home hero'}
+              {photo.isHero ? 'Deja hero' : 'Definir comme hero'}
             </Button>
           </form>
         </div>
@@ -55,10 +55,10 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
             href={`/fr/gallery/${photo.slug}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-ink-muted hover:text-accent transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors"
           >
-            View live
-            <ExternalLink className="w-3 h-3" />
+            Voir en ligne
+            <ExternalLink className="w-4 h-4" />
           </a>
         )}
       </div>
@@ -84,7 +84,7 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
           </dl>
         </div>
 
-        <form action={updatePhoto} className="lg:col-span-8 space-y-6 bg-paper border border-line p-6 sm:p-8">
+        <form action={updatePhoto} className="lg:col-span-8 space-y-6 bg-white rounded-xl border border-line p-6 sm:p-8">
           <input type="hidden" name="id" value={photo.id} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -161,8 +161,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <>
-      <dt className="eyebrow text-ink-muted">{label}</dt>
-      <dd className="text-ink-soft text-xs">{value}</dd>
+      <dt className="text-[11px] font-medium text-ink-muted">{label}</dt>
+      <dd className="text-xs text-ink-soft">{value}</dd>
     </>
   );
 }
@@ -170,8 +170,8 @@ function Info({ label, value }: { label: string; value: string }) {
 function Checkbox({ name, defaultChecked, label }: { name: string; defaultChecked?: boolean; label: string }) {
   return (
     <label className="inline-flex items-center gap-2 cursor-pointer">
-      <input type="checkbox" name={name} defaultChecked={defaultChecked} className="w-4 h-4 accent-accent" />
-      <span className="text-xs tracking-wide uppercase text-ink">{label}</span>
+      <input type="checkbox" name={name} defaultChecked={defaultChecked} className="h-4 w-4 rounded accent-accent" />
+      <span className="text-sm text-ink">{label}</span>
     </label>
   );
 }

@@ -1,85 +1,119 @@
+import Link from 'next/link';
+import { Download } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { formatPrice } from '@/lib/utils';
+import { parseListParams, buildQuery } from '@/lib/admin/list-params';
+import { PageHeader, Toolbar, SearchInput, EmptyState, Pagination } from '@/components/admin';
+import { OrdersTable } from './OrdersTable';
 
 export const dynamic = 'force-dynamic';
 
-async function getOrders() {
-  return prisma.order.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: { photo: { select: { title: true, slug: true } } },
-  });
-}
+const PAYMENT_STATUSES = ['paid', 'pending', 'refunded', 'failed'] as const;
 
-export default async function AdminOrders() {
-  const orders = await getOrders();
+export default async function AdminOrdersPage(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const searchParams = await props.searchParams;
+  const rawStatus = searchParams['status'];
+  const status = typeof rawStatus === 'string' ? rawStatus : undefined;
+
+  const params = parseListParams(searchParams, {
+    sortable: ['createdAt', 'total', 'paymentStatus'],
+    defaultSort: 'createdAt',
+    defaultDir: 'desc',
+    pageSize: 25,
+  });
+
+  const where = {
+    ...(params.q
+      ? {
+          OR: [
+            { buyerEmail: { contains: params.q, mode: 'insensitive' as const } },
+            { buyerName: { contains: params.q, mode: 'insensitive' as const } },
+          ],
+        }
+      : {}),
+    ...(status && PAYMENT_STATUSES.includes(status as typeof PAYMENT_STATUSES[number])
+      ? { paymentStatus: status }
+      : {}),
+  };
+
+  const [orders, total] = await Promise.all([
+    prisma.order.findMany({
+      where,
+      orderBy: { [params.sort]: params.dir },
+      skip: params.skip,
+      take: params.take,
+      include: { photo: { select: { title: true, slug: true } } },
+    }),
+    prisma.order.count({ where }),
+  ]);
+
+  const exportHref = `/admin/orders/export${buildQuery({
+    q: params.q || undefined,
+    status,
+  })}`;
+
   return (
     <Container size="wide">
-      <div className="space-y-3 mb-10">
-        <p className="eyebrow text-accent">Orders</p>
-        <h1 className="text-display-lg font-display text-ink">All orders</h1>
-        <p className="caption">{orders.length} total</p>
-      </div>
+      <PageHeader
+        eyebrow="Orders"
+        title="Commandes"
+        subtitle={`${total} commande${total !== 1 ? 's' : ''}`}
+        actions={
+          <a
+            href={exportHref}
+            className="inline-flex items-center gap-2 rounded-md border border-line px-4 py-2 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </a>
+        }
+      />
+
+      <Toolbar
+        search={<SearchInput placeholder="Email, nom..." />}
+        filters={
+          <div className="flex flex-wrap items-center gap-2">
+            {(['', ...PAYMENT_STATUSES] as const).map((s) => {
+              const label = s === '' ? 'Tous' : s;
+              const href = `/admin/orders${buildQuery({
+                q: params.q || undefined,
+                status: s || undefined,
+              })}`;
+              const active = (status ?? '') === s;
+              return (
+                <Link
+                  key={s}
+                  href={href}
+                  className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
+                    active
+                      ? 'bg-ink text-white border-ink'
+                      : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+        }
+        count={total}
+      />
 
       {orders.length === 0 ? (
-        <div className="border border-dashed border-line py-32 text-center">
-          <p className="caption">No orders yet.</p>
-        </div>
+        <EmptyState
+          title="Aucune commande"
+          description={params.q || status ? 'Aucun résultat pour ces filtres.' : 'Aucune commande pour le moment.'}
+        />
       ) : (
-        <div className="bg-paper border border-line overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-paper-cool">
-              <tr className="text-left">
-                <Th>Date</Th>
-                <Th>Photo</Th>
-                <Th>Buyer</Th>
-                <Th>Amount</Th>
-                <Th>Status</Th>
-                <Th>Downloads</Th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-line">
-              {orders.map((o) => (
-                <tr key={o.id}>
-                  <td className="p-3 text-ink-muted text-xs whitespace-nowrap">
-                    {new Date(o.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </td>
-                  <td className="p-3 text-ink">{o.photo?.title ?? '-'}</td>
-                  <td className="p-3">
-                    <p className="text-ink">{o.buyerName ?? '-'}</p>
-                    <p className="caption text-xs">{o.buyerEmail}</p>
-                  </td>
-                  <td className="p-3 tabular-nums">{formatPrice(o.total, o.currency)}</td>
-                  <td className="p-3">
-                    <span
-                      className={`text-[10px] tracking-widest uppercase ${
-                        o.paymentStatus === 'paid'
-                          ? 'text-green-700'
-                          : o.paymentStatus === 'failed' || o.paymentStatus === 'refunded'
-                            ? 'text-red-700'
-                            : 'text-ink-muted'
-                      }`}
-                    >
-                      {o.paymentStatus}
-                    </span>
-                  </td>
-                  <td className="p-3 text-ink-muted text-xs">
-                    {o.downloadCount}/{o.downloadMax}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <OrdersTable rows={orders} sort={params.sort} dir={params.dir} />
+      )}
+
+      {total > params.pageSize && (
+        <Pagination page={params.page} pageSize={params.pageSize} total={total} />
       )}
     </Container>
-  );
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-3 py-2.5 text-[10px] tracking-widest uppercase text-ink-muted font-normal">
-      {children}
-    </th>
   );
 }

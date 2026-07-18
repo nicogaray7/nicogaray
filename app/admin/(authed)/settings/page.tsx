@@ -18,11 +18,10 @@ export default async function SettingsPage() {
 
   return (
     <Container size="wide">
-      <div className="mb-10 space-y-3">
-        <p className="eyebrow text-accent">Settings</p>
-        <h1 className="text-display-lg font-display text-ink">Site content</h1>
-        <p className="caption">
-          Override the default text on the public pages. Empty fields fall back to the bundled translations.
+      <div className="mb-8 space-y-1">
+        <h1 className="text-2xl font-semibold text-ink">Contenu du site</h1>
+        <p className="text-sm text-ink-muted">
+          Surcharge les textes par defaut des pages publiques. Les champs vides utilisent les traductions par defaut.
         </p>
       </div>
 
@@ -108,8 +107,8 @@ export default async function SettingsPage() {
 
 function Section({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className={`bg-paper border border-line p-5 sm:p-6 ${className}`}>
-      <p className="eyebrow text-accent mb-4">{title}</p>
+    <section className={`bg-white rounded-xl border border-line p-5 sm:p-6 ${className}`}>
+      <p className="text-sm font-semibold text-ink mb-4">{title}</p>
       {children}
     </section>
   );

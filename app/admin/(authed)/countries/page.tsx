@@ -20,10 +20,9 @@ export default async function AdminCountries() {
   const countries = await getCountries();
   return (
     <Container size="wide">
-      <div className="mb-10 space-y-3">
-        <p className="eyebrow text-accent">Countries</p>
-        <h1 className="text-display-lg font-display text-ink">Country intros</h1>
-        <p className="caption">{countries.length} countries</p>
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-ink">Country intros</h1>
+        <p className="text-sm text-ink-muted mt-1">{countries.length} countries</p>
       </div>
 
       {countries.length === 0 ? (
@@ -31,45 +30,74 @@ export default async function AdminCountries() {
           <p className="caption">No countries yet. Run the geocoding script first.</p>
         </div>
       ) : (
-        <div className="bg-paper border border-line overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-paper-cool">
-              <tr className="text-left">
-                <Th>Code</Th>
-                <Th>Name (FR)</Th>
-                <Th>Name (EN)</Th>
-                <Th>Photos</Th>
-                <Th>Intro</Th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-line">
-              {countries.map((c) => (
-                <tr key={c.code} className="hover:bg-paper-cool/60">
-                  <td className="p-3 font-mono text-xs">{c.code} {flagEmoji(c.code)}</td>
-                  <td className="p-3">
-                    <Link href={`/admin/countries/${c.code}`} className="text-ink hover:text-accent">
-                      {c.nameFr}
-                    </Link>
-                  </td>
-                  <td className="p-3 text-ink-muted">{c.nameEn}</td>
-                  <td className="p-3 tabular-nums">{c.photoCount}</td>
-                  <td className="p-3">
-                    <span className={c.intro ? 'text-green-700' : 'text-ink-dim'}>
+        <>
+          {/* Mobile : cartes */}
+          <ul className="md:hidden space-y-3">
+            {countries.map((c) => (
+              <li key={c.code}>
+                <Link
+                  href={`/admin/countries/${c.code}`}
+                  className="block bg-white rounded-xl border border-line p-4 active:bg-paper-cool/60"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-ink">
+                      {flagEmoji(c.code)} {c.nameFr}
+                    </span>
+                    <span className={`text-xs ${c.intro ? 'text-green-700' : 'text-ink-dim'}`}>
                       {c.intro ? 'set' : 'missing'}
                     </span>
-                  </td>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between text-xs text-ink-muted">
+                    <span className="font-mono">
+                      {c.code} · {c.nameEn}
+                    </span>
+                    <span className="tabular-nums">{c.photoCount} photos</span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {/* Desktop : tableau */}
+          <div className="hidden md:block bg-white rounded-xl border border-line overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-paper-cool">
+                <tr className="text-left">
+                  <Th>Code</Th>
+                  <Th>Name (FR)</Th>
+                  <Th>Name (EN)</Th>
+                  <Th>Photos</Th>
+                  <Th>Intro</Th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {countries.map((c) => (
+                  <tr key={c.code} className="hover:bg-paper-cool/60">
+                    <td className="p-3 font-mono text-xs">{c.code} {flagEmoji(c.code)}</td>
+                    <td className="p-3">
+                      <Link href={`/admin/countries/${c.code}`} className="text-ink hover:text-accent">
+                        {c.nameFr}
+                      </Link>
+                    </td>
+                    <td className="p-3 text-ink-muted">{c.nameEn}</td>
+                    <td className="p-3 tabular-nums">{c.photoCount}</td>
+                    <td className="p-3">
+                      <span className={c.intro ? 'text-green-700' : 'text-ink-dim'}>
+                        {c.intro ? 'set' : 'missing'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </Container>
   );
 }
 
 function Th({ children }: { children: React.ReactNode }) {
-  return <th className="px-3 py-2.5 text-[10px] tracking-widest uppercase text-ink-muted font-normal">{children}</th>;
+  return <th className="px-3 py-2.5 text-[11px] font-medium text-ink-muted text-left">{children}</th>;
 }
 
 function flagEmoji(code: string): string {
