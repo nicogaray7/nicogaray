@@ -75,7 +75,7 @@ export default async function AdminOrdersPage(props: {
       <Toolbar
         search={<SearchInput placeholder="Email, nom..." />}
         filters={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {(['', ...PAYMENT_STATUSES] as const).map((s) => {
               const label = s === '' ? 'Tous' : s;
               const href = `/admin/orders${buildQuery({

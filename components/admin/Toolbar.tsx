@@ -12,14 +12,14 @@ export function Toolbar({
   count?: number;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 py-3 mb-4">
-      <div className="flex items-center gap-3 flex-wrap">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between py-3 mb-4">
+      <div className="flex items-center gap-3 flex-wrap min-w-0">
         {search}
         {filters}
-        {bulk && <div className="flex items-center gap-2">{bulk}</div>}
+        {bulk && <div className="flex items-center gap-2 flex-wrap">{bulk}</div>}
       </div>
       {count !== undefined && (
-        <span className="text-sm text-ink-muted shrink-0">
+        <span className="text-sm text-ink-muted sm:shrink-0">
           {count} {count === 1 ? 'element' : 'elements'}
         </span>
       )}
