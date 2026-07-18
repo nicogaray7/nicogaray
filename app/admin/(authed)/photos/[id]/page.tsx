@@ -77,10 +77,6 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
             <Info label="Dimensions" value={`${photo.width} × ${photo.height}`} />
             <Info label="Orientation" value={photo.orientation} />
             <Info label="Size" value={`${(photo.fileSize / 1024 / 1024).toFixed(1)} MB`} />
-            <Info label="Camera" value={photo.camera ?? '-'} />
-            <Info label="Lens" value={photo.lens ?? '-'} />
-            <Info label="Date" value={photo.takenAt?.toISOString().slice(0, 10) ?? '-'} />
-            <Info label="GPS" value={photo.latitude && photo.longitude ? `${photo.latitude.toFixed(3)}, ${photo.longitude.toFixed(3)}` : '-'} />
           </dl>
         </div>
 
@@ -124,6 +120,48 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
             <Field label="Tags (comma)">
               <Input name="tags" defaultValue={photo.tags.join(', ')} />
             </Field>
+          </div>
+
+          <div className="pt-2 border-t border-line">
+            <p className="text-xs font-medium text-ink-muted uppercase tracking-wide mb-3 mt-4">
+              Métadonnées (EXIF)
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Field label="Date de prise">
+                <Input
+                  name="takenAt"
+                  type="date"
+                  defaultValue={photo.takenAt ? photo.takenAt.toISOString().slice(0, 10) : ''}
+                />
+              </Field>
+              <Field label="Région">
+                <Input name="region" defaultValue={photo.region ?? ''} />
+              </Field>
+              <Field label="Appareil">
+                <Input name="camera" defaultValue={photo.camera ?? ''} placeholder="ex: SONY ILCE-7M4" />
+              </Field>
+              <Field label="Objectif">
+                <Input name="lens" defaultValue={photo.lens ?? ''} placeholder="ex: FE 24-70mm F2.8" />
+              </Field>
+              <Field label="Focale">
+                <Input name="focalLength" defaultValue={photo.focalLength ?? ''} placeholder="ex: 35mm" />
+              </Field>
+              <Field label="Ouverture">
+                <Input name="aperture" defaultValue={photo.aperture ?? ''} placeholder="ex: f/2.8" />
+              </Field>
+              <Field label="Vitesse">
+                <Input name="shutterSpeed" defaultValue={photo.shutterSpeed ?? ''} placeholder="ex: 1/250s" />
+              </Field>
+              <Field label="ISO">
+                <Input name="iso" type="number" min="0" step="1" defaultValue={photo.iso ?? ''} />
+              </Field>
+              <Field label="Latitude">
+                <Input name="latitude" type="number" step="any" defaultValue={photo.latitude ?? ''} placeholder="ex: 45.764" />
+              </Field>
+              <Field label="Longitude">
+                <Input name="longitude" type="number" step="any" defaultValue={photo.longitude ?? ''} placeholder="ex: 4.835" />
+              </Field>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">

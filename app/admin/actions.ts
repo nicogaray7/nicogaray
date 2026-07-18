@@ -32,6 +32,17 @@ const updateSchema = z.object({
   published: z.coerce.boolean().optional(),
   featured: z.coerce.boolean().optional(),
   sortOrder: z.coerce.number().int().optional(),
+  // Metadonnees (EXIF) editables
+  region: z.string().optional(),
+  takenAt: z.string().optional(),
+  camera: z.string().optional(),
+  lens: z.string().optional(),
+  focalLength: z.string().optional(),
+  aperture: z.string().optional(),
+  shutterSpeed: z.string().optional(),
+  iso: z.preprocess((v) => (v === '' || v == null ? undefined : v), z.coerce.number().int().optional()),
+  latitude: z.preprocess((v) => (v === '' || v == null ? undefined : v), z.coerce.number().optional()),
+  longitude: z.preprocess((v) => (v === '' || v == null ? undefined : v), z.coerce.number().optional()),
 });
 
 export async function updatePhoto(formData: FormData) {
@@ -64,6 +75,9 @@ export async function updatePhoto(formData: FormData) {
     });
   }
 
+  const takenAtRaw = data.takenAt ? new Date(data.takenAt) : null;
+  const takenAt = takenAtRaw && !Number.isNaN(takenAtRaw.getTime()) ? takenAtRaw : null;
+
   await prisma.photo.update({
     where: { id: data.id },
     data: {
@@ -76,11 +90,22 @@ export async function updatePhoto(formData: FormData) {
       country: countryName,
       countryCode,
       city: data.city || null,
+      region: data.region || null,
       tags,
       price: data.price,
       published: data.published ?? false,
       featured: data.featured ?? false,
       sortOrder: data.sortOrder ?? 0,
+      // Metadonnees (EXIF) editables
+      takenAt,
+      camera: data.camera || null,
+      lens: data.lens || null,
+      focalLength: data.focalLength || null,
+      aperture: data.aperture || null,
+      shutterSpeed: data.shutterSpeed || null,
+      iso: data.iso ?? null,
+      latitude: data.latitude ?? null,
+      longitude: data.longitude ?? null,
     },
   });
 
