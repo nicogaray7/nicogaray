@@ -58,35 +58,52 @@ export default async function SecurityPage() {
           {auditLogs.length === 0 ? (
             <EmptyState title="Aucun evenement" description="Le journal d'audit est vide." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-line bg-paper-cool">
-                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Date</th>
-                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Action</th>
-                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Acteur</th>
-                    <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Cible</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {auditLogs.map((log) => (
-                    <tr key={log.id} className="border-b border-line last:border-0 hover:bg-paper-cool/60">
-                      <td className="py-3 px-3 text-xs text-ink-muted whitespace-nowrap">
-                        {new Intl.DateTimeFormat('fr-FR', {
-                          dateStyle: 'short',
-                          timeStyle: 'short',
-                        }).format(log.createdAt)}
-                      </td>
-                      <td className="py-3 px-3">
-                        <StatusPill status={log.action} tone="neutral" />
-                      </td>
-                      <td className="py-3 px-3 text-sm text-ink-muted">{log.actorEmail ?? '-'}</td>
-                      <td className="py-3 px-3 text-sm text-ink-muted">{log.target ?? '-'}</td>
+            <>
+              {/* Mobile : liste empilee */}
+              <ul className="md:hidden divide-y divide-line">
+                {auditLogs.map((log) => (
+                  <li key={log.id} className="py-3 flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <StatusPill status={log.action} tone="neutral" />
+                      <span className="text-xs text-ink-muted whitespace-nowrap">
+                        {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(log.createdAt)}
+                      </span>
+                    </div>
+                    <span className="text-xs text-ink-muted break-all">
+                      {log.actorEmail ?? '-'}
+                      {log.target ? ` · ${log.target}` : ''}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              {/* Desktop : tableau */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-line bg-paper-cool">
+                      <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Date</th>
+                      <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Action</th>
+                      <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Acteur</th>
+                      <th className="text-left py-2.5 px-3 text-[11px] font-medium text-ink-muted">Cible</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {auditLogs.map((log) => (
+                      <tr key={log.id} className="border-b border-line last:border-0 hover:bg-paper-cool/60">
+                        <td className="py-3 px-3 text-xs text-ink-muted whitespace-nowrap">
+                          {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(log.createdAt)}
+                        </td>
+                        <td className="py-3 px-3">
+                          <StatusPill status={log.action} tone="neutral" />
+                        </td>
+                        <td className="py-3 px-3 text-sm text-ink-muted">{log.actorEmail ?? '-'}</td>
+                        <td className="py-3 px-3 text-sm text-ink-muted">{log.target ?? '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </Card>
       </div>
