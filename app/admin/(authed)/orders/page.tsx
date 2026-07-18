@@ -4,88 +4,12 @@ import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { formatPrice } from '@/lib/utils';
 import { parseListParams, buildQuery } from '@/lib/admin/list-params';
-import {
-  PageHeader,
-  Toolbar,
-  SearchInput,
-  DataTable,
-  EmptyState,
-  Pagination,
-  StatusPill,
-} from '@/components/admin';
-import type { Column } from '@/components/admin/DataTable';
+import { PageHeader, Toolbar, SearchInput, EmptyState, Pagination } from '@/components/admin';
+import { OrdersTable } from './OrdersTable';
 
 export const dynamic = 'force-dynamic';
 
 const PAYMENT_STATUSES = ['paid', 'pending', 'refunded', 'failed'] as const;
-
-type OrderRow = {
-  id: string;
-  createdAt: Date;
-  photo: { title: string; slug: string } | null;
-  buyerName: string | null;
-  buyerEmail: string | null;
-  total: number;
-  currency: string;
-  paymentStatus: string;
-  downloadCount: number;
-  downloadMax: number;
-};
-
-const COLUMNS: Column<OrderRow>[] = [
-  {
-    key: 'createdAt',
-    header: 'Date',
-    sortable: true,
-    render: (o) =>
-      new Date(o.createdAt).toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      }),
-  },
-  {
-    key: 'photo',
-    header: 'Photo',
-    render: (o) => (
-      <span className="text-ink">{o.photo?.title ?? '-'}</span>
-    ),
-  },
-  {
-    key: 'buyer',
-    header: 'Acheteur',
-    render: (o) => (
-      <div>
-        <p className="text-ink">{o.buyerName ?? '-'}</p>
-        <p className="text-xs text-ink-muted">{o.buyerEmail ?? '-'}</p>
-      </div>
-    ),
-  },
-  {
-    key: 'total',
-    header: 'Montant',
-    sortable: true,
-    align: 'right',
-    render: (o) => (
-      <span className="tabular-nums">{formatPrice(o.total, o.currency)}</span>
-    ),
-  },
-  {
-    key: 'paymentStatus',
-    header: 'Statut',
-    sortable: true,
-    render: (o) => <StatusPill status={o.paymentStatus} />,
-  },
-  {
-    key: 'downloads',
-    header: 'DL',
-    render: (o) => (
-      <span className="text-xs text-ink-muted tabular-nums">
-        {o.downloadCount}/{o.downloadMax}
-      </span>
-    ),
-  },
-];
 
 export default async function AdminOrdersPage(props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -184,12 +108,7 @@ export default async function AdminOrdersPage(props: {
           description={params.q || status ? 'Aucun résultat pour ces filtres.' : 'Aucune commande pour le moment.'}
         />
       ) : (
-        <DataTable<OrderRow>
-          columns={COLUMNS}
-          rows={orders}
-          getRowId={(o) => o.id}
-          rowHref={(o) => `/admin/orders/${o.id}`}
-        />
+        <OrdersTable rows={orders} sort={params.sort} dir={params.dir} />
       )}
 
       {total > params.pageSize && (
