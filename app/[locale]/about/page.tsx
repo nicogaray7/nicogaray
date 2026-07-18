@@ -2,8 +2,19 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout/Container';
 import { getSetting, pickText, type AboutSettings } from '@/lib/settings';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(props: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await props.params;
+  return {
+    alternates: {
+      canonical: `/${locale}/about`,
+      languages: { fr: '/fr/about', en: '/en/about', 'x-default': '/fr/about' },
+    },
+  };
+}
 
 export default async function AboutPage(props: { params: Promise<{ locale: string }> }) {
   const params = await props.params;
