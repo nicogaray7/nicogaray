@@ -10,6 +10,10 @@ import { buyerFees } from '@/lib/stripe';
 import { formatPrice } from '@/lib/utils';
 import { CheckoutForm } from './CheckoutForm';
 
+// Page transactionnelle (achat d'une photo) : ne doit pas etre indexee (evite
+// les doublons "sans canonique" cote Search Console).
+export const metadata = { robots: { index: false } };
+
 export const dynamic = 'force-dynamic';
 
 async function getPhoto(id: string) {

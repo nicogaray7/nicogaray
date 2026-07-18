@@ -6,6 +6,9 @@ import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
 import { PurchaseTracker } from '@/components/analytics/PurchaseTracker';
 
+// Page de confirmation d'achat : ne doit pas etre indexee.
+export const metadata = { robots: { index: false } };
+
 export const dynamic = 'force-dynamic';
 
 async function getOrder(sessionId: string) {
