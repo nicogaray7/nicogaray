@@ -9,6 +9,7 @@ import { prisma } from '@/lib/prisma';
 import { r2Put, r2Delete } from '@/lib/r2';
 import { processImage, extractExif } from '@/lib/images';
 import { COUNTRY_NAMES, nameToCode } from '@/lib/country-names';
+import { reverseGeocode } from '@/lib/geocode';
 
 async function requireAdmin() {
   const session = await auth();
@@ -182,6 +183,34 @@ export async function uploadPhoto(formData: FormData) {
   const { original, preview, thumb, width, height, orientation } = await processImage(buffer);
   const exif = await extractExif(buffer);
 
+  // Geocodage inverse depuis les coordonnees GPS EXIF -> remplit pays/ville/region.
+  // Best effort : si Nominatim echoue, on garde juste les coordonnees.
+  let geo: { country: string | null; countryCode: string | null; city: string | null; region: string | null } = {
+    country: null,
+    countryCode: null,
+    city: null,
+    region: null,
+  };
+  if (exif.latitude != null && exif.longitude != null) {
+    try {
+      geo = await reverseGeocode(exif.latitude, exif.longitude);
+      if (geo.countryCode) {
+        const meta = COUNTRY_NAMES[geo.countryCode];
+        await prisma.country.upsert({
+          where: { code: geo.countryCode },
+          create: {
+            code: geo.countryCode,
+            nameFr: meta?.fr ?? geo.country ?? geo.countryCode,
+            nameEn: meta?.en ?? geo.country ?? geo.countryCode,
+          },
+          update: {},
+        });
+      }
+    } catch {
+      /* geocodage indisponible : on continue sans localisation */
+    }
+  }
+
   const baseSlug = slugify(title, { lower: true, strict: true }).slice(0, 60) || 'photo';
   let slug = baseSlug;
   let counter = 1;
@@ -215,6 +244,10 @@ export async function uploadPhoto(formData: FormData) {
       orientation,
       price: defaultPrice,
       published: false,
+      country: geo.country,
+      countryCode: geo.countryCode,
+      city: geo.city,
+      region: geo.region,
       takenAt: exif.takenAt,
       camera: exif.camera,
       lens: exif.lens,
