@@ -3,11 +3,26 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout/Container';
 import { getSetting, pickText, type LegalSettings } from '@/lib/settings';
+import type { Metadata } from 'next';
 
 const SLUGS = ['cgv', 'license', 'mentions'] as const;
 type LegalSlug = (typeof SLUGS)[number];
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(props: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
+  const { locale, slug } = await props.params;
+  return {
+    alternates: {
+      canonical: `/${locale}/legal/${slug}`,
+      languages: {
+        fr: `/fr/legal/${slug}`,
+        en: `/en/legal/${slug}`,
+        'x-default': `/fr/legal/${slug}`,
+      },
+    },
+  };
+}
 
 export default async function LegalPage(props: { params: Promise<{ locale: string; slug: string }> }) {
   const params = await props.params;

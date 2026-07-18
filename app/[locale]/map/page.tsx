@@ -3,8 +3,19 @@ import { setRequestLocale } from 'next-intl/server';
 import { Container } from '@/components/layout/Container';
 import { WorldMap } from '@/components/WorldMap';
 import { prisma } from '@/lib/prisma';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(props: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await props.params;
+  return {
+    alternates: {
+      canonical: `/${locale}/map`,
+      languages: { fr: '/fr/map', en: '/en/map', 'x-default': '/fr/map' },
+    },
+  };
+}
 
 async function getVisitedCountries(locale: string) {
   const rows = await prisma.photo.groupBy({

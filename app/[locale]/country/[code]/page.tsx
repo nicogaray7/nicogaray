@@ -23,9 +23,21 @@ async function getPhotosForCountry(code: string) {
 export async function generateMetadata(props: { params: Promise<{ locale: string; code: string }> }) {
   const params = await props.params;
   const country = await getCountry(params.code);
-  if (!country) return {};
+  const alternates = {
+    canonical: `/${params.locale}/country/${params.code}`,
+    languages: {
+      fr: `/fr/country/${params.code}`,
+      en: `/en/country/${params.code}`,
+      'x-default': `/fr/country/${params.code}`,
+    },
+  };
+  if (!country) return { alternates };
   const name = params.locale === 'en' ? country.nameEn : country.nameFr;
-  return { title: name, description: params.locale === 'en' ? country.introEn : country.intro };
+  return {
+    title: name,
+    description: params.locale === 'en' ? country.introEn : country.intro,
+    alternates,
+  };
 }
 
 export default async function CountryPage(props: { params: Promise<{ locale: string; code: string }> }) {
