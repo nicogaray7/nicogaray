@@ -10,6 +10,7 @@ import { r2Put, r2Delete } from '@/lib/r2';
 import { processImage, extractExif } from '@/lib/images';
 import { COUNTRY_NAMES, nameToCode } from '@/lib/country-names';
 import { reverseGeocode } from '@/lib/geocode';
+import { generatePhotoMetadata } from '@/lib/ai/gemini-metadata';
 
 async function requireAdmin() {
   const session = await auth();
@@ -165,7 +166,7 @@ const ALLOWED_UPLOAD_TYPES = new Set([
 export async function uploadPhoto(formData: FormData) {
   await requireAdmin();
   const file = formData.get('file');
-  const title = (formData.get('title') as string) || 'Untitled';
+  const providedTitle = ((formData.get('title') as string) || '').trim();
   if (!(file instanceof File) || file.size === 0) throw new Error('Missing file');
   if (file.size > MAX_UPLOAD_BYTES) throw new Error('File too large (max 50 MB)');
   if (file.type && !ALLOWED_UPLOAD_TYPES.has(file.type)) {
@@ -211,6 +212,24 @@ export async function uploadPhoto(formData: FormData) {
     }
   }
 
+  // Génération IA du titre + description (FR/EN) à partir de la vignette et des
+  // métadonnées. Best effort : si Gemini n'est pas configuré ou échoue, on garde
+  // le titre fourni (ou 'Untitled') et on laisse les champs vides.
+  const ai = await generatePhotoMetadata(thumb, {
+    camera: exif.camera,
+    lens: exif.lens,
+    focalLength: exif.focalLength,
+    aperture: exif.aperture,
+    shutterSpeed: exif.shutterSpeed,
+    iso: exif.iso,
+    city: geo.city,
+    region: geo.region,
+    country: geo.country,
+    takenAt: exif.takenAt,
+  });
+
+  const title = providedTitle || ai?.title || 'Untitled';
+
   const baseSlug = slugify(title, { lower: true, strict: true }).slice(0, 60) || 'photo';
   let slug = baseSlug;
   let counter = 1;
@@ -235,6 +254,9 @@ export async function uploadPhoto(formData: FormData) {
     data: {
       slug,
       title,
+      titleEn: ai?.titleEn || null,
+      description: ai?.description || null,
+      descriptionEn: ai?.descriptionEn || null,
       originalKey,
       previewKey,
       thumbKey,
