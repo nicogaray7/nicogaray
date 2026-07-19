@@ -20,7 +20,6 @@ export function UploadForm() {
       const f = accepted[0];
       if (!f) return;
       setFile(f);
-      if (!title) setTitle(f.name.replace(/\.[^.]+$/, ''));
     },
   });
 
@@ -34,7 +33,7 @@ export function UploadForm() {
     setPending(true);
     const fd = new FormData();
     fd.set('file', file);
-    fd.set('title', title || file.name);
+    fd.set('title', title);
     try {
       await uploadPhoto(fd);
     } catch (err) {
@@ -69,23 +68,29 @@ export function UploadForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">Titre (optionnel)</Label>
         <Input
           id="title"
           name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Untitled"
+          placeholder="Généré par l'IA si laissé vide"
         />
+        <p className="caption">
+          Laissé vide, le titre et la description (FR et EN) sont générés automatiquement à partir de
+          l'image et des métadonnées. Vous pourrez les modifier à l'étape suivante.
+        </p>
       </div>
 
       {error && <p className="text-xs text-red-700">{error}</p>}
 
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={!file || pending}>
-          {pending ? 'Uploading…' : 'Upload & continue'}
+          {pending ? 'Traitement…' : 'Upload & continue'}
         </Button>
-        {pending && <p className="caption">This may take a few seconds for large files.</p>}
+        {pending && (
+          <p className="caption">Traitement de l'image et génération du titre, quelques secondes.</p>
+        )}
       </div>
     </form>
   );
