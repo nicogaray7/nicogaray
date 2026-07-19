@@ -69,13 +69,21 @@ export async function generatePhotoMetadata(
   if (!apiKey) return null;
 
   const prompt = [
-    "Tu es un photographe francophone qui rédige les légendes d'une galerie d'art.",
-    "À partir de l'image et de ses métadonnées, propose un titre court et évocateur",
-    'puis une description de 2 phrases, en français soigné (accents corrects obligatoires).',
-    'Le titre fait 4 à 10 mots, sans guillemets, sans point final.',
-    'Décris ce qui est visible (paysage, lumière, sujet), en intégrant le lieu si pertinent.',
-    'Fournis aussi la traduction anglaise naturelle du titre (titleEn) et de la description (descriptionEn).',
-    "N'invente pas de lieu qui ne serait pas dans les métadonnées.",
+    "Tu rédiges les légendes d'une galerie photo, dans un style factuel, concret et sobre.",
+    'Produis un titre et une description en français soigné (accents corrects obligatoires).',
+    '',
+    'TITRE (4 à 9 mots, sans guillemets, sans point final) : nomme le SUJET principal concret',
+    'et le LIEU réel issu des métadonnées. Sois précis et descriptif, pas poétique.',
+    "Exemples du style attendu : \"Vallée karstique de Xuân Trường, Cao Bằng\" ; ",
+    '"Rochers de granit rose sur la côte bretonne" ; "Route en lacets dans la montagne, Cao Bang".',
+    "INTERDIT : commencer par \"Lumière\", \"Vue sur\", \"Panorama\", \"Coucher de soleil sur\" ; ",
+    'et les adjectifs clichés (verdoyant, spectaculaire, apaisant, éclatant, majestueux, baigné de soleil, doux).',
+    '',
+    'DESCRIPTION (1 à 2 phrases factuelles) : décris les éléments concrets réellement visibles',
+    '(sujet, premier plan, arrière-plan, lieu, saison ou date si connue). Pas de métaphore ni de lyrisme.',
+    '',
+    "N'invente aucun lieu absent des métadonnées. Chaque photo étant différente, varie le vocabulaire.",
+    'Fournis aussi les traductions anglaises naturelles (titleEn, descriptionEn).',
     '',
     'Métadonnées :',
     buildContextLine(ctx),
@@ -93,7 +101,7 @@ export async function generatePhotoMetadata(
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: RESPONSE_SCHEMA,
-      temperature: 0.7,
+      temperature: 0.9,
     },
   };
 
