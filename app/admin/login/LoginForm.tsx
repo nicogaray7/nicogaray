@@ -53,14 +53,14 @@ export function LoginForm({
         redirect: false,
       });
       if (result?.error) {
-        setError("Cle d'acces non reconnue.");
+        setError("Clé d'accès non reconnue.");
         setPending(false);
         return;
       }
       router.push(redirectTo ?? '/admin');
       router.refresh();
     } catch {
-      setError("Connexion par cle d'acces annulee ou indisponible.");
+      setError("Connexion par clé d'accès annulée ou indisponible.");
       setPending(false);
     }
   }
@@ -108,7 +108,7 @@ export function LoginForm({
         disabled={pending}
         className="w-full rounded-md border border-line px-4 py-2.5 text-sm font-medium text-ink hover:bg-paper-cool transition-colors disabled:opacity-50"
       >
-        Se connecter avec une cle d'acces (Touch ID / Face ID)
+        Se connecter avec une clé d'accès (Touch ID / Face ID)
       </button>
     </form>
   );

@@ -55,7 +55,7 @@ export async function finishRegistration(responseJSON: string, label?: string) {
   const user = await requireAdmin();
   const { rpID, origin } = await getRelyingParty();
   const expectedChallenge = await readChallenge(REG_CHALLENGE);
-  if (!expectedChallenge) throw new Error('Challenge expire, reessaie.');
+  if (!expectedChallenge) throw new Error('Challenge expiré, réessaie.');
 
   const response = JSON.parse(responseJSON);
   const verification = await verifyRegistrationResponse({
@@ -65,7 +65,7 @@ export async function finishRegistration(responseJSON: string, label?: string) {
     expectedRPID: rpID,
   });
   if (!verification.verified || !verification.registrationInfo) {
-    throw new Error('Verification de la cle echouee.');
+    throw new Error('Vérification de la clé échouée.');
   }
 
   const info = verification.registrationInfo;
@@ -77,7 +77,7 @@ export async function finishRegistration(responseJSON: string, label?: string) {
       transports: (response.response?.transports ?? []) as string[],
       deviceType: info.credentialDeviceType,
       backedUp: info.credentialBackedUp,
-      name: label?.trim() || "Cle d'acces",
+      name: label?.trim() || "Clé d'accès",
       adminUserId: user.id,
     },
   });

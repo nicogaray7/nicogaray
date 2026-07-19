@@ -23,7 +23,7 @@ export function PasskeysClient({ passkeys }: { passkeys: PK[] }) {
       await finishRegistration(JSON.stringify(resp), label);
       router.refresh();
     } catch {
-      setError("Enregistrement annule ou cle deja presente.");
+      setError("Enregistrement annulé ou clé déjà présente.");
     } finally {
       setPending(false);
     }
@@ -43,18 +43,18 @@ export function PasskeysClient({ passkeys }: { passkeys: PK[] }) {
     <div>
       {passkeys.length === 0 ? (
         <p className="text-sm text-ink-muted mb-4">
-          Aucune cle d&apos;acces. Ajoutez-en une pour vous connecter avec Touch ID / Face ID.
+          Aucune clé d&apos;accès. Ajoutez-en une pour vous connecter avec Touch ID / Face ID.
         </p>
       ) : (
         <ul className="divide-y divide-line mb-4">
           {passkeys.map((p) => (
             <li key={p.id} className="py-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm text-ink">{p.name || "Cle d'acces"}</p>
+                <p className="text-sm text-ink">{p.name || "Clé d'accès"}</p>
                 <p className="text-xs text-ink-muted">
-                  Ajoutee le {new Date(p.createdAt).toLocaleDateString('fr-FR')}
+                  Ajoutée le {new Date(p.createdAt).toLocaleDateString('fr-FR')}
                   {p.lastUsedAt
-                    ? ` · derniere utilisation le ${new Date(p.lastUsedAt).toLocaleDateString('fr-FR')}`
+                    ? ` · dernière utilisation le ${new Date(p.lastUsedAt).toLocaleDateString('fr-FR')}`
                     : ''}
                 </p>
               </div>
@@ -77,7 +77,7 @@ export function PasskeysClient({ passkeys }: { passkeys: PK[] }) {
         disabled={pending}
         className="rounded-md bg-ink text-white px-4 py-2 text-sm font-medium hover:bg-accent transition-colors disabled:opacity-50"
       >
-        {pending ? '...' : "Ajouter une cle d'acces"}
+        {pending ? '...' : "Ajouter une clé d'accès"}
       </button>
     </div>
   );

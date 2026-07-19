@@ -31,7 +31,7 @@ export default async function SecurityPage() {
 
       <div className="space-y-6">
         {/* Passkeys (Touch ID / Face ID) */}
-        <Card title="Cles d'acces (passkeys)">
+        <Card title="Clés d'accès (passkeys)">
           <p className="text-sm text-ink-muted mb-4">
             Connectez-vous avec Touch ID, Face ID ou Windows Hello, sans mot de passe.
           </p>
