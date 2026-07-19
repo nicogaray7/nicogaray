@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { Container } from '@/components/layout/Container';
 import { PageHeader, Card, StatusPill, EmptyState } from '@/components/admin';
 import { SecurityClient } from '../SecurityClient';
+import { PasskeysClient } from '../PasskeysClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,11 +19,32 @@ export default async function SecurityPage() {
 
   if (!user) redirect('/admin/login');
 
+  const passkeys = await prisma.webAuthnCredential.findMany({
+    where: { adminUserId: user.id },
+    orderBy: { createdAt: 'desc' },
+    select: { id: true, name: true, createdAt: true, lastUsedAt: true },
+  });
+
   return (
     <Container size="wide">
       <PageHeader eyebrow="Compte" title="Security" />
 
       <div className="space-y-6">
+        {/* Passkeys (Touch ID / Face ID) */}
+        <Card title="Clés d'accès (passkeys)">
+          <p className="text-sm text-ink-muted mb-4">
+            Connectez-vous avec Touch ID, Face ID ou Windows Hello, sans mot de passe.
+          </p>
+          <PasskeysClient
+            passkeys={passkeys.map((p) => ({
+              id: p.id,
+              name: p.name,
+              createdAt: p.createdAt.toISOString(),
+              lastUsedAt: p.lastUsedAt ? p.lastUsedAt.toISOString() : null,
+            }))}
+          />
+        </Card>
+
         {/* Two-factor authentication */}
         <Card title="Two-factor authentication">
           <div className="flex items-center gap-3 mb-6">

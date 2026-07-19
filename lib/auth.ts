@@ -6,6 +6,9 @@ import { prisma } from './prisma';
 import { checkRate, resetRate } from './rate-limit';
 import { verifyTotp } from './totp';
 import { logAudit } from './audit';
+import { verifyAuthenticationResponse } from '@simplewebauthn/server';
+import { isoBase64URL } from '@simplewebauthn/server/helpers';
+import { getRelyingParty, readChallenge, clearChallenge, AUTH_CHALLENGE } from './webauthn';
 
 declare module 'next-auth' {
   interface Session {
@@ -76,6 +79,70 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name ?? undefined,
         };
+      },
+    }),
+    // Connexion par cle d'acces (passkey / WebAuthn : Touch ID, Face ID...).
+    Credentials({
+      id: 'passkey',
+      name: 'Passkey',
+      credentials: { assertion: { label: 'assertion', type: 'text' } },
+      async authorize(raw) {
+        const assertion = typeof raw?.assertion === 'string' ? raw.assertion : null;
+        if (!assertion) return null;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let response: any;
+        try {
+          response = JSON.parse(assertion);
+        } catch {
+          return null;
+        }
+
+        const expectedChallenge = await readChallenge(AUTH_CHALLENGE);
+        if (!expectedChallenge) return null;
+        const { rpID, origin } = await getRelyingParty();
+
+        const cred = await prisma.webAuthnCredential.findUnique({
+          where: { credentialId: response.id },
+          include: { adminUser: true },
+        });
+        if (!cred) {
+          await logAudit('auth.passkey_failed', { meta: { reason: 'unknown_credential' } });
+          return null;
+        }
+
+        try {
+          const verification = await verifyAuthenticationResponse({
+            response,
+            expectedChallenge,
+            expectedOrigin: origin,
+            expectedRPID: rpID,
+            authenticator: {
+              credentialID: isoBase64URL.toBuffer(cred.credentialId),
+              credentialPublicKey: new Uint8Array(cred.publicKey),
+              counter: cred.counter,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              transports: cred.transports as any,
+            },
+          });
+          if (!verification.verified) {
+            await logAudit('auth.passkey_failed', { target: cred.adminUserId });
+            return null;
+          }
+          await prisma.webAuthnCredential.update({
+            where: { id: cred.id },
+            data: { counter: verification.authenticationInfo.newCounter, lastUsedAt: new Date() },
+          });
+          await prisma.adminUser.update({ where: { id: cred.adminUserId }, data: { lastLoginAt: new Date() } });
+          await clearChallenge(AUTH_CHALLENGE);
+          await logAudit('auth.passkey_login', { target: cred.adminUserId });
+          return {
+            id: cred.adminUser.id,
+            email: cred.adminUser.email,
+            name: cred.adminUser.name ?? undefined,
+          };
+        } catch {
+          return null;
+        }
       },
     }),
   ],
