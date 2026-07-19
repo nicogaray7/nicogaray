@@ -3,7 +3,7 @@
 // Zéro coût : clé AI Studio sans facturation. Best effort : en cas d'absence
 // de clé ou d'erreur, renvoie null et l'upload continue normalement.
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 export type PhotoMetadataContext = {
