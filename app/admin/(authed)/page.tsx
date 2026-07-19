@@ -92,7 +92,7 @@ export default async function AdminDashboard() {
               {recent.map((o) => (
                 <li key={o.id} className="py-3 flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-ink truncate">{o.photo?.title ?? 'Photo supprimee'}</p>
+                    <p className="text-sm text-ink truncate">{o.photo?.title ?? 'Photo supprimée'}</p>
                     {o.buyerEmail && (
                       <p className="text-xs text-ink-muted truncate">{o.buyerEmail}</p>
                     )}

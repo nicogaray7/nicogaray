@@ -78,7 +78,7 @@ export default async function SecurityPage() {
         {/* Audit log */}
         <Card title="Journal d'audit">
           {auditLogs.length === 0 ? (
-            <EmptyState title="Aucun evenement" description="Le journal d'audit est vide." />
+            <EmptyState title="Aucun événement" description="Le journal d'audit est vide." />
           ) : (
             <>
               {/* Mobile : liste empilee */}

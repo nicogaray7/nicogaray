@@ -39,14 +39,14 @@ export default async function EditPhotoPage(props: { params: Promise<{ id: strin
           <h1 className="text-2xl font-semibold text-ink">{photo.title}</h1>
           <div className="flex items-center gap-3 text-sm">
             <span className={photo.published ? 'text-emerald-700 font-medium' : 'text-ink-muted'}>
-              {photo.published ? 'Publiee' : 'Brouillon'}
+              {photo.published ? 'Publiée' : 'Brouillon'}
             </span>
             {photo.featured && <span className="text-accent font-medium">Featured</span>}
             {photo.isHero && <span className="text-accent font-medium">Hero</span>}
           </div>
           <form action={setHeroPhoto.bind(null, photo.id)} className="pt-1">
             <Button type="submit" size="sm" variant={photo.isHero ? 'ghost' : 'secondary'} disabled={photo.isHero}>
-              {photo.isHero ? 'Deja hero' : 'Definir comme hero'}
+              {photo.isHero ? 'Déjà hero' : 'Définir comme hero'}
             </Button>
           </form>
         </div>

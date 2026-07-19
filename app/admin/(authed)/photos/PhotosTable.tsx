@@ -158,7 +158,7 @@ export function PhotosTable({
             onClick={() => runAction(() => bulkSetPublished(selectedIds, false))}
             className="rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
-            Depublier
+            Dépublier
           </button>
 
           <button
@@ -190,7 +190,7 @@ export function PhotosTable({
               </button>
             }
             title="Supprimer les photos"
-            description={`Supprimer ${selectedIds.length} photo${selectedIds.length > 1 ? 's' : ''} ? Cette action est irreversible.`}
+            description={`Supprimer ${selectedIds.length} photo${selectedIds.length > 1 ? 's' : ''} ? Cette action est irréversible.`}
             confirmLabel="Supprimer"
             destructive
             onConfirm={() =>

@@ -45,7 +45,7 @@ export function OrderActions({
           </button>
         }
         title="Rembourser la commande"
-        description="Cette action est irreversible. Le remboursement sera execute via Stripe et le statut de la commande passera a 'refunded'."
+        description="Cette action est irréversible. Le remboursement sera exécuté via Stripe et le statut de la commande passera à 'refunded'."
         confirmLabel="Rembourser"
         destructive
         onConfirm={() => run(() => refundOrder(orderId))}
@@ -76,7 +76,7 @@ export function OrderActions({
             className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm border border-line text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
           >
             <RotateCcw className="w-4 h-4" />
-            Reinitialiser les DL
+            Réinitialiser les DL
           </button>
         }
         title="Réinitialiser les téléchargements"

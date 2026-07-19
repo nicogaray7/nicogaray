@@ -87,7 +87,7 @@ export default async function OrderDetailPage(props: {
                 <dd className="text-ink">{order.buyerEmail ?? '-'}</dd>
               </div>
               <div>
-                <dt className="text-xs text-ink-muted mb-1">Telephone</dt>
+                <dt className="text-xs text-ink-muted mb-1">Téléphone</dt>
                 <dd className="text-ink">{order.buyerPhone ?? '-'}</dd>
               </div>
               <div>
@@ -102,7 +102,7 @@ export default async function OrderDetailPage(props: {
             <h2 className="text-sm font-semibold text-ink mb-4">Paiement</h2>
             <dl className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <dt className="text-xs text-ink-muted mb-1">Methode</dt>
+                <dt className="text-xs text-ink-muted mb-1">Méthode</dt>
                 <dd className="text-ink capitalize">{order.paymentMethod}</dd>
               </div>
               <div>
@@ -144,7 +144,7 @@ export default async function OrderDetailPage(props: {
 
           {/* Downloads */}
           <section className="bg-white rounded-xl border border-line p-6">
-            <h2 className="text-sm font-semibold text-ink mb-4">Telechargements</h2>
+            <h2 className="text-sm font-semibold text-ink mb-4">Téléchargements</h2>
             <dl className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <dt className="text-xs text-ink-muted mb-1">Compteur</dt>
@@ -174,7 +174,7 @@ export default async function OrderDetailPage(props: {
                 <span className="text-ink">{formatDate(order.createdAt)}</span>
               </li>
               <li className="flex items-center justify-between">
-                <span className="text-xs text-ink-muted">Paye le</span>
+                <span className="text-xs text-ink-muted">Payé le</span>
                 <span className="text-ink">{formatDate(order.paidAt)}</span>
               </li>
               <li className="flex items-center justify-between">

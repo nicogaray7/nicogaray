@@ -83,9 +83,9 @@ export function DataTable<T>({
                   }}
                   onChange={toggleAll}
                   className="h-4 w-4 rounded accent-ink"
-                  aria-label="Tout selectionner"
+                  aria-label="Tout sélectionner"
                 />
-                Tout selectionner
+                Tout sélectionner
               </label>
             ) : (
               <span />
@@ -145,7 +145,7 @@ export function DataTable<T>({
                   onChange={() => toggleRow(id)}
                   onClick={(e) => e.stopPropagation()}
                   className="absolute right-4 top-4 z-10 h-4 w-4 rounded accent-ink"
-                  aria-label={`Selectionner ${id}`}
+                  aria-label={`Sélectionner ${id}`}
                 />
               )}
               {href ? (
@@ -176,7 +176,7 @@ export function DataTable<T>({
                       }}
                       onChange={toggleAll}
                       className="h-4 w-4 rounded accent-ink cursor-pointer"
-                      aria-label="Tout selectionner"
+                      aria-label="Tout sélectionner"
                     />
                   </th>
                 )}
@@ -234,7 +234,7 @@ export function DataTable<T>({
                           checked={isSelected}
                           onChange={() => toggleRow(id)}
                           className="h-4 w-4 rounded accent-ink cursor-pointer"
-                          aria-label={`Selectionner ${id}`}
+                          aria-label={`Sélectionner ${id}`}
                         />
                       </td>
                     )}

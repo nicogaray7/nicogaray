@@ -90,7 +90,7 @@ export default async function AdminPhotosPage({
             : 'border-line text-ink-muted hover:text-ink hover:bg-paper-cool'
         }`}
       >
-        Publiees
+        Publiées
       </Link>
       <Link
         href={`/admin/photos${buildQuery({ ...baseQ, published: '0' })}`}
