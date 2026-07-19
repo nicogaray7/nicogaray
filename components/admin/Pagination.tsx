@@ -34,7 +34,7 @@ export function Pagination({
         onClick={() => navigate(page - 1)}
         disabled={page <= 1}
         className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:text-ink hover:bg-paper-cool disabled:opacity-30 disabled:pointer-events-none transition-colors"
-        aria-label="Page precedente"
+        aria-label="Page précédente"
       >
         <ChevronLeft className="w-4 h-4" />
         Précédent

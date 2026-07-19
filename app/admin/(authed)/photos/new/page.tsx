@@ -16,7 +16,7 @@ export default function NewPhotoPage() {
       <div className="space-y-2 mb-10">
         <h1 className="text-2xl font-semibold text-ink">Ajouter une photo</h1>
         <p className="text-sm text-ink-muted">
-          L'image sera traitee (preview + miniature), les EXIF extraits, et sauvegardee en brouillon. Vous editerez les metadonnees a l'etape suivante.
+          L'image sera traitée (preview + miniature), les EXIF extraits, et sauvegardée en brouillon. Vous éditerez les métadonnées à l'étape suivante.
         </p>
       </div>
       <UploadForm />
