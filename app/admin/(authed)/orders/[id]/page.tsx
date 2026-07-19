@@ -61,7 +61,14 @@ export default async function OrderDetailPage(props: {
           <h1 className="text-2xl font-semibold text-ink font-mono">{order.id}</h1>
           <p className="text-sm text-ink-muted">{formatDate(order.createdAt)}</p>
         </div>
-        <StatusPill status={order.paymentStatus} />
+        <div className="flex items-center gap-2">
+          {order.isTest && (
+            <span className="inline-flex items-center rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700">
+              Test
+            </span>
+          )}
+          <StatusPill status={order.paymentStatus} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -211,7 +218,7 @@ export default async function OrderDetailPage(props: {
           {/* Actions */}
           <section className="bg-white rounded-xl border border-line p-4">
             <h2 className="text-sm font-semibold text-ink mb-3">Actions</h2>
-            <OrderActions orderId={order.id} paymentStatus={order.paymentStatus} />
+            <OrderActions orderId={order.id} paymentStatus={order.paymentStatus} isTest={order.isTest} />
           </section>
         </div>
       </div>

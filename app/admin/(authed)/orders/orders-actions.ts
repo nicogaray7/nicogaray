@@ -98,3 +98,17 @@ export async function resetDownloads(id: string) {
 
   revalidateOrders(id);
 }
+
+export async function setOrderTest(id: string, isTest: boolean) {
+  await requireAdmin();
+
+  await prisma.order.update({
+    where: { id },
+    data: { isTest },
+  });
+
+  await logAudit('order.set_test', { target: id, meta: { isTest } });
+
+  revalidateOrders(id);
+  revalidatePath('/admin');
+}
