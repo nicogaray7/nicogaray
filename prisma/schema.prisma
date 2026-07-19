@@ -161,7 +161,10 @@ model Order {
   refundedAt   DateTime?
   refundReason String?
 
+  isTest Boolean @default(false) // commande de test, exclue des stats du dashboard
+
   @@index([buyerEmail])
   @@index([paymentStatus])
   @@index([createdAt])
+  @@index([isTest])
 }

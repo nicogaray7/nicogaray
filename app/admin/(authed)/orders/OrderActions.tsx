@@ -2,16 +2,18 @@
 
 import React, { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { RefreshCw, Mail, RotateCcw } from 'lucide-react';
+import { RefreshCw, Mail, RotateCcw, FlaskConical } from 'lucide-react';
 import { ConfirmDialog } from '@/components/admin';
-import { refundOrder, resendDownloadLink, resetDownloads } from './orders-actions';
+import { refundOrder, resendDownloadLink, resetDownloads, setOrderTest } from './orders-actions';
 
 export function OrderActions({
   orderId,
   paymentStatus,
+  isTest,
 }: {
   orderId: string;
   paymentStatus: string;
+  isTest: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -82,6 +84,16 @@ export function OrderActions({
         confirmLabel="Réinitialiser"
         onConfirm={() => run(() => resetDownloads(orderId))}
       />
+
+      <button
+        type="button"
+        disabled={isPending}
+        onClick={() => run(() => setOrderTest(orderId, !isTest))}
+        className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm border border-line text-ink-muted hover:text-ink hover:bg-paper-cool transition-colors disabled:opacity-40"
+      >
+        <FlaskConical className="w-4 h-4" />
+        {isTest ? 'Retirer le marquage test' : 'Marquer comme test'}
+      </button>
     </div>
   );
 }

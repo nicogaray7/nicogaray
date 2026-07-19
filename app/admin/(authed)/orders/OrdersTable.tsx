@@ -15,6 +15,7 @@ export type OrderRow = {
   paymentStatus: string;
   downloadCount: number;
   downloadMax: number;
+  isTest: boolean;
 };
 
 const COLUMNS: Column<OrderRow>[] = [
@@ -32,7 +33,16 @@ const COLUMNS: Column<OrderRow>[] = [
   {
     key: 'photo',
     header: 'Photo',
-    render: (o) => <span className="text-ink">{o.photo?.title ?? '-'}</span>,
+    render: (o) => (
+      <span className="inline-flex items-center gap-2">
+        <span className="text-ink">{o.photo?.title ?? '-'}</span>
+        {o.isTest && (
+          <span className="inline-flex items-center rounded border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-700">
+            Test
+          </span>
+        )}
+      </span>
+    ),
   },
   {
     key: 'buyer',

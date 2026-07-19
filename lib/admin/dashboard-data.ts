@@ -95,31 +95,33 @@ export async function getDashboardData(): Promise<DashboardData> {
     recent,
   ] = await Promise.all([
     prisma.order.aggregate({
-      where: { paymentStatus: 'paid' },
+      where: { paymentStatus: 'paid', isTest: false },
       _sum: { amount: true },
     }),
-    prisma.order.count({ where: { paymentStatus: 'paid' } }),
-    prisma.order.count({ where: { paymentStatus: 'pending' } }),
-    prisma.order.count({ where: { paymentStatus: 'refunded' } }),
+    prisma.order.count({ where: { paymentStatus: 'paid', isTest: false } }),
+    prisma.order.count({ where: { paymentStatus: 'pending', isTest: false } }),
+    prisma.order.count({ where: { paymentStatus: 'refunded', isTest: false } }),
     prisma.photo.count(),
     prisma.photo.count({ where: { published: true } }),
     prisma.photo.count({ where: { featured: true } }),
     prisma.order.findMany({
       where: {
         paymentStatus: 'paid',
+        isTest: false,
         paidAt: { gte: twelveMonthsAgo },
       },
       select: { amount: true, paidAt: true },
     }),
     prisma.order.groupBy({
       by: ['photoId'],
-      where: { paymentStatus: 'paid' },
+      where: { paymentStatus: 'paid', isTest: false },
       _sum: { amount: true },
       _count: { id: true },
       orderBy: { _sum: { amount: 'desc' } },
       take: 5,
     }),
     prisma.order.findMany({
+      where: { isTest: false },
       orderBy: { createdAt: 'desc' },
       take: 8,
       select: {
