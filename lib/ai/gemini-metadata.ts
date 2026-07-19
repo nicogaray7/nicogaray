@@ -3,7 +3,7 @@
 // Zéro coût : clé AI Studio sans facturation. Best effort : en cas d'absence
 // de clé ou d'erreur, renvoie null et l'upload continue normalement.
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
 const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 export type PhotoMetadataContext = {
@@ -97,40 +97,55 @@ export async function generatePhotoMetadata(
     },
   };
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20_000);
-  try {
-    const res = await fetch(
-      `${GEMINI_ENDPOINT}/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-      {
+  const url = `${GEMINI_ENDPOINT}/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
+  // Jusqu'a 3 tentatives : le 429 (quota gratuit) et les 5xx sont souvent
+  // transitoires, on reessaie avec un backoff avant d'abandonner.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20_000);
+    try {
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
         signal: controller.signal,
-      },
-    );
-    if (!res.ok) {
-      console.error('[gemini] HTTP', res.status, (await res.text()).slice(0, 300));
+      });
+      if (!res.ok) {
+        const errText = (await res.text()).slice(0, 300);
+        if ((res.status === 429 || res.status >= 500) && attempt < 2) {
+          console.error(`[gemini] HTTP ${res.status}, nouvelle tentative ${attempt + 1}/2`);
+          await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+          continue;
+        }
+        console.error('[gemini] HTTP', res.status, errText);
+        return null;
+      }
+      const json = await res.json();
+      const text: string | undefined = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) return null;
+
+      const parsed = JSON.parse(text) as Partial<GeneratedPhotoMetadata>;
+      if (!parsed.title || !parsed.description) return null;
+
+      const clean = (s: string) => s.trim().replace(/^["'«»]+|["'«».]+$/g, '').trim();
+      return {
+        title: clean(parsed.title),
+        titleEn: parsed.titleEn ? clean(parsed.titleEn) : '',
+        description: parsed.description.trim(),
+        descriptionEn: parsed.descriptionEn?.trim() ?? '',
+      };
+    } catch (err) {
+      if (attempt < 2) {
+        console.error('[gemini] erreur, nouvelle tentative :', err instanceof Error ? err.message : err);
+        await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+        continue;
+      }
+      console.error('[gemini] génération échouée :', err instanceof Error ? err.message : err);
       return null;
+    } finally {
+      clearTimeout(timeout);
     }
-    const json = await res.json();
-    const text: string | undefined = json?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) return null;
-
-    const parsed = JSON.parse(text) as Partial<GeneratedPhotoMetadata>;
-    if (!parsed.title || !parsed.description) return null;
-
-    const clean = (s: string) => s.trim().replace(/^["'«»]+|["'«».]+$/g, '').trim();
-    return {
-      title: clean(parsed.title),
-      titleEn: parsed.titleEn ? clean(parsed.titleEn) : '',
-      description: parsed.description.trim(),
-      descriptionEn: parsed.descriptionEn?.trim() ?? '',
-    };
-  } catch (err) {
-    console.error('[gemini] génération échouée :', err instanceof Error ? err.message : err);
-    return null;
-  } finally {
-    clearTimeout(timeout);
   }
+  return null;
 }
