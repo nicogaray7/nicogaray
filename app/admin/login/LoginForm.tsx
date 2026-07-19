@@ -2,8 +2,10 @@
 import * as React from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { startAuthentication } from '@simplewebauthn/browser';
 import { Button } from '@/components/ui/button';
 import { Input, Label } from '@/components/ui/input';
+import { beginAuthentication } from '@/app/admin/passkey-actions';
 
 export function LoginForm({
   redirectTo,
@@ -39,6 +41,30 @@ export function LoginForm({
     router.refresh();
   }
 
+  async function onPasskey() {
+    setError('');
+    setPending(true);
+    try {
+      const options = await beginAuthentication();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const assertion = await startAuthentication(options as any);
+      const result = await signIn('passkey', {
+        assertion: JSON.stringify(assertion),
+        redirect: false,
+      });
+      if (result?.error) {
+        setError("Cle d'acces non reconnue.");
+        setPending(false);
+        return;
+      }
+      router.push(redirectTo ?? '/admin');
+      router.refresh();
+    } catch {
+      setError("Connexion par cle d'acces annulee ou indisponible.");
+      setPending(false);
+    }
+  }
+
   return (
     <form onSubmit={onSubmit} className="space-y-6 bg-white rounded-xl p-8 sm:p-10 border border-line shadow-sm">
       <div className="space-y-2">
@@ -69,6 +95,21 @@ export function LoginForm({
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? 'Connexion...' : 'Se connecter'}
       </Button>
+
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-line" />
+        <span className="text-xs text-ink-muted">ou</span>
+        <span className="h-px flex-1 bg-line" />
+      </div>
+
+      <button
+        type="button"
+        onClick={onPasskey}
+        disabled={pending}
+        className="w-full rounded-md border border-line px-4 py-2.5 text-sm font-medium text-ink hover:bg-paper-cool transition-colors disabled:opacity-50"
+      >
+        Se connecter avec une cle d'acces (Touch ID / Face ID)
+      </button>
     </form>
   );
 }

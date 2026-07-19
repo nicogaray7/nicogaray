@@ -19,7 +19,27 @@ model AdminUser {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  credentials  WebAuthnCredential[]
+
   @@index([email])
+}
+
+// Cles d'acces (passkeys / WebAuthn) : connexion biometrique Touch ID / Face ID.
+model WebAuthnCredential {
+  id           String   @id @default(cuid())
+  credentialId String   @unique // base64url
+  publicKey    Bytes
+  counter      Int      @default(0)
+  transports   String[] @default([])
+  deviceType   String?
+  backedUp     Boolean  @default(false)
+  name         String?
+  adminUserId  String
+  adminUser    AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  lastUsedAt   DateTime?
+
+  @@index([adminUserId])
 }
 
 // Journal d'audit des actions admin (securite + tracabilite)
