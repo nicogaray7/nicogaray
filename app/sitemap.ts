@@ -22,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'fonds-decran-coucher-de-soleil',
     'fonds-decran-tropical',
   ];
+  const guideSlugs = ['fond-decran-iphone', 'fond-decran-android'];
   const staticPaths = [
     '',
     '/gallery',
@@ -30,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/legal/license',
     '/legal/mentions',
     ...collectionSlugs.map((s) => `/collection/${s}`),
+    ...guideSlugs.map((s) => `/guide/${s}`),
   ];
   const out: MetadataRoute.Sitemap = [];
 
