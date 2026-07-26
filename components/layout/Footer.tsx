@@ -29,6 +29,9 @@ export function Footer() {
             <Link href={`/${locale}/gallery`} className="hover:text-accent transition-colors">{t('gallery')}</Link>
             <Link href={`/${locale}/map`} className="hover:text-accent transition-colors">{t('map')}</Link>
             <Link href={`/${locale}/about`} className="hover:text-accent transition-colors">{t('about')}</Link>
+            <Link href={`/${locale}/guide/fond-decran-iphone`} className="hover:text-accent transition-colors">
+              {isEn ? 'Guide' : 'Guide'}
+            </Link>
             <Link href={`/${locale}/legal/cgv`} className="hover:text-accent transition-colors">{t('cgv')}</Link>
             <Link href={`/${locale}/legal/license`} className="hover:text-accent transition-colors">{t('license')}</Link>
             <Link href={`/${locale}/legal/mentions`} className="hover:text-accent transition-colors">{t('mentions')}</Link>
