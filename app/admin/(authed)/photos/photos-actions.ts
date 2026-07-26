@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { r2Delete } from '@/lib/r2';
+import { r2Delete, r2DeleteOriginal } from '@/lib/r2';
 import { logAudit } from '@/lib/audit';
 
 async function requireAdmin() {
@@ -42,11 +42,12 @@ export async function bulkDelete(ids: string[]) {
 
   // Delete R2 files best-effort
   await Promise.all(
-    photos.flatMap((p) =>
-      [p.originalKey, p.previewKey, p.thumbKey]
+    photos.flatMap((p) => [
+      r2DeleteOriginal(p.originalKey).catch(() => undefined),
+      ...[p.previewKey, p.thumbKey]
         .filter(Boolean)
         .map((k) => r2Delete(k).catch(() => undefined)),
-    ),
+    ]),
   );
 
   await prisma.photo.deleteMany({ where: { id: { in: ids } } });

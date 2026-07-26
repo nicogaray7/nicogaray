@@ -6,7 +6,7 @@ import slugify from 'slugify';
 import sharp from 'sharp';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { r2Put, r2Delete } from '@/lib/r2';
+import { r2Put, r2Delete, r2PutOriginal, r2DeleteOriginal } from '@/lib/r2';
 import { processImage, extractExif } from '@/lib/images';
 import { COUNTRY_NAMES, nameToCode } from '@/lib/country-names';
 import { reverseGeocode } from '@/lib/geocode';
@@ -122,11 +122,12 @@ export async function deletePhoto(id: string) {
   const photo = await prisma.photo.findUnique({ where: { id } });
   if (!photo) return;
 
-  await Promise.all(
-    [photo.originalKey, photo.previewKey, photo.thumbKey]
+  await Promise.all([
+    r2DeleteOriginal(photo.originalKey).catch(() => undefined),
+    ...[photo.previewKey, photo.thumbKey]
       .filter(Boolean)
       .map((k) => r2Delete(k).catch(() => undefined)),
-  );
+  ]);
 
   await prisma.photo.delete({ where: { id } });
   revalidatePath('/admin/photos');
@@ -243,7 +244,7 @@ export async function uploadPhoto(formData: FormData) {
   const thumbKey = `photos/${id}/thumb.jpg`;
 
   await Promise.all([
-    r2Put(originalKey, original, 'image/jpeg'),
+    r2PutOriginal(originalKey, original, 'image/jpeg'),
     r2Put(previewKey, preview, 'image/jpeg'),
     r2Put(thumbKey, thumb, 'image/jpeg'),
   ]);

@@ -17,6 +17,9 @@ export const r2 = new S3Client({
 });
 
 export const R2_BUCKET = process.env.R2_BUCKET_NAME ?? '';
+// Bucket prive dedie aux originaux HD (le produit vendu). Jamais expose en public :
+// pas d'URL r2.dev publique, acces uniquement via lien signe genere apres achat.
+export const R2_ORIGINALS_BUCKET = process.env.R2_ORIGINALS_BUCKET_NAME ?? 'nico-garay-originals';
 
 export async function r2Put(key: string, body: Buffer | Uint8Array, contentType: string) {
   return r2.send(
@@ -29,8 +32,25 @@ export async function r2Put(key: string, body: Buffer | Uint8Array, contentType:
   );
 }
 
+// Upload d'un original vers le bucket prive (jamais dans le bucket public).
+export async function r2PutOriginal(key: string, body: Buffer | Uint8Array, contentType: string) {
+  return r2.send(
+    new PutObjectCommand({
+      Bucket: R2_ORIGINALS_BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+    }),
+  );
+}
+
 export async function r2Delete(key: string) {
   return r2.send(new DeleteObjectCommand({ Bucket: required('R2_BUCKET_NAME'), Key: key }));
+}
+
+// Suppression d'un original dans le bucket prive.
+export async function r2DeleteOriginal(key: string) {
+  return r2.send(new DeleteObjectCommand({ Bucket: R2_ORIGINALS_BUCKET, Key: key }));
 }
 
 export async function r2List(prefix = '') {
@@ -50,12 +70,23 @@ export async function r2List(prefix = '') {
   return out;
 }
 
+// Lien signe court vers un original, dans le bucket prive. Seule voie d'acces
+// aux originaux, genere uniquement apres verification du paiement.
 export async function r2SignedGetUrl(key: string, expiresIn = 60 * 60) {
   return getSignedUrl(
     r2,
-    new GetObjectCommand({ Bucket: required('R2_BUCKET_NAME'), Key: key }),
+    new GetObjectCommand({ Bucket: R2_ORIGINALS_BUCKET, Key: key }),
     { expiresIn },
   );
+}
+
+// Recupere le contenu d'un original depuis le bucket prive (ex: generation du hero).
+export async function r2GetOriginalBuffer(key: string): Promise<Buffer> {
+  const resp = await r2.send(new GetObjectCommand({ Bucket: R2_ORIGINALS_BUCKET, Key: key }));
+  const chunks: Buffer[] = [];
+  // @ts-expect-error - stream type from AWS SDK is opaque
+  for await (const c of resp.Body) chunks.push(Buffer.from(c));
+  return Buffer.concat(chunks);
 }
 
 // Re-exported from a dependency-free module so client components can import

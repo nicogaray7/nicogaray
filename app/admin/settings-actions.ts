@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { setSetting } from '@/lib/settings';
-import { r2, r2Put, R2_BUCKET } from '@/lib/r2';
+import { r2, r2Put, R2_ORIGINALS_BUCKET } from '@/lib/r2';
 
 const HERO_KEY = 'hero/main.jpg';
 const HERO_MAX = 2400;
@@ -16,7 +16,7 @@ async function requireAdmin() {
 }
 
 async function fetchR2(key: string): Promise<Buffer> {
-  const resp = await r2.send(new GetObjectCommand({ Bucket: R2_BUCKET, Key: key }));
+  const resp = await r2.send(new GetObjectCommand({ Bucket: R2_ORIGINALS_BUCKET, Key: key }));
   const chunks: Buffer[] = [];
   // @ts-expect-error - stream type from AWS SDK is opaque
   for await (const c of resp.Body) chunks.push(Buffer.from(c));
