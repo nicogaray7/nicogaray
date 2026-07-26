@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import Link from 'next/link';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { setRequestLocale } from 'next-intl/server';
@@ -10,6 +11,11 @@ import { PurchaseTracker } from '@/components/analytics/PurchaseTracker';
 export const metadata = { robots: { index: false } };
 
 export const dynamic = 'force-dynamic';
+
+// Enhanced match Pinterest : email hashe cote serveur, jamais transmis en clair au client.
+function hashEmail(email: string) {
+  return createHash('sha256').update(email.trim().toLowerCase()).digest('hex');
+}
 
 async function getOrder(sessionId: string) {
   return prisma.order.findFirst({
@@ -52,6 +58,7 @@ export default async function CheckoutSuccessPage(
                 city: order.photo.city,
                 orientation: order.photo.orientation,
               },
+              hashedEmail: order.buyerEmail ? hashEmail(order.buyerEmail) : undefined,
             }
           : undefined
       }
@@ -72,6 +79,7 @@ function SuccessView({
     transactionId: string;
     total: number;
     photo: import('@/lib/analytics').PhotoLike;
+    hashedEmail?: string;
   };
 }) {
   const t = useTranslations('checkout.success');
@@ -82,6 +90,7 @@ function SuccessView({
           transactionId={tracking.transactionId}
           total={tracking.total}
           photo={tracking.photo}
+          hashedEmail={tracking.hashedEmail}
         />
       )}
       <Container size="narrow">
