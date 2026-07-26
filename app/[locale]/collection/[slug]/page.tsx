@@ -45,19 +45,19 @@ const COLLECTIONS: Record<CollectionSlug, CollectionDef> = {
     titleFr: 'Photographie de voyage : le monde en images',
     titleEn: 'Travel photography: the world in pictures',
     descriptionFr:
-      "Collection de photographie de voyage : Asie, Europe, Amérique du Sud, Afrique. Portraits, paysages, architecture et instants de vie du monde entier. Tirages photo d'art disponibles.",
+      "Collection de photographie de voyage : Australie, Vietnam, Philippines, France et quelques autres pays d'Europe. Paysages, mer, montagne et instants de voyage. Fonds d'écran en fichier numérique, à partir de 2 €.",
     descriptionEn:
-      'Travel photography collection: Asia, Europe, South America, Africa. Portraits, landscapes, architecture and moments of life from around the world. Fine art prints available.',
+      "Travel photography collection: Australia, Vietnam, the Philippines, France and a few other European countries. Landscapes, sea, mountains and travel moments. Digital wallpaper file, from €2.",
     introFr: `La photographie de voyage est une façon de voir le monde deux fois - une première fois à travers l'objectif, une deuxième en revoyant les images longtemps après. Ce qui reste, ce n'est jamais le monument ou le paysage attendu : c'est la lumière d'un matin particulier, la texture d'un mur, un regard capté par hasard dans une rue.
 
-Cette collection rassemble des images prises sur plusieurs continents, au fil d'années de voyages. Du Japon à Cuba, de la Patagonie au Myanmar, chaque photo cherche à saisir ce moment où un lieu révèle quelque chose qu'on ne pouvait pas anticiper. Pas de mise en scène, pas de retouche excessive : juste la lumière, le moment et l'endroit.
+Cette collection rassemble des images prises au fil de plusieurs voyages : l'outback et les côtes d'Australie, les montagnes karstiques du Vietnam, les îles des Philippines, les volcans du Cantal et quelques détours en Europe. Pas de mise en scène, pas de retouche excessive : juste la lumière, le moment et l'endroit.
 
-Chaque tirage est une édition limitée, imprimée sur papier photo d'art et accompagnée d'un certificat d'authenticité. Voyager avec une photo sur son mur, c'est aussi une façon de ne jamais tout à fait rentrer.`,
+Chaque photo est un fichier numérique en haute résolution, calibré pour un écran de smartphone. Emporter un paysage de voyage sur son téléphone, c'est aussi une façon de ne jamais tout à fait rentrer.`,
     introEn: `Travel photography is a way of seeing the world twice - first through the lens, then again when revisiting the images long after. What remains is never the expected monument or landscape: it is the light of a particular morning, the texture of a wall, a glance caught by chance in a street.
 
-This collection brings together images taken across several continents over years of travel. From Japan to Cuba, from Patagonia to Myanmar, each photograph reaches for the moment when a place reveals something unforeseen. No staging, no heavy retouching - just light, timing and place.
+This collection brings together images taken across several trips: the outback and coastlines of Australia, the karst mountains of Vietnam, the islands of the Philippines, the volcanoes of Cantal and a few detours across Europe. No staging, no heavy retouching - just light, timing and place.
 
-Every print is a limited edition, produced on fine art paper and accompanied by a certificate of authenticity. Hanging a travel photograph on your wall is also a way of never quite coming home.`,
+Each photo is a high-resolution digital file, calibrated for a smartphone screen. Carrying a travel landscape on your phone is also a way of never quite coming home.`,
     filter: { published: true },
     orderBy: [{ featured: 'desc' }, { sortOrder: 'asc' }, { takenAt: 'desc' }],
     limit: 30,
