@@ -185,6 +185,23 @@ function PhotoView({
       { '@type': 'ListItem', position: 2, name: title, item: pageUrl },
     ],
   };
+  const productLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: title,
+    ...(description ? { description } : {}),
+    image: [previewUrl].filter(Boolean),
+    sku: photo.id,
+    brand: { '@type': 'Brand', name: 'Nico Garay' },
+    offers: {
+      '@type': 'Offer',
+      url: pageUrl,
+      priceCurrency: photo.currency,
+      price: photo.price,
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+    },
+  };
 
   return (
     <article>
@@ -195,6 +212,10 @@ function PhotoView({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }}
       />
       <PhotoPageTracker
         photo={{

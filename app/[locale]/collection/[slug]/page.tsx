@@ -8,13 +8,23 @@ import { PhotoCard } from '@/components/gallery/PhotoCard';
 import { prisma } from '@/lib/prisma';
 import type { Prisma } from '@prisma/client';
 
-export const revalidate = 3600;
+// Généré au runtime (pas au build) : sinon la DB n'est pas joignable pendant le
+// build Docker et la collection sort figée à 0 photo jusqu'à la revalidation ISR.
+export const dynamic = 'force-dynamic';
 
 // ---------------------------------------------------------------------------
 // Collection definitions (hardcoded - no DB required)
 // ---------------------------------------------------------------------------
 
-type CollectionSlug = 'japon' | 'islande' | 'photographie-voyage';
+type CollectionSlug =
+  | 'japon'
+  | 'islande'
+  | 'photographie-voyage'
+  | 'fonds-decran-mer'
+  | 'fonds-decran-montagne'
+  | 'fonds-decran-desert'
+  | 'fonds-decran-coucher-de-soleil'
+  | 'fonds-decran-tropical';
 
 interface CollectionDef {
   slugFr: string;
@@ -99,6 +109,106 @@ Every print is a limited edition, produced on fine art paper and accompanied by 
     filter: { published: true },
     orderBy: [{ featured: 'desc' }, { sortOrder: 'asc' }, { takenAt: 'desc' }],
     limit: 30,
+  },
+
+  'fonds-decran-mer': {
+    slugFr: 'fonds-decran-mer',
+    slugEn: 'fonds-decran-mer',
+    titleFr: "Fonds d'écran mer et océan pour smartphone",
+    titleEn: 'Sea and ocean wallpapers for smartphone',
+    descriptionFr:
+      "Fonds d'écran HD de mer et d'océan, format vertical optimisé mobile : lagons turquoise, vagues, plages et horizons infinis. Fichier numérique, téléchargement immédiat, à partir de 2 €.",
+    descriptionEn:
+      'HD sea and ocean wallpapers, vertical format optimized for mobile: turquoise lagoons, waves, beaches and endless horizons. Digital file, from €2.',
+    introFr: `Un lagon turquoise, une vague qui se brise, un horizon qui se perd dans le bleu : ces images ont été prises entre les Philippines, l'Australie et le Vietnam, là où la mer change de couleur à chaque heure de la journée.
+
+Chaque photo est recadrée et calibrée pour un écran de smartphone, en haute résolution, pour un rendu net sur l'écran d'accueil ou de verrouillage.`,
+    introEn: `A turquoise lagoon, a breaking wave, a horizon dissolving into blue: these images were taken between the Philippines, Australia and Vietnam, where the sea shifts color throughout the day.
+
+Each photo is cropped and calibrated for a smartphone screen, in high resolution, for a crisp result on your home or lock screen.`,
+    filter: { published: true, tags: { has: 'mer' } },
+    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
+    limit: 40,
+  },
+
+  'fonds-decran-montagne': {
+    slugFr: 'fonds-decran-montagne',
+    slugEn: 'fonds-decran-montagne',
+    titleFr: "Fonds d'écran montagne pour smartphone",
+    titleEn: 'Mountain wallpapers for smartphone',
+    descriptionFr:
+      "Fonds d'écran HD de montagne, format vertical optimisé mobile : sommets, vallées et reliefs d'Auvergne, du Vietnam et d'Australie. Fichier numérique à partir de 2 €.",
+    descriptionEn:
+      'HD mountain wallpapers, vertical format optimized for mobile: peaks, valleys and reliefs from Auvergne, Vietnam and Australia. Digital file from €2.',
+    introFr: `Des volcans du Cantal aux montagnes karstiques du nord du Vietnam, ces photos capturent des reliefs qui donnent l'impression de tenir un paysage entier dans la poche.
+
+Format vertical, haute résolution : ces images sont pensées pour habiller un écran de téléphone, pas un mur.`,
+    introEn: `From the volcanoes of Cantal to the karst mountains of northern Vietnam, these photos capture landscapes that feel like holding an entire vista in your pocket.
+
+Vertical format, high resolution: these images are made to dress a phone screen, not a wall.`,
+    filter: { published: true, tags: { has: 'montagne' } },
+    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
+    limit: 40,
+  },
+
+  'fonds-decran-desert': {
+    slugFr: 'fonds-decran-desert',
+    slugEn: 'fonds-decran-desert',
+    titleFr: "Fonds d'écran désert pour smartphone",
+    titleEn: 'Desert wallpapers for smartphone',
+    descriptionFr:
+      "Fonds d'écran HD de désert et d'outback australien, format vertical optimisé mobile : terres arides, routes infinies et couleurs ocre. Fichier numérique à partir de 2 €.",
+    descriptionEn:
+      'HD desert and Australian outback wallpapers, vertical format optimized for mobile: arid land, endless roads and ochre tones. Digital file from €2.',
+    introFr: `L'outback australien impose ses propres règles : des routes qui filent à l'horizon, une terre rouge à perte de vue, un ciel qui prend feu au coucher du soleil.
+
+Ces images en haute résolution restituent ces étendues arides directement sur l'écran d'un smartphone.`,
+    introEn: `The Australian outback plays by its own rules: roads stretching to the horizon, red earth as far as the eye can see, a sky catching fire at sunset.
+
+These high-resolution images bring those arid expanses straight to a smartphone screen.`,
+    filter: { published: true, tags: { has: 'desert' } },
+    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
+    limit: 40,
+  },
+
+  'fonds-decran-coucher-de-soleil': {
+    slugFr: 'fonds-decran-coucher-de-soleil',
+    slugEn: 'fonds-decran-coucher-de-soleil',
+    titleFr: "Fonds d'écran coucher de soleil pour smartphone",
+    titleEn: 'Sunset wallpapers for smartphone',
+    descriptionFr:
+      "Fonds d'écran HD de couchers de soleil, format vertical optimisé mobile : ciels orangés, silhouettes et lumière rasante capturés en voyage. Fichier numérique à partir de 2 €.",
+    descriptionEn:
+      'HD sunset wallpapers, vertical format optimized for mobile: orange skies, silhouettes and raking light captured while traveling. Digital file from €2.',
+    introFr: `Le moment le plus court de la journée est souvent le plus photographié : quelques minutes où la lumière devient orange, rose, presque rouge, avant de disparaître.
+
+Cette sélection rassemble des couchers de soleil pris entre l'Australie, les Philippines et le Vietnam, prêts à remplacer l'écran d'accueil du téléphone.`,
+    introEn: `The shortest moment of the day is often the most photographed: a few minutes when the light turns orange, pink, almost red, before fading away.
+
+This selection brings together sunsets captured between Australia, the Philippines and Vietnam, ready to replace a phone's home screen.`,
+    filter: { published: true, tags: { has: 'coucher-de-soleil' } },
+    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
+    limit: 40,
+  },
+
+  'fonds-decran-tropical': {
+    slugFr: 'fonds-decran-tropical',
+    slugEn: 'fonds-decran-tropical',
+    titleFr: "Fonds d'écran tropical pour smartphone",
+    titleEn: 'Tropical wallpapers for smartphone',
+    descriptionFr:
+      "Fonds d'écran HD tropical, format vertical optimisé mobile : îles, palmiers et eaux turquoise des Philippines et d'Asie du Sud-Est. Fichier numérique à partir de 2 €.",
+    descriptionEn:
+      'HD tropical wallpapers, vertical format optimized for mobile: islands, palm trees and turquoise waters from the Philippines and Southeast Asia. Digital file from €2.',
+    introFr: `Des îles de Palawan à la baie de Bangka, cette sélection tropicale rassemble des couleurs qu'on associe instinctivement aux vacances : sable blanc, eau turquoise, végétation dense.
+
+De quoi transformer un écran de téléphone en carte postale, toute l'année.`,
+    introEn: `From the islands of Palawan to Bangka Bay, this tropical selection brings together colors instinctively associated with vacation: white sand, turquoise water, dense vegetation.
+
+Enough to turn a phone screen into a postcard, all year round.`,
+    filter: { published: true, tags: { has: 'tropical' } },
+    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
+    limit: 40,
   },
 };
 
