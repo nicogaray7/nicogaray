@@ -22,13 +22,14 @@ function xmlEscape(s: string): string {
 
 function itemDescription(photo: {
   title: string;
-  description: string | null;
+  titleEn: string | null;
+  descriptionEn: string | null;
   city: string | null;
   country: string | null;
 }): string {
-  if (photo.description) return photo.description;
+  if (photo.descriptionEn) return photo.descriptionEn;
   const place = [photo.city, photo.country].filter(Boolean).join(', ');
-  return `${photo.title}${place ? `, ${place}` : ''}. Photographie de voyage en édition numérique haute résolution.`;
+  return `${photo.titleEn ?? photo.title}${place ? `, ${place}` : ''}. High-resolution travel photography in limited digital editions.`;
 }
 
 export async function GET() {
@@ -38,7 +39,9 @@ export async function GET() {
       select: {
         slug: true,
         title: true,
+        titleEn: true,
         description: true,
+        descriptionEn: true,
         city: true,
         country: true,
         previewKey: true,
@@ -58,7 +61,7 @@ export async function GET() {
       const link = `${pageUrl}?utm_source=pinterest&utm_medium=rss`;
       return [
         '    <item>',
-        `      <title>${xmlEscape(photo.title)}</title>`,
+        `      <title>${xmlEscape(photo.titleEn ?? photo.title)}</title>`,
         `      <description>${xmlEscape(itemDescription(photo))}</description>`,
         `      <link>${xmlEscape(link)}</link>`,
         `      <guid isPermaLink="true">${xmlEscape(pageUrl)}</guid>`,
@@ -73,10 +76,10 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
-    <title>Nico Garay · Photographie de voyage</title>
+    <title>Nico Garay · Travel Photography</title>
     <link>${xmlEscape(BASE)}</link>
-    <description>Photographies de voyage en édition numérique haute résolution.</description>
-    <language>fr</language>
+    <description>High-resolution travel photography in limited digital editions.</description>
+    <language>en</language>
 ${items}
   </channel>
 </rss>
