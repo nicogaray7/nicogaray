@@ -306,7 +306,7 @@ function PhotoView({
               <div className="bg-paper-warm p-6 sm:p-8 space-y-5 border border-line">
                 {/* Prix + libellé */}
                 <div>
-                  <p className="text-2xl font-display text-ink">{formattedPrice}</p>
+                  <p className="text-2xl font-sans font-semibold text-ink">{formattedPrice}</p>
                   <p className="text-xs text-ink-muted mt-0.5">{t('buyTitle')}</p>
                 </div>
                 <p className="text-sm text-ink-soft">{t('buyDescription')}</p>
