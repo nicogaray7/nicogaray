@@ -93,6 +93,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${sans.variable} ${display.variable}`}>
       <head>
+        {/* Vérification de domaine Pinterest */}
+        <meta name="p:domain_verify" content="3f8bc414d1d7c5975758b57acd5e4768" />
         {/* Google tag (gtag.js) */}
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
         <script
