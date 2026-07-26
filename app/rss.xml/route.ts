@@ -2,9 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { r2PublicUrl } from '@/lib/r2-url';
 
 // Flux RSS 2.0 pour la création groupée d'épingles Pinterest (1 flux = 1 tableau).
-// Ne contient QUE les photos mises en avant (featured) : le contenu du flux est
-// validé visuellement avant diffusion, jamais tout le catalogue. L'image est la
-// preview filigranée ; l'original HD est le produit vendu et ne sort jamais ici.
+// Contient toutes les photos publiées du site (du plus ancien au plus récent).
+// L'image est la preview filigranée ; l'original HD est le produit vendu et ne
+// sort jamais ici. Le clic renvoie vers la page produit.
 // Généré au runtime (pas au build) : sinon la DB n'est pas joignable pendant le
 // build Docker et le flux sortirait vide.
 export const dynamic = 'force-dynamic';
@@ -34,7 +34,7 @@ function itemDescription(photo: {
 export async function GET() {
   const photos = await prisma.photo
     .findMany({
-      where: { published: true, featured: true },
+      where: { published: true },
       select: {
         slug: true,
         title: true,
@@ -75,7 +75,7 @@ export async function GET() {
   <channel>
     <title>Nico Garay · Photographie de voyage</title>
     <link>${xmlEscape(BASE)}</link>
-    <description>Photographies de voyage en édition numérique haute résolution. Sélection mise en avant.</description>
+    <description>Photographies de voyage en édition numérique haute résolution.</description>
     <language>fr</language>
 ${items}
   </channel>
