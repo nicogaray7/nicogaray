@@ -17,8 +17,6 @@ export const dynamic = 'force-dynamic';
 // ---------------------------------------------------------------------------
 
 type CollectionSlug =
-  | 'japon'
-  | 'islande'
   | 'photographie-voyage'
   | 'fonds-decran-mer'
   | 'fonds-decran-montagne'
@@ -41,52 +39,6 @@ interface CollectionDef {
 }
 
 const COLLECTIONS: Record<CollectionSlug, CollectionDef> = {
-  japon: {
-    slugFr: 'japon',
-    slugEn: 'japon',
-    titleFr: 'Photos du Japon : torii, temples et paysages',
-    titleEn: 'Photos of Japan: torii gates, temples and landscapes',
-    descriptionFr:
-      'Galerie de photos du Japon : torii de Fushimi Inari, Mont Fuji, temples de Kyoto, geishas de Gion, cerisiers en fleurs. Tirages photo disponibles à la vente.',
-    descriptionEn:
-      'Photo gallery of Japan: Fushimi Inari torii gates, Mount Fuji, Kyoto temples, Gion geishas, cherry blossoms. Fine art prints available for purchase.',
-    introFr: `Le Japon est un pays qui se photographie autant qu'il se vit. Chaque recoin cache une invitation à s'arrêter - une rangée de torii vermillon qui disparaît dans la brume, un jardin de mousse immobile dans la lumière de l'après-midi, une rue d'Asakusa balayée par la neige un matin de janvier.
-
-Ces images ont été prises au fil de plusieurs voyages, de Tokyo à Kyoto, d'Osaka aux montagnes du nord. Je cherche toujours ce moment suspendu entre ordre et chaos propre au Japon : une geisha qui traverse les pavés de Gion tandis que les lanternes s'allument, le Fuji-san qui se dessine au-dessus des nuages à l'aube, les temples envahis par la foule quelques heures plus tard et pourtant déjà silencieux en contre-lumière.
-
-Photographier le Japon, c'est apprendre à ralentir. À attendre que la lumière change, que la foule s'écarte ou que le brouillard se lève. Les tirages disponibles ici sont tous des éditions limitées, imprimées sur papier Hahnemühle pour restituer la profondeur des ombres et la douceur des tons de l'archipel.`,
-    introEn: `Japan is a country that rewards the patient photographer. Every corner holds an invitation to stop - a row of vermillion torii dissolving into morning mist, a moss garden frozen in afternoon light, a snow-covered street in Asakusa before the city wakes.
-
-These images were taken across several trips, from Tokyo to Kyoto, from Osaka to the northern mountains. I am always chasing that suspended moment unique to Japan: a geisha crossing the cobblestones of Gion as lanterns flicker to life, Fuji-san emerging above the clouds at dawn, temples packed with visitors yet somehow serene when caught in backlight.
-
-Photographing Japan is an exercise in slowing down. Waiting for the light to shift, for the crowd to part, for the fog to lift. The prints available here are all limited editions, printed on Hahnemühle paper to preserve the depth of shadow and subtle warmth of the archipelago.`,
-    filter: { published: true, countryCode: 'JP' },
-    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
-  },
-
-  islande: {
-    slugFr: 'islande',
-    slugEn: 'islande',
-    titleFr: "Photos d'Islande : aurores boréales et volcans",
-    titleEn: 'Photos of Iceland: northern lights and volcanoes',
-    descriptionFr:
-      "Galerie de photos d'Islande : aurores boréales sur Jökulsárlón, cascades de Skógafoss et Seljalandsfoss, paysages volcaniques, landes et déserts de lave. Tirages disponibles.",
-    descriptionEn:
-      'Photo gallery of Iceland: northern lights over Jökulsárlón, Skógafoss and Seljalandsfoss waterfalls, volcanic landscapes, lava fields. Fine art prints available.',
-    introFr: `L'Islande ressemble à une planète parallèle. En quelques heures de route, on passe des champs de lave noire aux prairies vertes lumineuses, des cascades géantes aux plages de sable noir, des geysers bouillonnants au silence total d'un intérieur enneigé. C'est un terrain de jeu exceptionnel pour la photographie de paysage.
-
-La lumière y est particulière : en été, elle ne disparaît jamais vraiment et baigne tout d'une teinte dorée pendant des heures. En hiver, elle est courte, rasante, dramatique - idéale pour les aurores boréales qui dansent au-dessus des icebergs du lagon de Jökulsárlón.
-
-Ces photos ont été prises lors de plusieurs séjours, été comme hiver. Certaines demandent d'attendre des heures dans le froid, d'autres se donnent en quelques secondes. Toutes racontent une Islande qui n'appartient qu'à elle-même - sauvage, imprévisible et inoubliable. Les tirages sont disponibles en édition limitée, sur papier baryté pour les noirs profonds des paysages nocturnes.`,
-    introEn: `Iceland resembles a parallel planet. Within a few hours of driving, you move from black lava fields to luminous green meadows, from towering waterfalls to black sand beaches, from boiling geysers to the complete silence of the snowy interior. It is an exceptional playground for landscape photography.
-
-The light here is unlike anywhere else: in summer it never fully disappears, bathing everything in golden tones for hours. In winter it is short, raking, dramatic - perfect for the northern lights that dance above the icebergs of the Jökulsárlón lagoon.
-
-These photographs were taken across several trips, both in summer and winter. Some required waiting hours in the cold; others revealed themselves in seconds. All of them tell of an Iceland that belongs only to itself - wild, unpredictable and unforgettable. Prints are available in limited editions, on baryta paper to render the deep blacks of night landscapes.`,
-    filter: { published: true, countryCode: 'IS' },
-    orderBy: [{ featured: 'desc' }, { takenAt: 'desc' }],
-  },
-
   'photographie-voyage': {
     slugFr: 'photographie-voyage',
     slugEn: 'photographie-voyage',

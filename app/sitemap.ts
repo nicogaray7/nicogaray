@@ -15,8 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ['fr', 'en'] as const;
 
   const collectionSlugs = [
-    'japon',
-    'islande',
     'photographie-voyage',
     'fonds-decran-mer',
     'fonds-decran-montagne',

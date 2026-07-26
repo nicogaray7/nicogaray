@@ -9,8 +9,6 @@ const THEME_COLLECTIONS: { slug: string; labelFr: string; labelEn: string }[] = 
   { slug: 'fonds-decran-desert', labelFr: 'Désert', labelEn: 'Desert' },
   { slug: 'fonds-decran-coucher-de-soleil', labelFr: 'Coucher de soleil', labelEn: 'Sunset' },
   { slug: 'fonds-decran-tropical', labelFr: 'Tropical', labelEn: 'Tropical' },
-  { slug: 'japon', labelFr: 'Japon', labelEn: 'Japan' },
-  { slug: 'islande', labelFr: 'Islande', labelEn: 'Iceland' },
 ];
 
 export function Footer() {
