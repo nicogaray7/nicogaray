@@ -35,6 +35,8 @@ const imgSrc = [
   'https://yt3.googleusercontent.com',
   'https://www.google-analytics.com',
   'https://www.googletagmanager.com',
+  // Pinterest Tag (pixel de conversion)
+  'https://ct.pinterest.com',
   // Dynamic R2 origin from env var (may duplicate one of the above, filtered)
   r2Origin,
 ]
@@ -49,12 +51,12 @@ const cspDirectives = [
   "form-action 'self' https://checkout.stripe.com",
   // 'unsafe-inline' is required for the gtag bootstrap snippet and Next.js
   // inline runtime; 'unsafe-eval' is not granted.
-  "script-src 'self' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com",
+  "script-src 'self' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://s.pinimg.com",
   "style-src 'self' 'unsafe-inline'",
   `img-src ${imgSrc}`,
   "font-src 'self' data:",
   // q.stripe.com is used by Stripe.js for fraud signals / telemetry
-  "connect-src 'self' https://api.stripe.com https://q.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+  "connect-src 'self' https://api.stripe.com https://q.stripe.com https://www.google-analytics.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://ct.pinterest.com",
   "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
   'upgrade-insecure-requests',
 ].join('; ');
