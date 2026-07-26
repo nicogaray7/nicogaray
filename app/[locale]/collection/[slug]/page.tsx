@@ -309,7 +309,7 @@ export default async function CollectionPage(
                         i === 2 && 'order-3',
                       )}
                     >
-                      <PhoneMockup src={src} alt={alt} priority={isMain} />
+                      <PhoneMockup src={src} alt={alt} uid={p.id} />
                     </Link>
                   );
                 })}
