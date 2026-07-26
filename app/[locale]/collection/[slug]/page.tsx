@@ -5,7 +5,10 @@ import type { Metadata } from 'next';
 import { ArrowLeft, Images } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { PhoneMockup } from '@/components/gallery/PhoneMockup';
 import { prisma } from '@/lib/prisma';
+import { r2PublicUrl } from '@/lib/r2-url';
+import { cn } from '@/lib/utils';
 import type { Prisma } from '@prisma/client';
 
 // Généré au runtime (pas au build) : sinon la DB n'est pas joignable pendant le
@@ -48,14 +51,14 @@ const COLLECTIONS: Record<CollectionSlug, CollectionDef> = {
       "Collection de photographie de voyage : Australie, Vietnam, Philippines, France et quelques autres pays d'Europe. Paysages, mer, montagne et instants de voyage. Fonds d'écran en fichier numérique, à partir de 2 €.",
     descriptionEn:
       "Travel photography collection: Australia, Vietnam, the Philippines, France and a few other European countries. Landscapes, sea, mountains and travel moments. Digital wallpaper file, from €2.",
-    introFr: `La photographie de voyage est une façon de voir le monde deux fois - une première fois à travers l'objectif, une deuxième en revoyant les images longtemps après. Ce qui reste, ce n'est jamais le monument ou le paysage attendu : c'est la lumière d'un matin particulier, la texture d'un mur, un regard capté par hasard dans une rue.
+    introFr: `La photographie de voyage est une façon de voir le monde deux fois : une première fois à travers l'objectif, une deuxième en revoyant les images longtemps après. Ce qui reste, ce n'est jamais le monument ou le paysage attendu, mais la lumière d'un matin particulier, la texture d'un mur, un regard capté par hasard dans une rue.
 
 Cette collection rassemble des images prises au fil de plusieurs voyages : l'outback et les côtes d'Australie, les montagnes karstiques du Vietnam, les îles des Philippines, les volcans du Cantal et quelques détours en Europe. Pas de mise en scène, pas de retouche excessive : juste la lumière, le moment et l'endroit.
 
 Chaque photo est un fichier numérique en haute résolution, calibré pour un écran de smartphone. Emporter un paysage de voyage sur son téléphone, c'est aussi une façon de ne jamais tout à fait rentrer.`,
-    introEn: `Travel photography is a way of seeing the world twice - first through the lens, then again when revisiting the images long after. What remains is never the expected monument or landscape: it is the light of a particular morning, the texture of a wall, a glance caught by chance in a street.
+    introEn: `Travel photography is a way of seeing the world twice: first through the lens, then again when revisiting the images long after. What remains is never the expected monument or landscape, but the light of a particular morning, the texture of a wall, a glance caught by chance in a street.
 
-This collection brings together images taken across several trips: the outback and coastlines of Australia, the karst mountains of Vietnam, the islands of the Philippines, the volcanoes of Cantal and a few detours across Europe. No staging, no heavy retouching - just light, timing and place.
+This collection brings together images taken across several trips: the outback and coastlines of Australia, the karst mountains of Vietnam, the islands of the Philippines, the volcanoes of Cantal and a few detours across Europe. No staging, no heavy retouching, just light, timing and place.
 
 Each photo is a high-resolution digital file, calibrated for a smartphone screen. Carrying a travel landscape on your phone is also a way of never quite coming home.`,
     filter: { published: true },
@@ -66,8 +69,8 @@ Each photo is a high-resolution digital file, calibrated for a smartphone screen
   'fonds-decran-mer': {
     slugFr: 'fonds-decran-mer',
     slugEn: 'fonds-decran-mer',
-    titleFr: "Fonds d'écran mer et océan pour smartphone",
-    titleEn: 'Sea and ocean wallpapers for smartphone',
+    titleFr: "Fonds d'écran mer et océan",
+    titleEn: 'Sea and ocean wallpapers',
     descriptionFr:
       "Fonds d'écran HD de mer et d'océan, format vertical optimisé mobile : lagons turquoise, vagues, plages et horizons infinis. Fichier numérique, téléchargement immédiat, à partir de 2 €.",
     descriptionEn:
@@ -86,8 +89,8 @@ Each photo is cropped and calibrated for a smartphone screen, in high resolution
   'fonds-decran-montagne': {
     slugFr: 'fonds-decran-montagne',
     slugEn: 'fonds-decran-montagne',
-    titleFr: "Fonds d'écran montagne pour smartphone",
-    titleEn: 'Mountain wallpapers for smartphone',
+    titleFr: "Fonds d'écran de montagne",
+    titleEn: 'Mountain wallpapers',
     descriptionFr:
       "Fonds d'écran HD de montagne, format vertical optimisé mobile : sommets, vallées et reliefs d'Auvergne, du Vietnam et d'Australie. Fichier numérique à partir de 2 €.",
     descriptionEn:
@@ -106,8 +109,8 @@ Vertical format, high resolution: these images are made to dress a phone screen,
   'fonds-decran-desert': {
     slugFr: 'fonds-decran-desert',
     slugEn: 'fonds-decran-desert',
-    titleFr: "Fonds d'écran désert pour smartphone",
-    titleEn: 'Desert wallpapers for smartphone',
+    titleFr: "Fonds d'écran du désert",
+    titleEn: 'Desert wallpapers',
     descriptionFr:
       "Fonds d'écran HD de désert et d'outback australien, format vertical optimisé mobile : terres arides, routes infinies et couleurs ocre. Fichier numérique à partir de 2 €.",
     descriptionEn:
@@ -126,8 +129,8 @@ These high-resolution images bring those arid expanses straight to a smartphone 
   'fonds-decran-coucher-de-soleil': {
     slugFr: 'fonds-decran-coucher-de-soleil',
     slugEn: 'fonds-decran-coucher-de-soleil',
-    titleFr: "Fonds d'écran coucher de soleil pour smartphone",
-    titleEn: 'Sunset wallpapers for smartphone',
+    titleFr: "Fonds d'écran couchers de soleil",
+    titleEn: 'Sunset wallpapers',
     descriptionFr:
       "Fonds d'écran HD de couchers de soleil, format vertical optimisé mobile : ciels orangés, silhouettes et lumière rasante capturés en voyage. Fichier numérique à partir de 2 €.",
     descriptionEn:
@@ -146,8 +149,8 @@ This selection brings together sunsets captured between Australia, the Philippin
   'fonds-decran-tropical': {
     slugFr: 'fonds-decran-tropical',
     slugEn: 'fonds-decran-tropical',
-    titleFr: "Fonds d'écran tropical pour smartphone",
-    titleEn: 'Tropical wallpapers for smartphone',
+    titleFr: "Fonds d'écran tropicaux",
+    titleEn: 'Tropical wallpapers',
     descriptionFr:
       "Fonds d'écran HD tropical, format vertical optimisé mobile : îles, palmiers et eaux turquoise des Philippines et d'Asie du Sud-Est. Fichier numérique à partir de 2 €.",
     descriptionEn:
@@ -246,6 +249,15 @@ export default async function CollectionPage(
   const intro = isEn ? collection.introEn : collection.introFr;
   const locale = params.locale;
 
+  // Aperçus en fond d'écran : on privilégie les formats portrait/carré
+  // (mieux rendus dans un cadre de téléphone), sinon on prend les premières.
+  const previewPhotos = [...photos]
+    .sort((a, b) => {
+      const score = (o: string) => (o === 'portrait' ? 0 : o === 'square' ? 1 : 2);
+      return score(a.orientation) - score(b.orientation);
+    })
+    .slice(0, 3);
+
   return (
     <article>
       <section className="pt-12 pb-10 sm:pt-16 sm:pb-14">
@@ -257,29 +269,52 @@ export default async function CollectionPage(
             <ArrowLeft className="w-4 h-4" />
             {isEn ? 'All photos' : 'Toutes les photos'}
           </Link>
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-paper-cool">
-                <Images className="w-5 h-5 text-ink-muted" />
-              </span>
-              <p className="text-sm text-ink-muted uppercase tracking-widest">
-                {isEn ? 'Collection' : 'Collection'}
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-paper-cool">
+                  <Images className="w-5 h-5 text-ink-muted" />
+                </span>
+                <p className="text-sm text-ink-muted uppercase tracking-widest">
+                  {isEn ? 'Wallpapers' : "Fonds d'écran"}
+                </p>
+              </div>
+              <h1 className="text-display-xl font-display text-ink">{title}</h1>
+              <div className="prose-feed text-lg mt-6 whitespace-pre-line text-ink-muted">
+                {intro}
+              </div>
+              <p className="text-sm text-ink-muted mt-6">
+                {photos.length}{' '}
+                {photos.length === 1 ? 'photo' : 'photos'}
               </p>
             </div>
-            <h1 className="text-display-xl font-display text-ink">{title}</h1>
-            <div className="prose-feed text-lg mt-6 whitespace-pre-line text-ink-muted">
-              {intro}
-            </div>
-            <p className="text-sm text-ink-muted mt-6">
-              {photos.length}{' '}
-              {isEn
-                ? photos.length === 1
-                  ? 'photo'
-                  : 'photos'
-                : photos.length === 1
-                  ? 'photo'
-                  : 'photos'}
-            </p>
+
+            {previewPhotos.length > 0 && (
+              <div className="flex items-end justify-center gap-4 sm:gap-6">
+                {previewPhotos.map((p, i) => {
+                  const src = r2PublicUrl(p.previewKey) ?? '';
+                  const alt = isEn && p.titleEn ? p.titleEn : p.title;
+                  const isMain = i === 0;
+                  return (
+                    <Link
+                      key={p.id}
+                      href={`/${locale}/gallery/${p.slug}`}
+                      aria-label={alt}
+                      className={cn(
+                        'transition-transform duration-500 hover:-translate-y-1',
+                        isMain
+                          ? 'order-2 block w-[62%] max-w-[190px] sm:w-[42%]'
+                          : 'hidden w-[32%] max-w-[150px] pb-4 sm:block',
+                        i === 1 && 'order-1',
+                        i === 2 && 'order-3',
+                      )}
+                    >
+                      <PhoneMockup src={src} alt={alt} priority={isMain} />
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </Container>
       </section>
