@@ -3,9 +3,18 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Container } from './Container';
 import { Logo } from './Logo';
 
+const THEME_COLLECTIONS: { slug: string; labelFr: string; labelEn: string }[] = [
+  { slug: 'fonds-decran-mer', labelFr: 'Mer', labelEn: 'Sea' },
+  { slug: 'fonds-decran-montagne', labelFr: 'Montagne', labelEn: 'Mountain' },
+  { slug: 'fonds-decran-desert', labelFr: 'Désert', labelEn: 'Desert' },
+  { slug: 'fonds-decran-coucher-de-soleil', labelFr: 'Coucher de soleil', labelEn: 'Sunset' },
+  { slug: 'fonds-decran-tropical', labelFr: 'Tropical', labelEn: 'Tropical' },
+];
+
 export function Footer() {
   const locale = useLocale();
   const t = useTranslations('footer');
+  const isEn = locale === 'en';
   const year = new Date().getFullYear();
 
   return (
@@ -24,6 +33,14 @@ export function Footer() {
             <Link href={`/${locale}/legal/license`} className="hover:text-accent transition-colors">{t('license')}</Link>
             <Link href={`/${locale}/legal/mentions`} className="hover:text-accent transition-colors">{t('mentions')}</Link>
           </nav>
+        </div>
+        <div className="pb-10 sm:pb-14 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-muted">
+          <span className="uppercase tracking-widest">{isEn ? 'Wallpapers by theme' : "Fonds d'écran par thème"}</span>
+          {THEME_COLLECTIONS.map((c) => (
+            <Link key={c.slug} href={`/${locale}/collection/${c.slug}`} className="hover:text-accent transition-colors">
+              {isEn ? c.labelEn : c.labelFr}
+            </Link>
+          ))}
         </div>
       </Container>
     </footer>

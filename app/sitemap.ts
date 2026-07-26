@@ -14,7 +14,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .catch(() => []);
   const locales = ['fr', 'en'] as const;
 
-  const collectionSlugs = ['japon', 'islande', 'photographie-voyage'];
+  const collectionSlugs = [
+    'photographie-voyage',
+    'fonds-decran-mer',
+    'fonds-decran-montagne',
+    'fonds-decran-desert',
+    'fonds-decran-coucher-de-soleil',
+    'fonds-decran-tropical',
+  ];
   const staticPaths = [
     '',
     '/gallery',
