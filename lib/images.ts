@@ -128,8 +128,12 @@ export async function extractExif(buffer: Buffer): Promise<ExtractedExif> {
     });
     if (!exif) return {};
 
-    const camera = [exif.Make, exif.Model].filter(Boolean).join(' ').trim() || undefined;
-    const lens = [exif.LensMake, exif.LensModel].filter(Boolean).join(' ').trim() || undefined;
+    let camera = [exif.Make, exif.Model].filter(Boolean).join(' ').trim() || undefined;
+    let lens = [exif.LensMake, exif.LensModel].filter(Boolean).join(' ').trim() || undefined;
+    if (camera && /iphone/i.test(camera)) {
+      camera = undefined;
+      lens = undefined;
+    }
     const focalLength = exif.FocalLength ? `${Math.round(exif.FocalLength)}mm` : undefined;
     const aperture = exif.FNumber ? `f/${Math.round(exif.FNumber * 10) / 10}` : undefined;
     const shutterSpeed = exif.ExposureTime
