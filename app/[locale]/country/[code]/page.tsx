@@ -4,7 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { ArrowLeft, MapPin } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
-import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { MasonryGrid } from '@/components/gallery/MasonryGrid';
 import { prisma } from '@/lib/prisma';
 
 export const revalidate = 60;
@@ -101,11 +101,14 @@ function CountryView({
               <p className="caption">{locale === 'en' ? 'No photos yet from this country.' : 'Aucune photo pour ce pays pour l\'instant.'}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {photos.map((p, i) => (
-                <PhotoCard key={p.id} photo={p} locale={locale} priority={i < 4} />
-              ))}
-            </div>
+            <MasonryGrid
+              photos={photos}
+              locale={locale}
+              priorityCount={4}
+              columnsClass="columns-2 sm:columns-3"
+              listId="country"
+              listName="Country"
+            />
           )}
         </Container>
       </section>
