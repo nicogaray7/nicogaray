@@ -4,7 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout/Container';
 import { prisma } from '@/lib/prisma';
-import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { MasonryGrid } from '@/components/gallery/MasonryGrid';
 import { r2PublicUrl } from '@/lib/r2';
 import { ProtectedImg } from '@/components/ProtectedImg';
 import { Logo } from '@/components/layout/Logo';
@@ -141,11 +141,14 @@ function FeaturedSection({ photos, locale }: { photos: Awaited<ReturnType<typeof
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {photos.map((p, i) => (
-            <PhotoCard key={p.id} photo={p} locale={locale} priority={i < 3} />
-          ))}
-        </div>
+        <MasonryGrid
+          photos={photos}
+          locale={locale}
+          priorityCount={3}
+          columnsClass="columns-2 sm:columns-3"
+          listId="home_featured"
+          listName="Home featured"
+        />
       </Container>
     </section>
   );

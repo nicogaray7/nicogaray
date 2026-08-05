@@ -5,7 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { ArrowLeft, MapPin, Calendar, Camera, Aperture } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
-import { PhotoCard } from '@/components/gallery/PhotoCard';
+import { MasonryGrid } from '@/components/gallery/MasonryGrid';
 import { PhotoPageTracker } from '@/components/gallery/PhotoPageTracker';
 import { BuyButton } from '@/components/gallery/BuyButton';
 import { MobileStickyBuy } from '@/components/gallery/MobileStickyBuy';
@@ -396,11 +396,13 @@ function PhotoView({
             <h2 className="text-display-lg font-display text-ink mb-8">
               {photo.country ? `${photo.country}` : 'Plus'}
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
-              {related.map((p) => (
-                <PhotoCard key={p.id} photo={p} locale={locale} />
-              ))}
-            </div>
+            <MasonryGrid
+              photos={related}
+              locale={locale}
+              columnsClass="columns-2 md:columns-3 lg:columns-4"
+              listId="photo_related"
+              listName="Related photos"
+            />
           </Container>
         </section>
       )}
